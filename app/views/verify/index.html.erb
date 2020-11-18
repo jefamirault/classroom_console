@@ -1,1 +1,123 @@
-<h1 class="text-danger">Hello, World!</h1>
+<nav class="navbar navbar-expand-md navbar-dark bg-dark">
+  <a class="navbar-brand" href="#">Canvas Console</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+<!--    <ul class="navbar-nav mr-auto">-->
+<!--      <li class="nav-item active">-->
+<!--        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>-->
+<!--      </li>-->
+<!--      <li class="nav-item">-->
+<!--        <a class="nav-link" href="#">Link</a>-->
+<!--      </li>-->
+<!--      <li class="nav-item">-->
+<!--        <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>-->
+<!--      </li>-->
+<!--      <li class="nav-item dropdown">-->
+<!--        <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Dropdown</a>-->
+<!--        <div class="dropdown-menu" aria-labelledby="dropdown01">-->
+<!--          <a class="dropdown-item" href="#">Action</a>-->
+<!--          <a class="dropdown-item" href="#">Another action</a>-->
+<!--          <a class="dropdown-item" href="#">Something else here</a>-->
+<!--        </div>-->
+<!--      </li>-->
+<!--    </ul>-->
+<!--    <form class="form-inline my-2 my-lg-0">-->
+<!--      <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">-->
+<!--      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>-->
+<!--    </form>-->
+  </div>
+</nav>
+
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" >
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Subscribe for Email Updates</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="userEmail">Email address</label>
+            <input type="email" class="form-control" id="userEmail" aria-describedby="emailHelp" placeholder="">
+            <small id="emailHelp" class="form-text text-muted">We will never share your email with anyone else.</small>
+          </div>
+<!--          <div class="form-group form-check">-->
+<!--            <input type="checkbox" class="form-check-input" id="exampleCheck1">-->
+<!--            <label class="form-check-label" for="exampleCheck1">Receive Monthly Newsletter</label>-->
+<!--          </div>-->
+        </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Nevermind</button>
+            <button type="submit" class="btn btn-primary dev">Subscribe</button>
+          </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<main role="main">
+
+  <!-- Main jumbotron for a primary marketing message or call to action -->
+  <div class="jumbotron">
+    <div class="container">
+      <h1 class="display-3">Canvas Console</h1>
+      <p class="lead mt-3 mb-4">Focus on your students. Synchronize your learning platforms. Empower existing Blackbaud solutions with the flexibility of Canvas.</p>
+      <p>
+        <!-- Button trigger modal -->
+        <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#exampleModal">
+          Subscribe for Email Updates
+        </button>
+<!--        <a class="btn btn-primary btn-lg" href="#" role="button">Learn more »</a>-->
+      </p>
+
+    </div>
+  </div>
+
+  <div class="container">
+    <!-- Example row of columns -->
+    <div class="row">
+      <div class="col-md-4">
+        <h2>Synchronize</h2>
+        <p class="lead">User Canvas for courses. Use Blackbaud for enrollmlent. Automatically create and keep up-to-date Canvas courses. Sync assignments and grades from Canvas to Blackbaud LMS.</p>
+        <p><a class="btn btn-outline-secondary dev" href="#" role="button">View details »</a></p>
+      </div>
+      <div class="col-md-4">
+        <h2>Data Integrity</h2>
+        <p class="lead">Query grades, enrollments, courses, etc. for a date and time in the past. Track changes to grades, assignments, and enrollments.</p>
+        <p><a class="btn btn-outline-secondary dev" href="#" role="button">View details »</a></p>
+      </div>
+      <div class="col-md-4">
+        <h2>Analytics</h2>
+        <p class="lead">Visualize student performance data so you can make the best decisions to drive learning. See what works and discover opportunities for improvement using real-time data.</p>
+        <p><a class="btn btn-outline-secondary dev" href="#" role="button">View details »</a></p>
+      </div>
+    </div>
+
+    <hr>
+
+  </div> <!-- /container -->
+
+</main>
+<footer class="container">
+  <blockquote class="blockquote">
+    <p class="mb-0">"An investment in knowledge pays the best interest."</p>
+    <footer class="blockquote-footer"><cite title="Source Title">Benjamin Franklin</cite></footer>
+  </blockquote>
+</footer>
+
+
+
+<div class="alert alert-warning alert-dismissible mb-0 fixed-bottom fade" id="under-development" role="alert">
+  Sorry, this feature is still under development. Thank you for using our product! Check back soon!
+<!--  <button type="button" class="close" data-dismiss="alert" aria-label="Close">-->
+<!--    <span aria-hidden="true">&times;</span>-->
+<!--  </button>-->
+</div>
