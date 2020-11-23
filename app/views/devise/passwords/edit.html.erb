@@ -1,0 +1,36 @@
+<div class="center_the_thing">
+  <div class="centered_thing">
+    <h3 class="modal-header">Change your password</h3>
+
+    <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :put }) do |f| %>
+      <div class="modal-body">
+        <%= render "devise/shared/error_messages", resource: resource %>
+        <%= f.hidden_field :reset_password_token %>
+
+        <div class="form-group">
+          <%= f.label :password, "New password" %>
+          <%= f.password_field :password, autofocus: true, autocomplete: "new-password", class: "form-control" %>
+          <% if @minimum_password_length %>
+            <small id="emailHelp" class="form-text text-muted"><%= @minimum_password_length %> characters minimum</small>
+          <% end %>
+        </div>
+
+        <div class="form-group">
+          <%= f.label :password_confirmation, "Confirm new password" %><br />
+          <%= f.password_field :password_confirmation, autocomplete: "new-password", class: "form-control" %>
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <div class="row w-100">
+          <%= f.submit "Change my password", class: "btn btn-primary ml-auto" %>
+        </div>
+
+      </div>
+
+  <% end %>
+
+
+
+  </div>
+</div>
