@@ -62,6 +62,16 @@ Rails.application.configure do
 
   config.action_mailer.default_url_options = { host: 'canvasconsole.org' }
 
+  ActionMailer::Base.smtp_settings = {
+      address:               'smtp.mailgun.org',
+      port:                  587,
+      user_name:             ENV['SMTP_USER'],
+      password:              ENV['SMTP_PASSWORD'],
+      domain:                ENV['SMTP_DOMAIN'],
+      authentication:        "plain",
+      enable_starttls_auto:  true
+  }
+  
   config.action_mailer.perform_caching = false
 
   # Ignore bad email addresses and do not raise email delivery errors.
