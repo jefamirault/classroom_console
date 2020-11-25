@@ -1,2 +1,12 @@
-alert("Thank you for your interest in Canvas Console! Your address, <%= @subscription.email %>, will be added to our mailing list.");
+button = $('#openSubscribeForm');
+duration = 300;
+button.fadeTo(duration, 0);
+window.setTimeout(function(){
+    button.attr("disabled", true).html("Thank you for subscribing!");
+    // 0.65 = opacity for disabled button
+    button.fadeTo(duration, 0.65);
+}, duration);
+
+$('.alert .message').html('<%= flash[:message] %>');
+$('.alert').show();
 $("#subscribeModal").modal("hide");
