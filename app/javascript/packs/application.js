@@ -17,6 +17,9 @@ require("channels")
 import 'bootstrap/dist/js/bootstrap'
 import 'bootstrap/dist/css/bootstrap'
 
+import $ from 'jquery';
+global.$ = jQuery;
+
 $(document).on('click', '.btn[data-target="#exampleModal"]', function() {
     setTimeout(function(){
         $('#userEmail').trigger('focus');
