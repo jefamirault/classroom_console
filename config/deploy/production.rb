@@ -1,3 +1,5 @@
+require 'dotenv/load'
+
 # server-based syntax
 # ======================
 # Defines a single server with a list of roles and multiple properties.
@@ -7,7 +9,7 @@
 # server "example.com", user: "deploy", roles: %w{app web}, other_property: :other_value
 # server "db.example.com", user: "deploy", roles: %w{db}
 
-server '134.209.223.69', user: 'deploy', roles: %w{app db web}
+server ENV['PRODUCTION_IP'], user: 'deploy', roles: %w{app db web}
 
 # role-based syntax
 # ==================

@@ -60,7 +60,7 @@ Rails.application.configure do
   # config.active_job.queue_adapter     = :resque
   # config.active_job.queue_name_prefix = "canvas_console_production"
 
-  config.action_mailer.default_url_options = { host: 'staging.canvasconsole.org' }
+  config.action_mailer.default_url_options = { host: "staging.#{ENV['DOMAIN']}" }
 
   ActionMailer::Base.smtp_settings = {
       address:               'smtp.mailgun.org',

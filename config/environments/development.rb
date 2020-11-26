@@ -32,7 +32,7 @@ Rails.application.configure do
   config.active_storage.service = :local
 
   # By default, do not send emails in development. Check in log/development.log
-  # config.action_mailer.perform_deliveries = true
+  config.action_mailer.perform_deliveries = false
 
   config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
 
