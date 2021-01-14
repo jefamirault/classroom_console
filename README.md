@@ -106,7 +106,8 @@ nano /home/deploy/myapp/.rbenv-vars
 # Database credentials
 
 # Config for local PostgreSQL database
-DATABASE_URL=postgresql://<database_username>:<database_password>@127.0.0.1/canvas_console
+DATABASE_USER=postgresql://<database_username>:<database_password>@127.0.0.1/canvas_console
+DATABASE_PASSWORD=<password>
 
 RAILS_MASTER_KEY=<long_hexadecimal_string>
 SECRET_KEY_BASE=<much_longer_hexadecimal_string>

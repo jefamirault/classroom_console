@@ -1,0 +1,43 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @section.name %>
+</p>
+
+<p>
+  <strong>SIS ID:</strong>
+  <%= @section.sis_id %>
+</p>
+
+<p>
+  <strong>Course:</strong>
+  <%= course_link @section.course %>
+</p>
+
+<p>
+  <strong>Canvas:</strong>
+  <%= @section.canvas_id %>
+</p>
+
+<p>
+  <strong>Canvas course:</strong>
+  <%= @section.canvas_course_id %>
+</p>
+
+<p>
+  <strong>Term:</strong>
+  <%= @section.term_id %>
+</p>
+
+<p>
+  <strong>Enrolled Users:</strong>
+  <ul>
+    <% @section.enrollments.each do |enrollment| %>
+      <li><%= enrollment.user %><%= enrollment.role == 'teacher' ? ' (Teacher)' : '' %></li>
+    <% end %>
+  </ul>
+</p>
+
+<%= link_to 'Edit', edit_section_path(@section) %> |
+<%= link_to 'Back', sections_path %>

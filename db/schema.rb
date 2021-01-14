@@ -10,7 +10,37 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_11_24_165815) do
+ActiveRecord::Schema.define(version: 2021_01_14_210911) do
+
+  create_table "courses", force: :cascade do |t|
+    t.string "name"
+    t.integer "sis_id"
+    t.boolean "is_active"
+    t.integer "course_length"
+    t.boolean "sync_course"
+    t.boolean "sync_grades"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "enrollments", force: :cascade do |t|
+    t.integer "user_id"
+    t.integer "section_id"
+    t.boolean "enrolled_in_canvas"
+    t.float "grade"
+    t.integer "role"
+  end
+
+  create_table "sections", force: :cascade do |t|
+    t.string "name"
+    t.integer "sis_id"
+    t.integer "course_id"
+    t.integer "canvas_id"
+    t.integer "canvas_course_id"
+    t.integer "term_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
 
   create_table "subscriptions", force: :cascade do |t|
     t.text "email"
@@ -20,7 +50,19 @@ ActiveRecord::Schema.define(version: 2020_11_24_165815) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
+  create_table "terms", force: :cascade do |t|
+    t.string "name"
+    t.integer "canvas_id"
+    t.datetime "start"
+    t.datetime "end"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
   create_table "users", force: :cascade do |t|
+    t.integer "sis_id"
+    t.string "name"
+    t.boolean "active"
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
     t.string "reset_password_token"
