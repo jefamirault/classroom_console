@@ -16,7 +16,7 @@
 </p>
 
 <p>
-  <strong>Canvas:</strong>
+  <strong>Canvas ID:</strong>
   <%= @section.canvas_id %>
 </p>
 
@@ -31,13 +31,29 @@
 </p>
 
 <p>
+  <strong>Sync Grades?:</strong>
+  <%= @section.sync_grades %>
+</p>
+
+<p>
+  <strong>Last Sync:</strong>
+  <%= @section.last_sync ? "#{time_ago_in_words(@section.last_sync)} ago" : 'Never' %>
+</p>
+
+<p>
   <strong>Enrolled Users:</strong>
   <ul>
     <% @section.enrollments.each do |enrollment| %>
-      <li><%= enrollment.user %><%= enrollment.role == 'teacher' ? ' (Teacher)' : '' %></li>
+      <li>
+        <%= link_to enrollment.user, user_path(enrollment.user) %>
+        - <strong>Grade: <%= enrollment.grade ? enrollment.grade : 'None' %></strong>
+        - Changed: <%= enrollment.grade_updated_at ? "#{time_ago_in_words(enrollment.grade_updated_at)} ago" : 'Never' %>
+        <%= enrollment.role == 'teacher' ? ' (Teacher)' : '' %>
+      </li>
     <% end %>
   </ul>
 </p>
 
+<%= link_to 'Sync Now', section_sync_path(@section) %> |
 <%= link_to 'Edit', edit_section_path(@section) %> |
 <%= link_to 'Back', sections_path %>

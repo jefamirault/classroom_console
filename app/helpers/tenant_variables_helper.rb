@@ -1,0 +1,2 @@
+module TenantVariablesHelper
+end

@@ -1,0 +1,31 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Tenant Variables</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Value</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @tenant_variables.each do |tenant_variable| %>
+      <tr>
+        <td><%= tenant_variable.name %></td>
+        <td><%= tenant_variable.value %></td>
+        <td><%= link_to 'Show', tenant_variable %></td>
+        <td><%= link_to 'Edit', edit_tenant_variable_path(tenant_variable) %></td>
+        <td><%= link_to 'Destroy', tenant_variable, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Tenant Variable', new_tenant_variable_path %>

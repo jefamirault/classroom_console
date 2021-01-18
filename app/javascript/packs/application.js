@@ -20,4 +20,6 @@ import 'bootstrap/dist/js/bootstrap'
 import 'bootstrap/dist/css/bootstrap'
 
 import $ from 'jquery';
+import jQuery from 'jquery';
 global.$ = jQuery;
+global.jQuery = jQuery;

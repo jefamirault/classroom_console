@@ -1,0 +1,33 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @user.name %>
+</p>
+
+<p>
+  <strong>SIS ID:</strong>
+  <%= @user.sis_id %>
+</p>
+
+<p>
+  <strong>Canvas ID:</strong>
+  <%= @user.canvas_id %>
+</p>
+
+<p>
+  <strong>Email:</strong>
+  <%= @user.email %>
+</p>
+
+<p>
+  <strong>Enrollments:</strong>
+  <ul>
+    <% @user.enrollments.each do |enrollment| %>
+      <li><%= link_to enrollment.section, section_path(enrollment.section) %> - Grade: <%= enrollment.grade ? enrollment.grade : 'n/a' %></li>
+    <% end %>
+  </ul>
+</p>
+
+<%= link_to 'Edit', edit_user_path(@user) %> |
+<%= link_to 'Back', users_path %>

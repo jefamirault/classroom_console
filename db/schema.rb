@@ -10,7 +10,12 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_01_14_210911) do
+ActiveRecord::Schema.define(version: 2021_02_12_170051) do
+
+  create_table "assignments", force: :cascade do |t|
+    t.integer "sis_id"
+    t.integer "section_id"
+  end
 
   create_table "courses", force: :cascade do |t|
     t.string "name"
@@ -29,6 +34,18 @@ ActiveRecord::Schema.define(version: 2021_01_14_210911) do
     t.boolean "enrolled_in_canvas"
     t.float "grade"
     t.integer "role"
+    t.integer "last_grade_change_id"
+  end
+
+  create_table "grade_changes", force: :cascade do |t|
+    t.integer "enrollment_id"
+    t.float "old_value"
+    t.float "new_value"
+    t.datetime "time"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.integer "previous_change_id"
+    t.integer "next_change_id"
   end
 
   create_table "sections", force: :cascade do |t|
@@ -40,12 +57,21 @@ ActiveRecord::Schema.define(version: 2021_01_14_210911) do
     t.integer "term_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.boolean "sync_grades"
+    t.datetime "last_sync"
   end
 
   create_table "subscriptions", force: :cascade do |t|
     t.text "email"
     t.integer "user_id"
     t.boolean "subscribed"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "tenant_variables", force: :cascade do |t|
+    t.string "name"
+    t.string "value"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
@@ -63,7 +89,7 @@ ActiveRecord::Schema.define(version: 2021_01_14_210911) do
     t.integer "sis_id"
     t.string "name"
     t.boolean "active"
-    t.string "email", default: "", null: false
+    t.string "email", default: ""
     t.string "encrypted_password", default: "", null: false
     t.string "reset_password_token"
     t.datetime "reset_password_sent_at"
@@ -74,6 +100,7 @@ ActiveRecord::Schema.define(version: 2021_01_14_210911) do
     t.string "unconfirmed_email"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.integer "canvas_id"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true

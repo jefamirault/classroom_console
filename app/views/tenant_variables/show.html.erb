@@ -1,0 +1,14 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @tenant_variable.name %>
+</p>
+
+<p>
+  <strong>Value:</strong>
+  <%= @tenant_variable.value %>
+</p>
+
+<%= link_to 'Edit', edit_tenant_variable_path(@tenant_variable) %> |
+<%= link_to 'Back', tenant_variables_path %>

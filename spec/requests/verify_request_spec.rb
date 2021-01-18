@@ -4,7 +4,7 @@ RSpec.describe "Verifies", type: :request do
 
   describe "GET /index" do
     it "returns http success" do
-      get "/verify/index"
+      get "/public"
       expect(response).to have_http_status(:success)
     end
   end

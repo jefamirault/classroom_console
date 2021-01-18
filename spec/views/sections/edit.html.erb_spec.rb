@@ -2,10 +2,15 @@ require 'rails_helper'
 
 RSpec.describe "sections/edit", type: :view do
   before(:each) do
+    @course = assign(:course, Course.create!(
+        name: "Math",
+        sis_id: 1,
+        course_length: 1
+    ))
     @section = assign(:section, Section.create!(
-      name: "MyString",
+      name: "Math - A Block",
       sis_id: 1,
-      course_id: 1,
+      course_id: @course.id,
       canvas_id: 1,
       canvas_course_id: 1,
       term_id: 1

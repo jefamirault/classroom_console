@@ -2,6 +2,13 @@
 
 <h1>Sections</h1>
 
+
+<%= link_to 'Sync Grades Now', sync_all_grades_path %>
+|
+<%= link_to 'Check for New Sections to Sync', sync_all_sis_assignments_path %>
+
+
+
 <table>
   <thead>
     <tr>
@@ -9,9 +16,13 @@
       <th>SIS ID</th>
       <th>Course</th>
       <th>Canvas ID</th>
-      <th>Canvas Course (Local) ID</th>
-      <th>Term</th>
-      <th colspan="3"></th>
+<!--      <th>Canvas Course (Local) ID</th>-->
+<!--      <th>Term</th>-->
+      <th>Sync Grades?</th>
+      <th>Last Sync</th>
+      <th></th>
+      <th></th>
+      <th></th>
     </tr>
   </thead>
 
@@ -22,8 +33,10 @@
         <td><%= section.sis_id %></td>
         <td><%= section.course %></td>
         <td><%= section.canvas_id %></td>
-        <td><%= section.canvas_course_id %></td>
-        <td><%= section.term_id %></td>
+<!--        <td><%#= section.canvas_course_id %></td>-->
+<!--        <td><%#= section.term_id %></td>-->
+        <td><%= section.sync_grades %></td>
+        <td><%= section.last_sync ? "#{time_ago_in_words(section.last_sync)} ago" : 'Never' %></td>
         <td><%= link_to 'Show', section %></td>
         <td><%= link_to 'Edit', edit_section_path(section) %></td>
         <td><%= link_to 'Destroy', section, method: :delete, data: { confirm: 'Are you sure?' } %></td>

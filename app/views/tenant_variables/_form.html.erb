@@ -1,0 +1,27 @@
+<%= form_with(model: tenant_variable, local: true) do |form| %>
+  <% if tenant_variable.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(tenant_variable.errors.count, "error") %> prohibited this tenant_variable from being saved:</h2>
+
+      <ul>
+        <% tenant_variable.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :name %>
+    <%= form.text_field :name %>
+  </div>
+
+  <div class="field">
+    <%= form.label :value %>
+    <%= form.text_field :value %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

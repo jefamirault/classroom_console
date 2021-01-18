@@ -1,3 +1,16 @@
+// $(document).ready(function() {
+//     $('table').DataTable({
+//         "pageLength": 25
+//     });
+// } );
+
+document.addEventListener("turbolinks:load", function() {
+    $('table').DataTable({
+        "pageLength": 25,
+        "aaSorting": []
+    });
+})
+
 $(document).on('shown.bs.modal','#subscribeModal', function() {
     $('#userEmail').focus();
 });

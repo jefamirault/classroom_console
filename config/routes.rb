@@ -1,6 +1,13 @@
 Rails.application.routes.draw do
+  resources :tenant_variables
   resources :terms
-  resources :sections
+  put 'detect_terms', to: 'terms#detect'
+  resources :sections do
+    get 'sync'
+  end
+  get 'sync_all_grades', to: 'sections#sync_all_grades', as: 'sync_all_grades'
+  get 'sync_all_sis_assignments', to: 'sections#sync_all_sis_assignments', as: 'sync_all_sis_assignments'
+
   resources :courses
   devise_scope :user do
     get "/sign_in" => "devise/sessions#new" # custom path to login/sign_in
@@ -13,14 +20,15 @@ Rails.application.routes.draw do
   # end
 
   devise_for :users
-
   resources :users
 
-  get 'verify/index'
+  get 'public', to: 'verify#index'
 
   post 'subscribe', to: 'subscriptions#create', as: 'subscribe'
 
   root to: 'verify#index'
+
+  get 'assignments', to: 'assignments#index', as: 'assignments'
 
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
 end

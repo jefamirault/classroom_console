@@ -6,7 +6,7 @@
 </p>
 
 <p>
-  <strong>Sis:</strong>
+  <strong>SIS ID:</strong>
   <%= @course.sis_id %>
 </p>
 
@@ -23,7 +23,7 @@
   <strong>Sections:</strong>
   <ul>
     <% @course.sections.each do |section| %>
-      <li><%= section_link section %></li>
+      <li><%= section_link section %> (<%= section.enrollments.count %> enrollments)</li>
     <% end %>
   </ul>
 </p>

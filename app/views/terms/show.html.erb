@@ -12,12 +12,12 @@
 
 <p>
   <strong>Start:</strong>
-  <%= @term.start %>
+  <%= format_datetime @term.start %>
 </p>
 
 <p>
   <strong>End:</strong>
-  <%= @term.end %>
+  <%= format_datetime @term.end %>
 </p>
 
 <%= link_to 'Edit', edit_term_path(@term) %> |
