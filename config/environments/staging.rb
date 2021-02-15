@@ -58,7 +58,7 @@ Rails.application.configure do
 
   # Use a real queuing backend for Active Job (and separate queues per environment).
   # config.active_job.queue_adapter     = :resque
-  # config.active_job.queue_name_prefix = "canvas_console_production"
+  # config.active_job.queue_name_prefix = "classroom_console_production"
 
   config.action_mailer.default_url_options = { host: "staging.#{ENV['DOMAIN']}" }
 

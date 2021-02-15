@@ -1,8 +1,8 @@
 # config valid for current version and patch releases of Capistrano
 lock "~> 3.14.1"
 
-set :application, "canvas_console"
-set :repo_url, "https://github.com/jefamirault/canvas_console.git"
+set :application, "classroom_console"
+set :repo_url, "https://github.com/jefamirault/classroom_console.git"
 
 # Default branch is :master
 ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp

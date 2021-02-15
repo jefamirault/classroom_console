@@ -1,11 +1,11 @@
-# Canvas Console
+# Classroom Console
 
-Canvas Console is an administrative tool to help educational institutions better manage their digital learning environments. It organizes and syncs data between Canvas Learning Management System (LMS) by Instructure, and the OnCampus LMS by Blackbaud, bundled with a broader suite of school management solutions.
+Classroom Console is an administrative tool to help educational institutions better manage their digital learning environments. It organizes and syncs data between Canvas Learning Management System (LMS) by Instructure, and the OnCampus LMS by Blackbaud, bundled with a broader suite of school management solutions.
 ## Development
 Make sure you have Rails 6 installed. Then clone the repository and run bundler.
 ```
-git clone https://github.com/jefamirault/canvas_console.git
-cd canvas_console
+git clone https://github.com/jefamirault/classroom.git
+cd classroom_console
 bundle
 rails s
 # Visit localhost:3000 in your web browser
@@ -51,7 +51,7 @@ Continue through the guide until you get to the section on deploying with Capist
 
 1. Install Ruby through rbenv version manager
 1. Install Nginx and Passenger as our webserver
-   * Make sure to replace any instances of "myapp" with "canvas_console". 
+   * Make sure to replace any instances of "myapp" with "classroom_console". 
 1. Set up a database
    * If you have your own database server, you may skip this step
    * Otherwise, PostgreSQL is recommended but MySQL is fine too.
@@ -67,8 +67,8 @@ sudo apt-get install freetds-dev
 You will be executing the command to deploy the app from your local machine. For this, you need a local copy of the repository.
 
 ```
-git clone https://github.com/jefamirault/canvas_console.git
-cd canvas_console
+git clone https://github.com/jefamirault/classroom_console.git
+cd classroom_console
 ```
 
 If you are using Azure SQL Server, check out the branch 'sqlserver'.
@@ -106,13 +106,13 @@ nano /home/deploy/myapp/.rbenv-vars
 # Database credentials
 
 # Config for local PostgreSQL database
-DATABASE_USER=postgresql://<database_username>:<database_password>@127.0.0.1/canvas_console
+DATABASE_USER=postgresql://<database_username>:<database_password>@127.0.0.1/classroom_console
 DATABASE_PASSWORD=<password>
 
 RAILS_MASTER_KEY=<long_hexadecimal_string>
 SECRET_KEY_BASE=<much_longer_hexadecimal_string>
 
-# ~/canvas_console/.rbenv-vars
+# ~/classroom_console/.rbenv-vars
 DOMAIN=yourdomain.org
 PRODUCTION_IP=SERVER_IP_ADDRESS
 

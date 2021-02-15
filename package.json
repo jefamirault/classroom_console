@@ -1,5 +1,5 @@
 {
-  "name": "canvas_console",
+  "name": "classroom_console",
   "private": true,
   "dependencies": {
     "@rails/actioncable": "^6.0.0",
