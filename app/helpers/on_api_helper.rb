@@ -1,4 +1,3 @@
-require 'dotenv/load'
 require 'net/http'
 require 'uri'
 require_relative 'export_helper'
