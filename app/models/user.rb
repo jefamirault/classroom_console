@@ -8,10 +8,13 @@ class User < ApplicationRecord
   has_many :sections, through: :enrollments
   has_many :courses, through: :sections
 
+  ACCOUNT_ID = 1
+
 
   def to_s
     self.name
   end
+
 
   # TODO refactor into at least 2 methods
   def self.refresh_sis_users(rosters_json, emails_json)
@@ -53,4 +56,44 @@ class User < ApplicationRecord
     puts "Updated #{updated.count} users."
   end
 
+
+  def self.refresh_canvas_users(canvas_users = User.request_canvas_users)
+    users_hash = Hash.new
+    User.all.each do |user|
+      users_hash[user.sis_id] = user
+    end
+
+    canvas_users.each do |u|
+      # TODO: Sanitize string ids
+      sis_id = u['sis_user_id'].to_i
+      canvas_id = u['id'].to_i
+
+      user = users_hash[sis_id]
+
+      if user.nil?
+        # skip Canvas user without SIS counterpart
+        next
+      end
+
+      user.assign_attributes canvas_id: canvas_id
+      if user.changed?
+        puts "User updated: #{user}, #{user.changes}"
+        user.save validate: false
+      end
+
+    end
+  end
+
+
+  extend OnApiHelper
+
+  def self.request_sis_users
+    response = on_api_get ''
+  end
+
+  extend CanvasApiHelper
+
+  def self.request_canvas_users
+    canvas_api_get_paginated "accounts/#{ACCOUNT_ID}/users"
+  end
 end

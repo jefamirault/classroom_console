@@ -9,10 +9,6 @@ module CanvasApiHelper
   # CANVAS_URL = ENV['CANVAS_TEST_URL']
   # ACCESS_TOKEN = ENV['ACCESS_TOKEN_TEST']
 
-
-
-  # def canvas_api_get(route = 'courses', body = nil)
-  #   uri = URI.parse("#{CANVAS_URL}/#{route}")
   def canvas_api_get(route = 'courses', parameters = nil, body = nil)
     uri = URI.parse("#{CANVAS_URL}/#{route}/#{parameters}")
     # puts "GET #{uri}..."

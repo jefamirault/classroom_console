@@ -1,6 +1,8 @@
 class Course < ApplicationRecord
   has_many :sections
 
+  validates_uniqueness_of :sis_id
+
   def to_s
     self.name
   end
@@ -14,7 +16,7 @@ class Course < ApplicationRecord
     course.save
   end
 
-  def self.refresh_sis_courses(courses_json)
+  def self.refresh_sis_courses(courses_json = Course.request_sis_courses)
     puts "Refreshing OnCampus Courses..."
 
     course_ids = Course.pluck(:sis_id)
@@ -22,6 +24,7 @@ class Course < ApplicationRecord
     course_ids.each {|c| course_hash[c] = true}
 
     discovered = 0
+
     courses_json.each do |json|
       sis_id = json['OfferingId']
       if course_hash[sis_id]
@@ -33,5 +36,17 @@ class Course < ApplicationRecord
       end
     end
     ["Discovered #{discovered} New Courses", "Total Courses: #{Course.count}"]
+  end
+
+
+  extend OnApiHelper
+
+  def self.request_sis_courses
+    response = on_api_get 'academics/course'
+    if response.code == '200'
+      JSON.parse(response.body)
+    else
+      raise "Error while requesting Course data via ON API."
+    end
   end
 end

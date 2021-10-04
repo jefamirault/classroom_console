@@ -11,6 +11,10 @@ class Section < ApplicationRecord
   include CanvasApiHelper
   include OnApiHelper
 
+  SIS_SCHOOL_YEAR = ENV['SIS_SCHOOL_YEAR']
+  SIS_LEVEL_NUM = ENV['SIS_LEVEL_NUM']
+
+  validates_uniqueness_of :sis_id
 
   def to_s
     self.name
@@ -19,10 +23,14 @@ class Section < ApplicationRecord
 
   def sync
     # check sis for opt-in assignment
+
+    sync_sis_enrollments
+
     sync_sis_assignments
 
     sync_canvas_enrollments
   end
+
 
   def self.sync_all_grades
     Section.where(sync_grades: true).each &:sync
@@ -32,11 +40,15 @@ class Section < ApplicationRecord
     if self.assignment
     #  already synced
     else
-      assignments = on_api_get_json "assignment/forsection/#{sis_id}", on_api_token
-      match_assignment = assignments.select{|a| a['AssignmentDescription'].downcase == 'canvas grade'}
+      # assignments = on_api_get_json "assignment/forsection/#{sis_id}"
+      assignments = on_api_get_json "academics/assignment", "&leadSectionId=#{sis_id}"
+      ################################################################################################
+      ## Determines how to configure a course in OnCampus so that it opts in to be synced with Canvas
+      ################################################################################################
+      match_assignment = assignments.select{|a| a['AssignmentType'] && a['AssignmentType'].downcase == 'canvas grade'}
       if match_assignment.size > 1
         puts "Multiple opt-in assignments found: skipping section #{self} sis_id: #{self.sis_id}"
-        return nil
+        return assignments
       end
       opt_in_assignment = match_assignment.first
       if opt_in_assignment.nil?
@@ -66,7 +78,13 @@ class Section < ApplicationRecord
 
   def sync_canvas_enrollments
     if canvas_id.nil?
-      return "Cannot sync Canvas enrollments without canvas_id."
+
+      sync_canvas_id
+
+      if canvas_id.nil?
+        puts "Cannot sync Canvas enrollments without canvas_id."
+        return nil
+      end
     end
     errors = nil
     canvas_api_get_paginated("sections/#{self.canvas_id}/enrollments").each do |e|
@@ -85,7 +103,9 @@ class Section < ApplicationRecord
         if enrollment.grade != json[:current_grade]
           enrollment.grade = json[:current_grade]
           if enrollment.save
-            enrollment.post_grade
+            # TODO SKIP WHILE TESTING
+            # enrollment.post_grade
+            puts "ATTENTION: Skipping grade post: #{enrollment}"
           end
         end
       end
@@ -170,7 +190,85 @@ class Section < ApplicationRecord
         end
       end
     end
+  end
+
+  def self.create_from_json(json)
+    id = json['Id']
+
+    # Skip wihout valid Section SIS ID
+    return nil if id.nil? || id < 1
+
+    if id.class != Fixnum
+      raise "Error parsing Section json, ID must be a number"
+    end
 
 
+    section = Section.new
+    section.sis_id = id
+    section.name = json['Name']
+    section.course = Course.find_by_sis_id json['OfferingId']
+    section.save
+  end
+
+  def self.refresh_sis_sections(sections_json = Section.request_sis_sections)
+    puts "Refreshing OnCampus Sections..."
+    sections_json.each do |json|
+      Section.create_from_json json
+    end
+  end
+
+  extend OnApiHelper
+
+  def sync_sis_enrollments
+    if self.sis_id.nil? || self.sis_id < 1
+      raise 'Cannot sync Section without valid SIS_ID'
+    end
+    sis_roster = on_api_get_json 'academics/enrollment', "&sectionID=#{self.sis_id}"
+    sis_roster.each do |student|
+      # match by sis_id if user exists, otherwise create user with sis_id + name
+      user = User.create_with(name: student['Name'], email: nil).find_or_create_by(sis_id: student['UserId'])
+      if user.new_record?
+        if user.sis_id.class != Fixnum || user.sis_id < 1
+          raise 'Cannot create user without valid SIS_ID'
+        end
+        if user.name.class != String
+          raise 'Cannot create user. Name must be a String'
+        end
+        # allow user to be created without a password
+        user.save validate: false
+      end
+      # Enroll user if not enrolled
+      if enrollments.find_by_user_id user.id
+      #  good
+      else
+        Enrollment.create user_id: user.id, section_id: self.id, role: :student
+      end
+    end
+  end
+
+  def self.request_sis_sections
+    puts "Getting SIS Sections for School Year #{SIS_SCHOOL_YEAR}..."
+    response = on_api_get 'academics/section', "&schoolYear=#{SIS_SCHOOL_YEAR}&levelNum=#{SIS_LEVEL_NUM}"
+    if response.code == '200'
+      JSON.parse(response.body).uniq!
+    else
+      raise "Error while requesting Section data via ON API."
+    end
+  end
+
+  extend CanvasApiHelper
+
+  def sync_canvas_id
+    # find canvas section by sis_id
+    response = canvas_api_get "sections/sis_section_id:#{self.sis_id}"
+    if response.code == '200'
+      section_json = JSON.parse response.body
+      canvas_id = section_json['id']
+      self.update canvas_id: canvas_id
+    elsif response.code == '400'
+      puts "ATTENTION: Section (sis_id = #{self.sis_id}) not found in canvas"
+    else
+      raise "Something unexpected happened."
+    end
   end
 end

@@ -5,8 +5,8 @@ require 'logger'
 
 module OnApiHelper
   ON_API_URL = ENV['ON_API_URL']
-  ON_API_USERNAME = ENV['ON_API_USERNAME']
-  ON_API_PASSWORD = ENV['ON_API_PASSWORD']
+  ON_API_KEY = ENV['ON_API_KEY']
+  ON_API_SECRET = ENV['ON_API_SECRET']
 
   include ExportHelper
 
@@ -22,8 +22,8 @@ module OnApiHelper
     }
 
     request.body = {
-        username: ON_API_USERNAME,
-        password: ON_API_PASSWORD
+        username: ON_API_KEY,
+        password: ON_API_SECRET
     }.to_json
 
     response = Net::HTTP.start(uri.hostname, uri.port, req_options) do |http|
@@ -33,6 +33,7 @@ module OnApiHelper
     # Responds with access token. Expires after 20 minutes without being used.
     response
   end
+
 
   def on_api_token
     last_token = read_object 'timed_token'
@@ -73,8 +74,8 @@ module OnApiHelper
     response
   end
 
-  def on_api_get(route, token, parameters = nil)
-    uri = URI.parse("#{ON_API_URL}/#{route}?t=#{token}#{parameters}")
+  def on_api_get(route, parameters = nil)
+    uri = URI.parse("#{ON_API_URL}/#{route}?t=#{on_api_token}#{parameters}")
     # puts "GET #{ON_API_URL}/#{route}?t=*#{parameters}..."
 
     header = { 'Content-Type': 'application/json' }
@@ -91,7 +92,7 @@ module OnApiHelper
     response
   end
 
-  def on_api_get_json(route, token, parameters = nil)
-    JSON.parse on_api_get(route, token, parameters).body
+  def on_api_get_json(route, parameters = nil)
+    JSON.parse on_api_get(route, parameters).body
   end
 end

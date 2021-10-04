@@ -57,6 +57,7 @@ class Enrollment < ApplicationRecord
     if options[:debug]
       puts grade_object
     end
+    binding.pry
     on_api_post 'academics/assignmentgrade', on_api_token, grade_object
   end
 

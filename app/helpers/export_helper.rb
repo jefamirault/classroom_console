@@ -13,7 +13,7 @@ module ExportHelper
 
   def write_json(json, filename)
     path = "#{DIRECTORY}/#{filename}"
-    puts "Writing to #{path}...".green
+    puts "Writing to #{path}..."
     File.open(path, 'w+') do |f|
       f.write JSON.pretty_generate(json)
     end
