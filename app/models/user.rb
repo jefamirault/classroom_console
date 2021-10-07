@@ -96,4 +96,11 @@ class User < ApplicationRecord
   def self.request_canvas_users
     canvas_api_get_paginated "accounts/#{ACCOUNT_ID}/users"
   end
+
+
+  protected
+
+  def password_required?
+    self.login_enabled ? super : false
+  end
 end
