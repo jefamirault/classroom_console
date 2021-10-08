@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
 
-  # before_action :authenticate_user!
+  before_action :authenticate_user!, if: -> { !ENV['DEMO'] }
   before_action :set_user, only: [:show, :edit, :update, :destroy]
 
   def index

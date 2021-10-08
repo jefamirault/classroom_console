@@ -13,8 +13,9 @@
   <thead>
     <tr>
       <th>Name</th>
-      <th>SIS ID</th>
       <th>Course</th>
+      <th>Enrollments</th>
+      <th>SIS ID</th>
       <th>Canvas ID</th>
 <!--      <th>Canvas Course (Local) ID</th>-->
 <!--      <th>Term</th>-->
@@ -30,8 +31,9 @@
     <% @sections.each do |section| %>
       <tr>
         <td><%= section.name %></td>
-        <td><%= section.sis_id %></td>
         <td><%= section.course %></td>
+        <td><%= section.enrollments.count %></td>
+        <td><%= section.sis_id %></td>
         <td><%= section.canvas_id %></td>
 <!--        <td><%#= section.canvas_course_id %></td>-->
 <!--        <td><%#= section.term_id %></td>-->

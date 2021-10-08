@@ -30,5 +30,9 @@ Rails.application.routes.draw do
 
   get 'assignments', to: 'assignments#index', as: 'assignments'
 
+  get 'generate_sample_data', to: 'courses#generate_sample_data', as: 'generate_sample_data'
+
+  get 'diagnostic', to: 'diagnostic#index'
+
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
 end

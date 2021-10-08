@@ -1,6 +1,6 @@
 class SectionsController < ApplicationController
 
-  # before_action :authenticate_user!
+  before_action :authenticate_user!, if: -> { !ENV['DEMO'] }
   before_action :set_section, only: [:show, :edit, :update, :destroy]
 
   # GET /sections

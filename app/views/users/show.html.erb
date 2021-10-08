@@ -24,7 +24,14 @@
   <strong>Enrollments:</strong>
   <ul>
     <% @user.enrollments.each do |enrollment| %>
-      <li><%= link_to enrollment.section, section_path(enrollment.section) %> - Grade: <%= enrollment.grade ? enrollment.grade : 'n/a' %></li>
+      <li>
+        <%= link_to enrollment.section, section_path(enrollment.section) %> -
+        <% if enrollment.role == 'student' %>
+          Grade: <%= enrollment.grade ? enrollment.grade : 'n/a' %>
+        <% else %>
+          (Teacher)
+        <% end %>
+      </li>
     <% end %>
   </ul>
 </p>

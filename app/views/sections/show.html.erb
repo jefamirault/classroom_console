@@ -6,13 +6,13 @@
 </p>
 
 <p>
-  <strong>SIS ID:</strong>
-  <%= @section.sis_id %>
+  <strong>Course:</strong>
+  <%= course_link @section.course %>
 </p>
 
 <p>
-  <strong>Course:</strong>
-  <%= course_link @section.course %>
+  <strong>SIS ID:</strong>
+  <%= @section.sis_id %>
 </p>
 
 <p>
@@ -41,14 +41,16 @@
 </p>
 
 <p>
-  <strong>Enrolled Users:</strong>
+  <strong><%= @section.enrollments.count %> Enrolled Users:</strong>
   <ul>
     <% @section.enrollments.each do |enrollment| %>
       <li>
         <%= link_to enrollment.user, user_path(enrollment.user) %>
+        <% if enrollment.role == 'student' %>
         - <strong>Grade: <%= enrollment.grade ? enrollment.grade : 'None' %></strong>
         - Changed: <%= enrollment.grade_updated_at ? "#{time_ago_in_words(enrollment.grade_updated_at)} ago" : 'Never' %>
-        <%= enrollment.role == 'teacher' ? ' (Teacher)' : '' %>
+        <% end %>
+        <%= enrollment.role == 'teacher' ? ' - (Teacher)' : '' %>
       </li>
     <% end %>
   </ul>

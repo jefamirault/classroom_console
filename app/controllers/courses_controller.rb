@@ -1,7 +1,6 @@
 class CoursesController < ApplicationController
 
-  # before_action :authenticate_user!
-
+  before_action :authenticate_user!, if: -> { !ENV['DEMO'] }
   before_action :set_course, only: [:show, :edit, :update, :destroy]
 
   # GET /courses
@@ -62,6 +61,11 @@ class CoursesController < ApplicationController
       format.html { redirect_to courses_url, notice: 'Course was successfully destroyed.' }
       format.json { head :no_content }
     end
+  end
+
+  def generate_sample_data
+    generate_sample if ENV['DEMO']
+    redirect_to courses_path
   end
 
   private
