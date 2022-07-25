@@ -80,6 +80,17 @@ class SectionsController < ApplicationController
     redirect_to sections_path
   end
 
+  def enroll_users_in_canvas
+    @section = Section.find params[:section_id]
+    @section.enroll_users_in_canvas
+    redirect_to @section
+  end
+
+  def create_canvas_course
+    @section = Section.find params[:section_id]
+    @section.create_canvas_course
+    redirect_to @section
+  end
 
   private
     # Use callbacks to share common setup or constraints between actions.

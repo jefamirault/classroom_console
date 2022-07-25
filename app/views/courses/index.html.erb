@@ -7,8 +7,9 @@
     <tr>
       <th>Name</th>
       <th>SIS ID</th>
-      <th>Active?</th>
+      <th>No. of Sections</th>
       <th>Course length</th>
+      <th>Enrollments</th>
 <!--      <th>Sync Course?</th>-->
 <!--      <th>Sync Grades?</th>-->
       <th></th>
@@ -22,8 +23,9 @@
       <tr>
         <td><%= course.name %></td>
         <td><%= course.sis_id %></td>
-        <td><%= course.is_active %></td>
+        <td><%= course.sections.count %></td>
         <td><%= course.course_length %></td>
+        <td><%= course.enrollments.size %></td>
 <!--        <td><%#= course.sync_course %></td>-->
 <!--        <td><%#= course.sync_grades %></td>-->
         <td><%= link_to 'Show', course %></td>

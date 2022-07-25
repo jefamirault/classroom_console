@@ -20,7 +20,7 @@
       <td><%= link_to user.name, user %></td>
       <td><%= user.email %></td>
       <td><%= user.sis_id %></td>
-      <td><%= user.canvas_id %></td>
+      <td><%= user.canvas_id ? link_to(user.canvas_id, "#{ENV['CANVAS_PATH']}/users/#{user.canvas_id}") : '' %></td>
       <td><%= user.enrollments.count %></td>
 <!--      <td><%#= link_to 'Show', user %></td>-->
 <!--      <td><%#= link_to 'Edit', edit_user_path(user) %></td>-->
@@ -31,5 +31,9 @@
 </table>
 
 <br>
+
+<%= link_to 'Refresh SIS Emails', refresh_sis_emails_path %> |
+<%= link_to 'Refresh Canvas Users', refresh_canvas_users_path %> |
+<%= link_to 'Create Missing Canvas Users', create_missing_canvas_users_path %>
 
 <%#= link_to 'New user', new_user_path %>

@@ -19,16 +19,50 @@
   <strong>Course length:</strong>
   <%= @course.course_length %>
 </p>
+
 <p>
   <strong>Sections:</strong>
-  <ul>
-    <% @course.sections.each do |section| %>
-      <li><%= section_link section %> (<%= section.enrollments.count %> enrollments)</li>
-    <% end %>
-  </ul>
 </p>
 
+
+<table>
+  <thead>
+  <tr>
+    <th>Name</th>
+    <th>Term</th>
+    <th>Size</th>
+    <th>SIS ID</th>
+    <th>Canvas ID</th>
+    <th>Canvas Course ID</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+  </thead>
+
+  <tbody>
+  <% @course.sections.each do |section| %>
+    <tr>
+      <td><%= section.name %></td>
+      <td><%= section.term %></td>
+      <td><%= section.users.count %></td>
+      <td><%= section.sis_id %></td>
+      <td><%= section.canvas_id && section.canvas_course_id ? link_to(section.canvas_id, "#{ENV['CANVAS_PATH']}/courses/#{section.canvas_course_id}/sections/#{section.canvas_id}") : '' %></td>
+      <td><%= section.canvas_course_id ? link_to(section.canvas_course_id, "#{ENV['CANVAS_PATH']}/courses/#{section.canvas_course_id}") : '' %></td>
+      <td><%= link_to 'Show', section %></td>
+      <td><%= link_to 'Edit', edit_section_path(section) %></td>
+      <td><%= link_to 'Destroy', section, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>
 
 
 <%= link_to 'Edit', edit_course_path(@course) %> |
 <%= link_to 'Back', courses_path %>
+
+<br>
+
+<%= link_to 'Sync SIS Enrollments', course_sync_sis_enrollments_path(@course.id) %> |
+<%= link_to 'Create Canvas Sections', course_create_canvas_sections_path(@course.id) %> |
+<%= link_to 'Enroll Users in Canvas', course_enroll_users_in_canvas_path(@course.id) %>

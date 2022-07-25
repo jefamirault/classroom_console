@@ -1,6 +1,6 @@
 class Enrollment < ApplicationRecord
   belongs_to :user
-  belongs_to :section
+  belongs_to :section, counter_cache: true
   has_one :assignment, through: :section
   has_one :course, through: :section
 
@@ -10,6 +10,7 @@ class Enrollment < ApplicationRecord
   after_create :log_create
 
   include OnApiHelper
+  include CanvasApiHelper
 
   def log_create
     change = GradeChange.create enrollment: self, old_value: nil, new_value: self.grade, time: Time.now.utc.to_s(:db)
@@ -57,8 +58,32 @@ class Enrollment < ApplicationRecord
     if options[:debug]
       puts grade_object
     end
-    binding.pry
     on_api_post 'academics/assignmentgrade', on_api_token, grade_object
+  end
+
+  def post_to_canvas(options = {})
+    raise 'Enrollment is missing a user' if user.nil?
+    raise 'Enrollment failed. Does user exist in Canvas?' if user.canvas_id.nil?
+    raise 'Enrollment failed. Does section exist in Canvas?' if section.canvas_id.nil?
+
+    body = {
+      enrollment: {
+        user_id: user.canvas_id,
+        # type: user.role.capitalize,
+        type: 'StudentEnrollment',
+        enrollment_status: 'active'
+      }
+    }.to_json
+
+    response = canvas_api_post_response "sections/#{section.canvas_id}/enrollments", body, options
+    if response.code == '200'
+      self.enrolled_in_canvas = true
+      save
+      unless options[:quiet]
+        puts "Enrollment Added: User: #{user}, Section: #{section}"
+      end
+    end
+    response
   end
 
 end

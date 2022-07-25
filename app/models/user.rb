@@ -85,18 +85,64 @@ class User < ApplicationRecord
   end
 
 
+  def self.refresh_sis_emails(json = User.request_sis_emails)
+    json.each do |json|
+      user = User.find_by_sis_id json['UserID']
+      if user && user.email.nil?
+        user.email = json['EMail']
+        user.save
+      end
+    end
+  end
+
   extend OnApiHelper
 
-  def self.request_sis_users
+  def self.request_sis_rosters
     response = on_api_get ''
   end
 
+  def self.request_sis_emails
+    on_api_get_json "list/#{ENV['EMAIL_LIST_ID']}"
+  end
+
+
+  # include CanvasApiHelper
   extend CanvasApiHelper
 
   def self.request_canvas_users
     canvas_api_get_paginated "accounts/#{ACCOUNT_ID}/users"
   end
 
+  def self.create_missing_canvas_users
+    users = User.where(canvas_id: nil)
+    users.each &:create_in_canvas
+  end
+
+  def create_in_canvas
+    raise 'Cannot create. Canvas ID is already present for User.' if self.canvas_id
+    raise 'Cannot create Canvas user without email.' if self.email.nil?
+
+    body = {
+      user: {
+        name: self.name
+      },
+      pseudonym: {
+        unique_id: self.email.downcase,
+        sis_user_id: self.sis_id,
+      #  Google's auth provider id assigned by Canvas: 141
+        authentication_provider_id: 141      }
+    }.to_json
+
+    response = canvas_api_post "accounts/1/users", body
+
+    if response['id']
+      self.update canvas_id: response['id']
+    else
+      raise "ERROR Could not create Canvas user: #{response}"
+    end
+
+    response
+  end
 
   protected
 

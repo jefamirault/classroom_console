@@ -1,7 +1,10 @@
 class Course < ApplicationRecord
   has_many :sections
+  has_many :enrollments, through: :sections
 
   validates_uniqueness_of :sis_id
+
+  ACCOUNT_ID = ENV['ACCOUNT_ID']
 
   def to_s
     self.name
@@ -28,9 +31,9 @@ class Course < ApplicationRecord
     courses_json.each do |json|
       sis_id = json['OfferingId']
       if course_hash[sis_id]
-      # if Course.exists? sis_id: sis_id
-        # Do nothing
+      # course already exists locally, do nothing
       else
+        next unless json['IsActive']
         discovered += 1
         Course.create_from_json json
       end
@@ -48,5 +51,31 @@ class Course < ApplicationRecord
     else
       raise "Error while requesting Course data via ON API."
     end
+  end
+
+  include CanvasApiHelper
+  extend CanvasApiHelper
+
+  def sync_sis_enrollments
+    sections.each &:sync_sis_enrollments
+  end
+
+  def create_canvas_sections
+    sections.each &:create_canvas_section
+  end
+  def enroll_users_in_canvas
+    sections.each &:enroll_users_in_canvas
+  end
+
+  def post_to_canvas(term)
+    raise 'Missing Canvas ID for term' if term.canvas_id.nil?
+    course_params = {
+      course: {
+        name: self.name,
+        course_code: self.name,
+        term_id: term.canvas_id
+      }
+    }.to_json
+    canvas_api_post "accounts/#{ACCOUNT_ID}/courses", course_params
   end
 end

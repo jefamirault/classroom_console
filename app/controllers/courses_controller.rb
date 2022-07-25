@@ -6,7 +6,7 @@ class CoursesController < ApplicationController
   # GET /courses
   # GET /courses.json
   def index
-    @courses = Course.all
+    @courses = Course.all.select{|c| c.sections.size > 0}
   end
 
   # GET /courses/1
@@ -62,6 +62,23 @@ class CoursesController < ApplicationController
       format.json { head :no_content }
     end
   end
+
+  def sync_sis_enrollments
+    @course = Course.find params[:course_id]
+    @course.sync_sis_enrollments
+    redirect_to course_path(@course)
+  end
+  def create_canvas_sections
+    @course = Course.find params[:course_id]
+    @course.create_canvas_sections
+    redirect_to course_path(@course)
+  end
+  def enroll_users_in_canvas
+    @course = Course.find params[:course_id]
+    @course.enroll_users_in_canvas
+    redirect_to course_path(@course)
+  end
+
 
   def generate_sample_data
     generate_sample if ENV['DEMO']

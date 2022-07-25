@@ -5,7 +5,7 @@
 
 <%= link_to 'Sync Grades Now', sync_all_grades_path %>
 |
-<%= link_to 'Check for New Sections to Sync', sync_all_sis_assignments_path %>
+<%= link_to 'Check for Opt-Ins', sync_all_sis_assignments_path %>
 
 
 
@@ -13,13 +13,12 @@
   <thead>
     <tr>
       <th>Name</th>
-      <th>Course</th>
-      <th>Enrollments</th>
+      <th>Course SIS ID</th>
+      <th>Size</th>
       <th>SIS ID</th>
       <th>Canvas ID</th>
-<!--      <th>Canvas Course (Local) ID</th>-->
-<!--      <th>Term</th>-->
-      <th>Sync Grades?</th>
+      <th>Term</th>
+      <th>Sync?</th>
       <th>Last Sync</th>
       <th></th>
       <th></th>
@@ -31,14 +30,13 @@
     <% @sections.each do |section| %>
       <tr>
         <td><%= section.name %></td>
-        <td><%= section.course %></td>
+        <td><%= section.course ? section.course.sis_id : nil %></td>
         <td><%= section.enrollments.count %></td>
         <td><%= section.sis_id %></td>
-        <td><%= section.canvas_id %></td>
-<!--        <td><%#= section.canvas_course_id %></td>-->
-<!--        <td><%#= section.term_id %></td>-->
+        <td><%= section.canvas_id && section.canvas_course_id ? link_to(section.canvas_id, "#{ENV['CANVAS_PATH']}/courses/#{section.canvas_course_id}/sections/#{section.canvas_id}") : '' %></td>
+        <td class="nowrap"><%= section.term %></td>
         <td><%= section.sync_grades %></td>
-        <td><%= section.last_sync ? "#{time_ago_in_words(section.last_sync)} ago" : 'Never' %></td>
+        <td class="nowrap"><%= section.last_sync ? "#{time_ago_in_words(section.last_sync)} ago" : 'Never' %></td>
         <td><%= link_to 'Show', section %></td>
         <td><%= link_to 'Edit', edit_section_path(section) %></td>
         <td><%= link_to 'Destroy', section, method: :delete, data: { confirm: 'Are you sure?' } %></td>

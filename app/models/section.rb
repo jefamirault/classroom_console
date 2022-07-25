@@ -1,5 +1,6 @@
 class Section < ApplicationRecord
-  belongs_to :course
+  belongs_to :course, counter_cache: true
+  belongs_to :term
   has_many :enrollments
   has_many :users, through: :enrollments
   has_one :assignment
@@ -22,14 +23,15 @@ class Section < ApplicationRecord
 
 
   def sync
-    # check sis for opt-in assignment
-
     sync_sis_enrollments
 
     sync_sis_assignments
 
+    sync_canvas_section if canvas_id.nil?
+
     sync_canvas_enrollments
   end
+
 
 
   def self.sync_all_grades
@@ -76,16 +78,14 @@ class Section < ApplicationRecord
     Section.all.each &:sync_sis_assignments
   end
 
+  def enroll_users_in_canvas
+    enrollments.each &:post_to_canvas
+  end
+
+  # get grades from Canvas
   def sync_canvas_enrollments
-    if canvas_id.nil?
+    raise 'Cannot sync Canvas enrollments without canvas_id.' if canvas_id.nil?
 
-      sync_canvas_id
-
-      if canvas_id.nil?
-        puts "Cannot sync Canvas enrollments without canvas_id."
-        return nil
-      end
-    end
     errors = nil
     canvas_api_get_paginated("sections/#{self.canvas_id}/enrollments").each do |e|
       json = {
@@ -203,10 +203,27 @@ class Section < ApplicationRecord
     end
 
 
+
     section = Section.new
     section.sis_id = id
     section.name = json['Name']
     section.course = Course.find_by_sis_id json['OfferingId']
+
+    # ignore sections from inactive courses
+    return nil if section.course.nil?
+
+    course_length = section.course.course_length
+    term_name = if course_length == 1
+      json['Duration']['SchoolYearLabel'] + ' ' + json['Duration']['Name']
+    elsif course_length == 2
+      json['Duration']['SchoolYearLabel'] + " Full Year"
+    end
+
+    term = Term.find_by_name term_name
+    if term.nil?
+      term = Term.create name: term_name, sis_id: json['Duration']['Id']
+    end
+    section.term_id = term.id
     section.save
   end
 
@@ -218,6 +235,15 @@ class Section < ApplicationRecord
   end
 
   extend OnApiHelper
+
+  # def sync_term
+  #   response = on_api_get 'academics/section', "&schoolYear=#{SIS_SCHOOL_YEAR}&levelNum=#{SIS_LEVEL_NUM}&OfferingID=#{course.sis_id}"
+  #   if response.code == '200'
+  #     JSON.parse(response.body).uniq
+  #   else
+  #     raise "Error while requesting Section data via ON API."
+  #   end
+  # end
 
   def sync_sis_enrollments
     if self.sis_id.nil? || self.sis_id < 1
@@ -258,17 +284,82 @@ class Section < ApplicationRecord
 
   extend CanvasApiHelper
 
-  def sync_canvas_id
+  def all_sections_for_course
+    course.sections.select{|s| s.term == self.term}
+  end
+
+  def create_canvas_section
+    unless canvas_id.nil?
+      puts 'Skipping create Canvas Section, canvas_id is already present.'
+      return nil
+    end
+    body = {
+      course_section: {
+        name: self.name,
+        sis_section_id: self.sis_id
+      }
+    }.to_json
+
+    if self.canvas_course_id.nil?
+      create_canvas_course
+    end
+
+    if canvas_id.nil?
+      response = canvas_api_post "courses/#{self.canvas_course_id}/sections", body
+      raise "Something went wrong. #{response['errors']}" if response['errors']
+      self.canvas_id = response['id']
+      save
+    else
+      puts "Canvas section id present, skipping create canvas section."
+    end
+
+    enroll_users_in_canvas
+  end
+
+  def create_canvas_course
+    sections = all_sections_for_course
+    raise 'Canvas Course ID already present for section' unless sections.map{|s| s.canvas_course_id.nil?}.reduce :&
+
+    response = course.post_to_canvas(self.term)
+    sections.each do |s|
+      s.canvas_course_id = response['id']
+      s.save
+    end
+    sections.each &:create_canvas_section
+  end
+
+  # if canvas section exists with matching sis_id, find it and record canvas_id
+  def sync_canvas_section
     # find canvas section by sis_id
     response = canvas_api_get "sections/sis_section_id:#{self.sis_id}"
     if response.code == '200'
+      # Section already exists in Canvas, record section canvas_id
       section_json = JSON.parse response.body
       canvas_id = section_json['id']
       self.update canvas_id: canvas_id
-    elsif response.code == '400'
-      puts "ATTENTION: Section (sis_id = #{self.sis_id}) not found in canvas"
+    elsif response.code == '404'
+      # Section does not exist in Canvas, create it
+      puts "Section (sis_id = #{self.sis_id}) not found in canvas."
+    elsif response.code == '401'
+      puts "ERROR: Could not authenticate to Canvas API. Is access token expired?"
     else
       raise "Something unexpected happened."
     end
+  end
+
+  def remove_sis_id_from_canvas
+    body = {
+      course_section: {
+        sis_section_id: ''
+      }
+    }.to_json
+    canvas_api_put "sections/#{self.canvas_id}", body
+  end
+
+  def delete_course_from_canvas
+    body = {
+      event: 'delete'
+    }.to_json
+    canvas_api_delete "courses/#{self.canvas_course_id}", body
   end
 end

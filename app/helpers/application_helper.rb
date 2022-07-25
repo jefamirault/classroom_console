@@ -6,4 +6,8 @@ module ApplicationHelper
       ''
     end
   end
+
+  def canvas_section_path(section)
+
+  end
 end

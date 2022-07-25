@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_10_06_182024) do
+ActiveRecord::Schema.define(version: 2022_07_26_000031) do
 
   create_table "assignments", force: :cascade do |t|
     t.integer "sis_id"
@@ -26,6 +26,7 @@ ActiveRecord::Schema.define(version: 2021_10_06_182024) do
     t.boolean "sync_grades"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.integer "sections_count"
   end
 
   create_table "enrollments", force: :cascade do |t|
@@ -59,6 +60,7 @@ ActiveRecord::Schema.define(version: 2021_10_06_182024) do
     t.datetime "updated_at", precision: 6, null: false
     t.boolean "sync_grades"
     t.datetime "last_sync"
+    t.integer "enrollments_count"
   end
 
   create_table "subscriptions", force: :cascade do |t|
@@ -83,6 +85,7 @@ ActiveRecord::Schema.define(version: 2021_10_06_182024) do
     t.datetime "end"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.integer "sis_id"
   end
 
   create_table "users", force: :cascade do |t|

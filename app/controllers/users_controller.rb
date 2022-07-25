@@ -1,3 +1,5 @@
+include CanvasApiHelper
+
 class UsersController < ApplicationController
 
   before_action :authenticate_user!, if: -> { !ENV['DEMO'] }
@@ -55,6 +57,20 @@ class UsersController < ApplicationController
     end
   end
 
+  def refresh_canvas_users
+    User.refresh_canvas_users
+    redirect_to users_path
+  end
+
+  def create_missing_canvas_users
+    User.create_missing_canvas_users
+    redirect_to users_path
+  end
+
+  def refresh_sis_emails
+    User.refresh_sis_emails
+    redirect_to users_path
+  end
 
   private
   # Use callbacks to share common setup or constraints between actions.

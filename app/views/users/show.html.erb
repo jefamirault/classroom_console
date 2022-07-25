@@ -25,7 +25,7 @@
   <ul>
     <% @user.enrollments.each do |enrollment| %>
       <li>
-        <%= link_to enrollment.section, section_path(enrollment.section) %> -
+        <%= link_to enrollment.section, section_path(enrollment.section.id) %> -
         <% if enrollment.role == 'student' %>
           Grade: <%= enrollment.grade ? enrollment.grade : 'n/a' %>
         <% else %>

@@ -1,1 +1,17 @@
-Hello Diagnostic!
+<p id="notice"><%= notice %></p>
+
+<h1>Diagnostic</h1>
+
+<div id="wizard">
+  <h2>What would you like to find?</h2>
+
+  <ul>
+    <li><%= link_to 'User', diagnostic_user_path, remote: true, class: 'btn btn-outline-info my-2 my-sm-0' %></li>
+    <li><a class="btn btn-outline-info my-2 my-sm-0" href="<%= diagnostic_course_path %>" data-remote="true">Course</a></li>
+    <li><a class="btn btn-outline-info my-2 my-sm-0" href="<%= edit_user_registration_path %>">Section</a></li>
+    <li><a class="btn btn-outline-info my-2 my-sm-0" href="<%= edit_user_registration_path %>">Enrollment</a></li>
+    <li><a class="btn btn-outline-info my-2 my-sm-0" href="<%= edit_user_registration_path %>">Grade</a></li>
+    <li><a class="btn btn-outline-info my-2 my-sm-0" href="<%= edit_user_registration_path %>">Term</a></li>
+    <li><a class="btn btn-outline-info my-2 my-sm-0" href="<%= edit_user_registration_path %>">Assignment</a></li>
+  </ul>
+</div>

@@ -17,17 +17,20 @@
 
 <p>
   <strong>Canvas ID:</strong>
-  <%= @section.canvas_id %>
+  <%= @section.canvas_id && @section.canvas_course_id ? link_to(@section.canvas_id, "#{ENV['CANVAS_PATH']}/courses/#{@section.canvas_course_id}/sections/#{@section.canvas_id}") : '' %>
 </p>
 
 <p>
   <strong>Canvas course:</strong>
-  <%= @section.canvas_course_id %>
+  <%= @section.canvas_course_id ? link_to(@section.canvas_course_id, "#{ENV['CANVAS_PATH']}/courses/#{@section.canvas_course_id}") : '' %>
+  <% if @section.canvas_course_id.nil? %>
+    <%= link_to 'Create Canvas Course', section_create_canvas_course_path(@section) %>
+  <% end %>
 </p>
 
 <p>
   <strong>Term:</strong>
-  <%= @section.term_id %>
+  <%= @section.term %>
 </p>
 
 <p>
@@ -59,3 +62,7 @@
 <%= link_to 'Sync Now', section_sync_path(@section) %> |
 <%= link_to 'Edit', edit_section_path(@section) %> |
 <%= link_to 'Back', sections_path %>
+
+<br>
+
+<%= link_to 'Enroll Users in Canvas', section_enroll_users_in_canvas_path(@section) %>
