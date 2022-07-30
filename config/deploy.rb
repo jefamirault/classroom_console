@@ -1,5 +1,5 @@
 # config valid for current version and patch releases of Capistrano
-lock "~> 3.14.1"
+# lock "~> 3.14.1"
 
 set :application, "classroom_console"
 set :repo_url, "https://github.com/jefamirault/classroom_console.git"
@@ -9,6 +9,8 @@ ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp
 
 # Default deploy_to directory is /var/www/my_app_name
 set :deploy_to, "/home/deploy/#{fetch :application}"
+
+set :rbenv_path, "/home/deploy/.rbenv"
 
 # Default value for :format is :airbrussh.
 # set :format, :airbrussh
