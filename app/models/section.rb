@@ -230,6 +230,8 @@ class Section < ApplicationRecord
   def self.refresh_sis_sections(sections_json = Section.request_sis_sections)
     puts "Refreshing OnCampus Sections..."
     sections_json.each do |json|
+      # OnCampus has 2 sections for each full year course, 1st and 2nd semester. Exclude second semester section
+      next if json['Id'] != json['LeadSectionId']
       Section.create_from_json json
     end
   end

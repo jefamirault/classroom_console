@@ -66,11 +66,12 @@ class Enrollment < ApplicationRecord
     raise 'Enrollment failed. Does user exist in Canvas?' if user.canvas_id.nil?
     raise 'Enrollment failed. Does section exist in Canvas?' if section.canvas_id.nil?
 
+    enrollment_type = self.role.capitalize + 'Enrollment'
+
     body = {
       enrollment: {
         user_id: user.canvas_id,
-        # type: user.role.capitalize,
-        type: 'StudentEnrollment',
+        type: enrollment_type,
         enrollment_status: 'active'
       }
     }.to_json
@@ -84,6 +85,46 @@ class Enrollment < ApplicationRecord
       end
     end
     response
+  end
+
+  extend OnApiHelper
+
+  def self.get_sis_teacher_enrollments
+    response = on_api_get "list/#{ENV['TEACHER_ENROLLMENTS_ID']}"
+    raise "ON API Error" unless response.code == "200"
+    enrollments = JSON.parse response.body
+
+    enrollments.filter! {|e| e['FacultyUserID'] != 0}
+
+    enrollments.each do |enrollment|
+      sis_user_id = enrollment['FacultyUserID']
+      next if sis_user_id == 0
+      section_sis_id = enrollment['GroupID']
+      teacher_name = "#{enrollment['FacultyFirstName']} #{enrollment['FacultyLastName']}"
+      teacher_email = enrollment['EMail']
+
+      section = Section.find_by_sis_id section_sis_id
+      if section
+        user = User.find_by_sis_id sis_user_id
+        if user.nil?
+          user_params = {
+            sis_id: sis_user_id,
+            name: teacher_name,
+            email: teacher_email
+          }
+          user = User.create user_params
+          if user
+            puts "User created: #{user}"#  create user
+          end
+        end
+        e = Enrollment.new
+        e.section = section
+        e.user = user
+        e.role = 'teacher'
+        e.save
+        # add enrollment if it does not exist
+      end
+    end
   end
 
 end
