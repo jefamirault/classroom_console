@@ -85,8 +85,16 @@ staging:
   username: <%= ENV['DATABASE_USER'] %>
   password: <%= ENV['DATABASE_PASSWORD'] %>
 
+#production:
+#  <<: *default
+#
+#  database: classroom_console
+
 production:
-  <<: *default
-  database: classroom_console
+  adapter: mysql2
+  encoding: utf8
+  reconnect: false
+  database: classroom_console_production
+  pool: 5
   username: <%= ENV['DATABASE_USER'] %>
   password: <%= ENV['DATABASE_PASSWORD'] %>

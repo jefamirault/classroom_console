@@ -10,7 +10,8 @@
     "datatables.net-bs4": "^1.10.23",
     "jquery": "^3.5.1",
     "popper.js": "^1.16.1",
-    "turbolinks": "^5.2.0"
+    "turbolinks": "^5.2.0",
+    "webpack": "^4.0.0"
   },
   "version": "0.1.0",
   "devDependencies": {
