@@ -59,6 +59,9 @@ class Course < ApplicationRecord
   def sync_sis_enrollments
     sections.each &:sync_sis_enrollments
   end
+  def self.sync_all_sis_enrollments
+    Course.where(sync_course: true).each &:sync_sis_enrollments
+  end
 
   def create_canvas_sections
     sections.each &:create_canvas_section
@@ -67,6 +70,9 @@ class Course < ApplicationRecord
     sections.each &:enroll_users_in_canvas
   end
 
+  def self.create_canvas_courses
+    Course.where(sync_course: true).each &:create_canvas_sections
+  end
   def post_to_canvas(term)
     raise 'Missing Canvas ID for term' if term.canvas_id.nil?
     course_params = {

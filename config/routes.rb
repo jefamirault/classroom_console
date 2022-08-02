@@ -18,6 +18,9 @@ Rails.application.routes.draw do
     get 'create_canvas_sections'
     get 'enroll_users_in_canvas'
   end
+  get 'sync_all_sis_enrollments', to: 'courses#sync_all_sis_enrollments'
+  get 'create_canvas_courses', to: 'courses#create_canvas_courses'
+
   devise_scope :user do
     get "/sign_in" => "devise/sessions#new" # custom path to login/sign_in
     # get "/sign_up" => "devise/registrations#new", as: "new_user_registration" # custom path to sign_up/registration

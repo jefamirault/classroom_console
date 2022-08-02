@@ -68,6 +68,11 @@ class CoursesController < ApplicationController
     @course.sync_sis_enrollments
     redirect_to course_path(@course)
   end
+
+  def sync_all_sis_enrollments
+    Course.sync_all_sis_enrollments
+    redirect_to courses_path
+  end
   def create_canvas_sections
     @course = Course.find params[:course_id]
     @course.create_canvas_sections
@@ -79,6 +84,10 @@ class CoursesController < ApplicationController
     redirect_to course_path(@course)
   end
 
+  def create_canvas_courses
+    Course.create_canvas_courses
+    redirect_to courses_path
+  end
 
   def generate_sample_data
     generate_sample if ENV['DEMO']

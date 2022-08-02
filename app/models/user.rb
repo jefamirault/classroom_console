@@ -114,7 +114,7 @@ class User < ApplicationRecord
   end
 
   def self.create_missing_canvas_users
-    users = User.where(canvas_id: nil)
+    users = User.where(canvas_id: nil).where.not(email: nil)
     users.each &:create_in_canvas
   end
 

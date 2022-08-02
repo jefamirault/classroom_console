@@ -64,8 +64,8 @@ class Enrollment < ApplicationRecord
   def post_to_canvas(options = {})
     raise 'Enrollment is missing a user' if user.nil?
     raise 'Enrollment failed. Does user exist in Canvas?' if user.canvas_id.nil?
-    raise 'Enrollment failed. Does section exist in Canvas?' if section.canvas_id.nil?
-
+    return nil if "Skipping Enrollment (id = #{self.id}). Does section (id = #{self.section_id}) exist in Canvas?" if section.nil? || section.canvas_id.nil?
+  
     enrollment_type = self.role.capitalize + 'Enrollment'
 
     body = {
@@ -103,6 +103,9 @@ class Enrollment < ApplicationRecord
       teacher_name = "#{enrollment['FacultyFirstName']} #{enrollment['FacultyLastName']}"
       teacher_email = enrollment['EMail']
 
+      # don't sync user without an email
+      next if teacher_email.nil?
+
       section = Section.find_by_sis_id section_sis_id
       if section
         user = User.find_by_sis_id sis_user_id
@@ -117,14 +120,30 @@ class Enrollment < ApplicationRecord
             puts "User created: #{user}"#  create user
           end
         end
-        e = Enrollment.new
-        e.section = section
-        e.user = user
-        e.role = 'teacher'
-        e.save
+        unless section.users.include? user
+          e = Enrollment.new
+          e.section = section
+          e.user = user
+          e.role = 'teacher'
+          e.save
+        end
         # add enrollment if it does not exist
       end
     end
   end
 
+  def self.remove_duplicate_enrollments
+    enrollments = Enrollment.all.order :user_id, :section_id
+    last_user_id = nil
+    last_section_id = nil
+    enrollments.each do |e|
+      repeat_user = (e.user_id == last_user_id)
+      repeat_section = (e.section_id == last_section_id)
+      if repeat_user && repeat_section
+        e.destroy
+      end
+      last_user_id = e.user_id
+      last_section_id = e.section_id
+    end
+  end
 end
