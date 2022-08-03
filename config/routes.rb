@@ -28,6 +28,7 @@ Rails.application.routes.draw do
   end
   get 'refresh_sis_emails', to: 'users#refresh_sis_emails'
   get 'create_missing_canvas_users', to: 'users#create_missing_canvas_users'
+  get 'sync_sis_teacher_enrollments', to:'users#sync_sis_teacher_enrollments'
 
   # devise_for :users, :skip => [:registrations]
   # as :user do

@@ -72,6 +72,11 @@ class UsersController < ApplicationController
     redirect_to users_path
   end
 
+  def sync_sis_teacher_enrollments
+    Enrollment.get_sis_teacher_enrollments
+    redirect_to users_path
+  end
+
   private
   # Use callbacks to share common setup or constraints between actions.
   def set_user
