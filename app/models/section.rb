@@ -338,7 +338,8 @@ class Section < ApplicationRecord
       # Section already exists in Canvas, record section canvas_id
       section_json = JSON.parse response.body
       canvas_id = section_json['id']
-      self.update canvas_id: canvas_id
+      canvas_course_id = section_json['course_id']
+      self.update canvas_id: canvas_id, canvas_course_id: canvas_course_id
     elsif response.code == '404'
       # Section does not exist in Canvas, create it
       puts "Section (sis_id = #{self.sis_id}) not found in canvas."

@@ -80,6 +80,11 @@ class SectionsController < ApplicationController
     redirect_to sections_path
   end
 
+  def sync_all_canvas_sections
+    Course.where(sync_course: true).each &:sync_canvas_sections
+    redirect_to sections_path
+  end
+
   def enroll_users_in_canvas
     @section = Section.find params[:section_id]
     @section.enroll_users_in_canvas

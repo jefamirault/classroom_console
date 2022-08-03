@@ -66,6 +66,10 @@ class Course < ApplicationRecord
   def create_canvas_sections
     sections.each &:create_canvas_section
   end
+
+  def sync_canvas_sections
+    sections.each &:sync_canvas_section
+  end
   def enroll_users_in_canvas
     sections.each &:enroll_users_in_canvas
   end
