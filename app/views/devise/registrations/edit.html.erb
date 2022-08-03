@@ -23,6 +23,13 @@
           <h5>Change your password</h5>
 
           <div class="form-group">
+            <%= f.label :current_password, 'Current password*' %>
+            <%= f.password_field :current_password, autocomplete: "current-password", class: "form-control" %>
+            <small id="emailHelp" class="form-text text-muted">*Required to update your account</small>
+
+          </div>
+          <hr>
+          <div class="form-group">
             <%= f.label :password, 'New password' %> <i></i><br />
             <%= f.password_field :password, autocomplete: "new-password", class: "form-control" %>
             <% if @minimum_password_length %>
@@ -33,13 +40,6 @@
           <div class="form-group">
             <%= f.label :password_confirmation, 'Confirm new password' %><br />
             <%= f.password_field :password_confirmation, autocomplete: "new-password", class: "form-control" %>
-          </div>
-          <hr>
-          <div class="form-group">
-            <%= f.label :current_password, 'Current password*' %>
-            <%= f.password_field :current_password, autocomplete: "current-password", class: "form-control" %>
-            <small id="emailHelp" class="form-text text-muted">*Required to update your account</small>
-
           </div>
 
           <div class="actions">

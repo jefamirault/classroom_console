@@ -6,7 +6,7 @@ class SectionsController < ApplicationController
   # GET /sections
   # GET /sections.json
   def index
-    @sections = Section.includes(:course).all.order(sync_grades: :desc, name: :asc)
+    @sections = Section.includes(:course).all.order(canvas_id: :desc, sync_grades: :desc, name: :asc)
   end
 
   # GET /sections/1

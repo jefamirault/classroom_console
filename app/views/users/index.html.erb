@@ -1,16 +1,14 @@
-<p id="notice"><%= notice %></p>
-
 <h1>Users</h1>
 
 <table>
   <thead>
   <tr>
-    <th>Name</th>
+    <th>User Name</th>
     <th>Email</th>
     <th>SIS ID</th>
     <th>Canvas ID</th>
     <th>Enrollments</th>
-<!--    <th colspan="3"></th>-->
+    <th></th>
   </tr>
   </thead>
 
@@ -20,11 +18,9 @@
       <td><%= link_to user.name, user %></td>
       <td><%= user.email %></td>
       <td><%= user.sis_id %></td>
-      <td><%= user.canvas_id ? link_to(user.canvas_id, "#{ENV['CANVAS_PATH']}/users/#{user.canvas_id}") : '' %></td>
+      <td><%= user.canvas_id ? link_to("#{user.canvas_id} ⧉", "#{ENV['CANVAS_PATH']}/users/#{user.canvas_id}") : '' %></td>
       <td><%= user.enrollments.count %></td>
-<!--      <td><%#= link_to 'Show', user %></td>-->
-<!--      <td><%#= link_to 'Edit', edit_user_path(user) %></td>-->
-<!--      <td><%#= link_to 'Destroy', user, method: :delete, data: { confirm: 'Are you sure?' } %></td>-->
+      <td><%= link_to 'Edit', edit_user_path(user) %></td>
     </tr>
   <% end %>
   </tbody>
@@ -32,9 +28,11 @@
 
 <br>
 
-<%= link_to 'Refresh SIS Emails', refresh_sis_emails_path %> |
-<%= link_to 'Refresh Canvas Users', refresh_canvas_users_path %> |
-<%= link_to 'Create Missing Canvas Users', create_missing_canvas_users_path %> |
-<%= link_to 'Sync SIS Teacher Enrollments', sync_sis_teacher_enrollments_path %>
+<div class="links">
+  <%= link_to 'Refresh SIS Emails', refresh_sis_emails_path, class: 'slow', title: 'For users present in Classroom Console, look up their email and add it here.' %> |
+  <%= link_to 'Refresh Canvas Users', refresh_canvas_users_path, class: 'slow', title: 'Add canvas_id to users here if they already exist in Canvas.' %> |
+  <%= link_to 'Create Missing Canvas Users', create_missing_canvas_users_path, class: 'slow', title: 'Create users that do not already exist in Canvas and record their canvas_ids here.' %> |
+  <%= link_to 'Sync SIS Teacher Enrollments', sync_sis_teacher_enrollments_path, class: 'slow', title: 'Look up teacher enrollments in OnCampus and add them here.' %>
 
 <%#= link_to 'New user', new_user_path %>
+</div>

@@ -20,3 +20,11 @@ $(function(){
         $(this).find('button[type=submit]').attr('disabled', true);
     });
 });
+
+$(window).on('load', function () {
+    $('#loading').hide();
+})
+
+$(document).on('click', '.slow', function(){
+    $('#loading').show();
+});

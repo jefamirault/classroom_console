@@ -1,19 +1,9 @@
-<p id="notice"><%= notice %></p>
-
 <h1>Sections</h1>
-
-
-<%= link_to 'Sync Grades Now', sync_all_grades_path %>
-|
-<%= link_to 'Check for Opt-Ins', sync_all_sis_assignments_path %>
-|
-<%= link_to 'Sync Canvas Sections', sync_all_canvas_sections_path %>
-
 
 <table>
   <thead>
     <tr>
-      <th>Name</th>
+      <th>Section Name</th>
       <th>Course SIS ID</th>
       <th>Size</th>
       <th>SIS ID</th>
@@ -22,30 +12,36 @@
       <th>Sync?</th>
       <th>Last Sync</th>
       <th></th>
-      <th></th>
-      <th></th>
     </tr>
   </thead>
 
   <tbody>
     <% @sections.each do |section| %>
       <tr>
-        <td><%= section.name %></td>
+        <td><%= link_to section.name, section %></td>
         <td><%= section.course ? section.course.sis_id : nil %></td>
         <td><%= section.enrollments.count %></td>
         <td><%= section.sis_id %></td>
-        <td><%= section.canvas_id && section.canvas_course_id ? link_to(section.canvas_id, "#{ENV['CANVAS_PATH']}/courses/#{section.canvas_course_id}/sections/#{section.canvas_id}") : '' %></td>
+        <td><%= section.canvas_id && section.canvas_course_id ? link_to("#{section.canvas_id} ⧉", "#{ENV['CANVAS_PATH']}/courses/#{section.canvas_course_id}/sections/#{section.canvas_id}") : '' %></td>
         <td class="nowrap"><%= section.term %></td>
         <td><%= section.sync_grades %></td>
         <td class="nowrap"><%= section.last_sync ? "#{time_ago_in_words(section.last_sync)} ago" : 'Never' %></td>
-        <td><%= link_to 'Show', section %></td>
         <td><%= link_to 'Edit', edit_section_path(section) %></td>
-        <td><%= link_to 'Destroy', section, method: :delete, data: { confirm: 'Are you sure?' } %></td>
       </tr>
     <% end %>
   </tbody>
 </table>
 
 <br>
+<div class="links">
+  <%= link_to 'New Section', new_section_path %>
 
-<%= link_to 'New Section', new_section_path %>
+  <br>
+  <br>
+
+  <%= link_to 'Sync Grades Now', sync_all_grades_path, class: 'slow', title: 'Look up current grades for all sections where sync: true, update them here, and post them to OnCampus.' %>
+  |
+  <%= link_to 'Check for Opt-Ins', sync_all_sis_assignments_path, class: 'slow', title: 'Look up assignments for all synced OnCampus courses, an assignment titled: "Canvas Grade" will cause it to be synced through Classroom Console.' %>
+  |
+  <%= link_to 'Sync Canvas Sections', sync_all_canvas_sections_path, class: 'slow', title: 'If a course + sections are already present in Canvas (determined by section sis_id), add their canvas_ids here.' %>
+</div>

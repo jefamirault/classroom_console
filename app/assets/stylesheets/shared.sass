@@ -1,5 +1,41 @@
 nav
   z-index: 10
+  background: #234f33
+
+  .btn-outline-info
+    color: #f4ae3e
+    border-color: #f4ae3e
+
+    &:hover, &:active
+      color: #fff !important
+      border-color: #f4ae3e !important
+      background: #f4ae3e !important
+
+#content
+  .btn-primary
+    background: #234f33
+    border-color: #234f33
+  .btn-outline-primary
+    color: #234f33
+    border-color: #234f33
+    &:hover, &:active
+      background: #234f33
+      color: #fff
+  .btn-outline-info
+    color: #234f33
+    border-color: #234f33
+    &:hover, &:active
+      background: #234f33
+      color: #fff
+
+table, .links, form, p
+  a
+    color: #234f33
+    font-weight: bold
+
+    &:hover
+      text-decoration: none
+      color: #f4ae3e
 
 .center_the_thing
   display: flex
@@ -27,7 +63,21 @@ nav
 table
   width: 100%
   margin: 0 auto
+  border: 2px solid rgba(205, 222, 195, 0.45)
 
+  thead th
+    background: rgba(205, 222, 195, 0.45)
+    padding: 0.5em 0
+
+  tr:nth-child(even)
+    background: rgba(205, 222, 195, 0.45)
+  tr:nth-child(odd)
+    background: #fff
+  td, th
+    padding: 0.4em 0.5em 0.4em 0
+
+    &:first-child
+      padding-left: 0.5em
 th
   white-space: nowrap
 
@@ -35,3 +85,41 @@ th
   white-space: nowrap
   overflow: hidden
   text-overflow: ellipsis
+
+#content
+  padding: 0 1em 1em
+
+// datatables paginator
+.page-link
+  color: #234f33 !important
+.page-item.active .page-link
+  color: #fff !important
+  background-color: #234f33 !important
+  border-color: #234f33 !important
+
+body
+  .form-control:focus, .btn:focus
+    border-color: #f4ae3e
+    outline: 0
+    box-shadow: 0 0 0 0.2rem rgba(255, 152, 0, 0.33) !important
+
+p#notice
+  background: rgba(244, 174, 62, 0.5)
+  padding: 1em
+  color: #fff
+
+#loading
+  position: fixed
+  display: flex
+  justify-content: center
+  align-items: center
+  width: 100%
+  height: 100%
+  top: 0
+  left: 0
+  opacity: 0.7
+  z-index: 99
+
+#loading-image
+  z-index: 100
+  width: 10%

@@ -1,7 +1,5 @@
-<p id="notice"><%= notice %></p>
-
 <p>
-  <strong>Name:</strong>
+  <strong>Section Name:</strong>
   <%= @section.name %>
 </p>
 
@@ -17,12 +15,12 @@
 
 <p>
   <strong>Canvas ID:</strong>
-  <%= @section.canvas_id && @section.canvas_course_id ? link_to(@section.canvas_id, "#{ENV['CANVAS_PATH']}/courses/#{@section.canvas_course_id}/sections/#{@section.canvas_id}") : '' %>
+  <%= @section.canvas_id && @section.canvas_course_id ? link_to("#{@section.canvas_id} ⧉", "#{ENV['CANVAS_PATH']}/courses/#{@section.canvas_course_id}/sections/#{@section.canvas_id}") : '' %>
 </p>
 
 <p>
   <strong>Canvas course:</strong>
-  <%= @section.canvas_course_id ? link_to(@section.canvas_course_id, "#{ENV['CANVAS_PATH']}/courses/#{@section.canvas_course_id}") : '' %>
+  <%= @section.canvas_course_id ? link_to("#{@section.canvas_course_id} ⧉", "#{ENV['CANVAS_PATH']}/courses/#{@section.canvas_course_id}") : '' %>
   <% if @section.canvas_course_id.nil? %>
     <%= link_to 'Create Canvas Course', section_create_canvas_course_path(@section) %>
   <% end %>
@@ -45,7 +43,7 @@
 
 <p>
   <strong><%= @section.enrollments.count %> Enrolled Users:</strong>
-  <ul>
+  <ul class="links">
     <% @section.enrollments.each do |enrollment| %>
       <li>
         <%= link_to enrollment.user, user_path(enrollment.user) %>
@@ -59,10 +57,13 @@
   </ul>
 </p>
 
-<%= link_to 'Sync Now', section_sync_path(@section) %> |
-<%= link_to 'Edit', edit_section_path(@section) %> |
-<%= link_to 'Back', sections_path %>
-
 <br>
+<div class="links">
+  <%= link_to 'Edit', edit_section_path(@section) %> |
+  <%= link_to 'Back', sections_path %>
 
-<%= link_to 'Enroll Users in Canvas', section_enroll_users_in_canvas_path(@section) %>
+  <br><br>
+
+  <%= link_to 'Sync Now', section_sync_path(@section), class: 'slow', title: 'Sync Canvas grades for this section.' %> |
+  <%= link_to 'Enroll Users in Canvas', section_enroll_users_in_canvas_path(@section), class: 'slow', title: 'Add enrolled users to matching section in Canvas.' %>
+</div>

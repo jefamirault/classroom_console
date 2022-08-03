@@ -18,6 +18,13 @@
 
   <body>
     <%= render partial: 'layouts/nav' %>
-    <%= yield %>
+
+    <div id="content">
+      <%= yield %>
+    </div>
+
+    <div id="loading" style="display:none;">
+      <img id="loading-image" src="https://bulldog.burrburton.org/devices/loader.gif" alt="Loading..." />
+    </div>
   </body>
 </html>
