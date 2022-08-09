@@ -32,12 +32,17 @@
   </tbody>
 </table>
 
+<div class="links text-center">
+  <% if @sections.size == @full_count %>
+    <%= link_to "Show Only 50 Sections", sections_path %>
+  <% else %>
+    <%= link_to "See All #{@full_count} Sections", sections_path(all: true) %>
+  <% end %>
+</div>
+
 <br>
 <div class="links">
-  <%= link_to 'New Section', new_section_path %>
-
-  <br>
-  <br>
+  <%#= link_to 'New Section', new_section_path %>
 
   <%= link_to 'Sync Grades Now', sync_all_grades_path, class: 'slow', data: { toggle: 'tooltip'}, title: 'Look up current grades for all sections where sync: true, update them here, and post them to OnCampus.' %>
   |

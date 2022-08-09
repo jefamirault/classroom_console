@@ -1,12 +1,14 @@
 class SectionsController < ApplicationController
 
-  before_action :authenticate_user!, if: -> { !ENV['DEMO'] }
+  before_action :authenticate_user!, if: -> { !demo_mode? }
   before_action :set_section, only: [:show, :edit, :update, :destroy]
 
   # GET /sections
   # GET /sections.json
   def index
     @sections = Section.includes(:course).all.order(canvas_id: :desc, sync_grades: :desc, name: :asc)
+    @full_count = @sections.size
+    @sections = @sections.first(50) unless params[:all]
   end
 
   # GET /sections/1
