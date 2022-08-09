@@ -1,14 +1,11 @@
-// $(document).ready(function() {
-//     $('table').DataTable({
-//         "pageLength": 25
-//     });
-// } );
+let dataTable = null
 
 document.addEventListener("turbolinks:load", function() {
-    $('table').DataTable({
+    dataTable = $('table').DataTable({
         "pageLength": 25,
         "aaSorting": []
     });
+    $('[data-toggle="tooltip"]').tooltip()
 })
 
 $(document).on('shown.bs.modal','#subscribeModal', function() {
@@ -24,6 +21,12 @@ $(function(){
 $(window).on('load', function () {
     $('#loading').hide();
     $('[data-toggle="tooltip"]').tooltip()
+    document.addEventListener("turbolinks:before-cache", function() {
+        if (dataTable !== null) {
+            dataTable.destroy()
+            dataTable = null
+        }
+    })
 });
 
 $(document).on('click', '.slow', function(){
