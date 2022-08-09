@@ -1,5 +1,5 @@
 module ExportHelper
-  DIRECTORY = "tmp/storage"
+  DIRECTORY = "tmp"
 
   def read_json(filename)
     path = "#{DIRECTORY}/#{filename}"
