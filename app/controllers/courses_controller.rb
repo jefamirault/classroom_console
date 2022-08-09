@@ -6,7 +6,9 @@ class CoursesController < ApplicationController
   # GET /courses
   # GET /courses.json
   def index
-    @courses = Course.where.not(sections_count: 0).order sync_course: :desc
+    @courses = Course.where.not(sections_count: 0).order(sync_course: :desc)
+    @full_count = @courses.size
+    @courses = @courses.first(50) unless params[:all]
   end
 
   # GET /courses/1

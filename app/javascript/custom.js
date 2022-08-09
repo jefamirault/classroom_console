@@ -2,7 +2,7 @@ let dataTable = null
 
 document.addEventListener("turbolinks:load", function() {
     dataTable = $('table').DataTable({
-        "pageLength": 25,
+        "pageLength": 50,
         "aaSorting": []
     });
     $('[data-toggle="tooltip"]').tooltip()

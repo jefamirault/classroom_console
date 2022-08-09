@@ -25,9 +25,8 @@
 </table>
 <br>
 <div class="links">
-  <%= link_to 'New Term', new_term_path %>
-  <br>
-  <br>
+  <%#= link_to 'New Term', new_term_path %>
+  
   <%= link_to 'Refresh SIS Terms', refresh_sis_terms_path, class: 'slow', data: { method: :put, toggle: 'tooltip'}, title: 'Look up term start and end times in OnCampus and update them here.' %> |
   <%= link_to 'Refresh Canvas Terms', refresh_canvas_terms_path, class: 'slow', data: { method: :put, toggle: 'tooltip'}, title: 'Sync Classroom Console terms with Canvas terms, creating them in Canvas if they do not exist, updating start and end times, and recording canvas_ids here.' %>
 </div>

@@ -29,12 +29,18 @@
     <% end %>
   </tbody>
 </table>
+
+<div class="links text-center">
+  <% if @courses.size == @full_count %>
+      <%= link_to "Show Only 50 Courses", courses_path %>
+    <% else %>
+      <%= link_to "See All #{@full_count} Courses", courses_path(all: true) %>
+    <% end %>
+</div>
+
 <br>
 <div class="links">
-  <%= link_to 'New Course', new_course_path %>
-
-  <br>
-  <br>
+  <%#= link_to 'New Course', new_course_path %>
 
   <%= link_to 'Sync SIS Enrollments', sync_all_sis_enrollments_path, class: 'slow', data: { toggle: 'tooltip'}, title: 'For all courses where sync=true, look up OnCampus enrollments for each of their sections and add them to Classroom Console, creating new users when necessary.' %> |
   <%= link_to 'Create Canvas Courses', create_canvas_courses_path, class: 'slow', data: { toggle: 'tooltip'}, title: 'For all courses where sync=true, create matching courses and sections in Canvas.' %>

@@ -7,6 +7,8 @@ class SectionsController < ApplicationController
   # GET /sections.json
   def index
     @sections = Section.includes(:course).all.order(canvas_id: :desc, sync_grades: :desc, name: :asc)
+    @full_count = @sections.size
+    @sections = @sections.first(50) unless params[:all]
   end
 
   # GET /sections/1
