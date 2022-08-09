@@ -1,6 +1,6 @@
 class DiagnosticController < ApplicationController
 
-  before_action :authenticate_user!, if: -> { !ENV['DEMO'] }
+  before_action :authenticate_user!, if: -> { !demo_mode? }
 
   # include ExportHelper
   def index

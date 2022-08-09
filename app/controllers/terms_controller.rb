@@ -1,6 +1,6 @@
 class TermsController < ApplicationController
 
-  before_action :authenticate_user!, if: -> { !ENV['DEMO'] }
+  before_action :authenticate_user!, if: -> { !demo_mode? }
   before_action :set_term, only: [:show, :edit, :update, :destroy]
 
   # GET /terms
