@@ -64,6 +64,6 @@
 
   <br><br>
 
-  <%= link_to 'Sync Now', section_sync_path(@section), class: 'slow', title: 'Sync Canvas grades for this section.' %> |
-  <%= link_to 'Enroll Users in Canvas', section_enroll_users_in_canvas_path(@section), class: 'slow', title: 'Add enrolled users to matching section in Canvas.' %>
+  <%= link_to 'Sync Now', section_sync_path(@section), class: 'slow', data: { toggle: 'tooltip'}, title: 'Sync Canvas grades for this section.' %> |
+  <%= link_to 'Enroll Users in Canvas', section_enroll_users_in_canvas_path(@section), class: 'slow', data: { toggle: 'tooltip'}, title: 'Add enrolled users to matching section in Canvas.' %>
 </div>

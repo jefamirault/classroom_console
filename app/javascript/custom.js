@@ -23,7 +23,8 @@ $(function(){
 
 $(window).on('load', function () {
     $('#loading').hide();
-})
+    $('[data-toggle="tooltip"]').tooltip()
+});
 
 $(document).on('click', '.slow', function(){
     $('#loading').show();

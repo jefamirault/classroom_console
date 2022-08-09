@@ -39,9 +39,9 @@
   <br>
   <br>
 
-  <%= link_to 'Sync Grades Now', sync_all_grades_path, class: 'slow', title: 'Look up current grades for all sections where sync: true, update them here, and post them to OnCampus.' %>
+  <%= link_to 'Sync Grades Now', sync_all_grades_path, class: 'slow', data: { toggle: 'tooltip'}, title: 'Look up current grades for all sections where sync: true, update them here, and post them to OnCampus.' %>
   |
-  <%= link_to 'Check for Opt-Ins', sync_all_sis_assignments_path, class: 'slow', title: 'Look up assignments for all synced OnCampus courses, an assignment titled: "Canvas Grade" will cause it to be synced through Classroom Console.' %>
+  <%= link_to 'Check for Opt-Ins', sync_all_sis_assignments_path, class: 'slow', data: { toggle: 'tooltip'}, title: 'Look up assignments for all synced OnCampus courses, an assignment titled: "Canvas Grade" will cause it to be synced through Classroom Console.' %>
   |
-  <%= link_to 'Sync Canvas Sections', sync_all_canvas_sections_path, class: 'slow', title: 'If a course + sections are already present in Canvas (determined by section sis_id), add their canvas_ids here.' %>
+  <%= link_to 'Sync Canvas Sections', sync_all_canvas_sections_path, class: 'slow', data: { toggle: 'tooltip'}, title: 'If a course + sections are already present in Canvas (determined by section sis_id), add their canvas_ids here.' %>
 </div>

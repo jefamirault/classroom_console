@@ -36,8 +36,8 @@
   <br>
   <br>
 
-  <%= link_to 'Sync SIS Enrollments', sync_all_sis_enrollments_path, class: 'slow', title: 'For all courses where sync=true, look up OnCampus enrollments for each of their sections and add them to Classroom Console, creating new users when necessary.' %> |
-  <%= link_to 'Create Canvas Courses', create_canvas_courses_path, class: 'slow', title: 'For all courses where sync=true, create matching courses and sections in Canvas' %>
+  <%= link_to 'Sync SIS Enrollments', sync_all_sis_enrollments_path, class: 'slow', data: { toggle: 'tooltip'}, title: 'For all courses where sync=true, look up OnCampus enrollments for each of their sections and add them to Classroom Console, creating new users when necessary.' %> |
+  <%= link_to 'Create Canvas Courses', create_canvas_courses_path, class: 'slow', data: { toggle: 'tooltip'}, title: 'For all courses where sync=true, create matching courses and sections in Canvas.' %>
 
   <% if ENV['DEMO'] %>
     <br>
