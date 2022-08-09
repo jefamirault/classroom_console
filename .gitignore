@@ -40,3 +40,5 @@ yarn-debug.log*
 db/*.db
 
 /config/credentials/production.key
+
+.rbenv-vars

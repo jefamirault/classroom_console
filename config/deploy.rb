@@ -2,15 +2,17 @@
 # lock "~> 3.14.1"
 
 set :application, "classroom_console"
+
+# change this is you have forked the repository
 set :repo_url, "https://github.com/jefamirault/classroom_console.git"
 
 # Default branch is :master
 ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp
 
 # Default deploy_to directory is /var/www/my_app_name
-set :deploy_to, "/home/deploy/#{fetch :application}"
+set :deploy_to, "#{ENV['DEPLOY_DIRECTORY'].delete("\r")}/#{fetch :application}"
 
-set :rbenv_path, "/home/deploy/.rbenv"
+set :rbenv_path, ENV['DEPLOY_RBENV_PATH'].delete("\r")
 
 # Default value for :format is :airbrussh.
 # set :format, :airbrussh
@@ -26,7 +28,7 @@ set :rbenv_path, "/home/deploy/.rbenv"
 # append :linked_files, "config/database.yml"
 
 # Default value for linked_dirs is []
-append :linked_dirs, "log", "tmp/pids", "tmp/cache", "tmp/sockets", "vendor/bundle", ".bundle", "public/system", "public/uploads"
+append :linked_dirs, "log", "tmp/pids", "tmp/cache", "tmp/sockets", "vendor/bundle", ".bundle", "public/system", "public/uploads", "node_modules"
 
 # Default value for default_env is {}
 # set :default_env, { path: "/opt/ruby/bin:$PATH" }
