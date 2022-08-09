@@ -28,11 +28,7 @@
 
 <br>
 
-<div class="links">
-  <%= link_to 'Refresh SIS Emails', refresh_sis_emails_path, class: 'slow', data: { toggle: 'tooltip'}, title: 'For users present in Classroom Console, look up their email and add it here.' %> |
-  <%= link_to 'Refresh Canvas Users', refresh_canvas_users_path, class: 'slow', data: { toggle: 'tooltip'}, title: 'Add canvas_id to users here if they already exist in Canvas.' %> |
-  <%= link_to 'Create Missing Canvas Users', create_missing_canvas_users_path, class: 'slow', data: { toggle: 'tooltip'}, title: 'Create users that do not already exist in Canvas and record their canvas_ids here.' %> |
-  <%= link_to 'Sync SIS Teacher Enrollments', sync_sis_teacher_enrollments_path, class: 'slow', data: { toggle: 'tooltip'}, title: 'Look up teacher enrollments in OnCampus and add them here.' %>
-
-<%#= link_to 'New user', new_user_path %>
-</div>
+<%= link_to 'Refresh SIS Emails', refresh_sis_emails_path, class: 'slow btn btn-primary m-2', data: { toggle: 'tooltip'}, title: 'For users present in Classroom Console, look up their email and add it here.' %>
+<%= link_to 'Refresh Canvas Users', refresh_canvas_users_path, class: 'slow btn btn-primary m-2', data: { toggle: 'tooltip'}, title: 'Add canvas_id to users here if they already exist in Canvas.' %>
+<%= link_to 'Create Missing Canvas Users', create_missing_canvas_users_path, class: 'slow btn btn-primary m-2', data: { toggle: 'tooltip'}, title: 'Create users that do not already exist in Canvas and record their canvas_ids here.' %>
+<%= link_to 'Sync SIS Teacher Enrollments', sync_sis_teacher_enrollments_path, class: 'slow btn btn-primary m-2', data: { toggle: 'tooltip'}, title: 'Look up teacher enrollments in OnCampus and add them here.' %>

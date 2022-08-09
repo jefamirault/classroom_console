@@ -30,24 +30,20 @@
   </tbody>
 </table>
 
-<div class="links text-center">
+<div class="text-center">
   <% if @courses.size == @full_count %>
-      <%= link_to "Show Only 50 Courses", courses_path %>
+      <%= link_to "Show Only 50 Courses", courses_path, class: 'btn btn-outline-primary' %>
     <% else %>
-      <%= link_to "See All #{@full_count} Courses", courses_path(all: true) %>
+      <%= link_to "See All #{@full_count} Courses", courses_path(all: true), class: 'btn btn-outline-primary' %>
     <% end %>
 </div>
 
 <br>
-<div class="links">
-  <%#= link_to 'New Course', new_course_path %>
 
-  <%= link_to 'Sync SIS Enrollments', sync_all_sis_enrollments_path, class: 'slow', data: { toggle: 'tooltip'}, title: 'For all courses where sync=true, look up OnCampus enrollments for each of their sections and add them to Classroom Console, creating new users when necessary.' %> |
-  <%= link_to 'Create Canvas Courses', create_canvas_courses_path, class: 'slow', data: { toggle: 'tooltip'}, title: 'For all courses where sync=true, create matching courses and sections in Canvas.' %>
+<%= link_to 'Sync SIS Enrollments', sync_all_sis_enrollments_path, class: 'slow btn btn-primary m-2', data: { toggle: 'tooltip'}, title: 'For all courses where sync=true, look up OnCampus enrollments for each of their sections and add them to Classroom Console, creating new users when necessary.' %>
+<%= link_to 'Create Canvas Courses', create_canvas_courses_path, class: 'slow btn btn-primary m-2', data: { toggle: 'tooltip'}, title: 'For all courses where sync=true, create matching courses and sections in Canvas.' %>
 
-  <% if ENV['DEMO'] %>
-    <br>
-    <br>
-    <%= link_to 'Generate Sample Data', generate_sample_data_path %>
-  <% end %>
-</div><br>
+<% if ENV['DEMO'] %>
+  <br>
+  <%= link_to 'Generate Sample Data', generate_sample_data_path, class: 'btn btn-primary m-2' %>
+<% end %>

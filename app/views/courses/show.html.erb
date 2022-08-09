@@ -56,11 +56,8 @@
 <div class="links">
   <%= link_to 'Edit', edit_course_path(@course) %> |
   <%= link_to 'Back', courses_path %>
-
-  <br>
-  <br>
-
-  <%= link_to 'Sync SIS Enrollments', course_sync_sis_enrollments_path(@course.id), data: { toggle: 'tooltip'} %> |
-  <%= link_to 'Create Canvas Sections', course_create_canvas_sections_path(@course.id), data: { toggle: 'tooltip'} %> |
-  <%= link_to 'Enroll Users in Canvas', course_enroll_users_in_canvas_path(@course.id), data: { toggle: 'tooltip'} %>
 </div>
+<br>
+<%= link_to 'Sync SIS Enrollments', course_sync_sis_enrollments_path(@course.id), class: 'btn btn-primary m-2', data: { toggle: 'tooltip'} %>
+<%= link_to 'Create Canvas Sections', course_create_canvas_sections_path(@course.id), class: 'btn btn-primary m-2', data: { toggle: 'tooltip'} %>
+<%= link_to 'Enroll Users in Canvas', course_enroll_users_in_canvas_path(@course.id), class: 'btn btn-primary m-2', data: { toggle: 'tooltip'} %>

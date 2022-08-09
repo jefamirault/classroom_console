@@ -34,19 +34,13 @@
 
 <div class="links text-center">
   <% if @sections.size == @full_count %>
-    <%= link_to "Show Only 50 Sections", sections_path %>
+    <%= link_to "Show Only 50 Sections", sections_path, class: 'btn btn-outline-primary' %>
   <% else %>
-    <%= link_to "See All #{@full_count} Sections", sections_path(all: true) %>
+    <%= link_to "See All #{@full_count} Sections", sections_path(all: true), class: 'btn btn-outline-primary' %>
   <% end %>
 </div>
 
 <br>
-<div class="links">
-  <%#= link_to 'New Section', new_section_path %>
-
-  <%= link_to 'Sync Grades Now', sync_all_grades_path, class: 'slow', data: { toggle: 'tooltip'}, title: 'Look up current grades for all sections where sync: true, update them here, and post them to OnCampus.' %>
-  |
-  <%= link_to 'Check for Opt-Ins', sync_all_sis_assignments_path, class: 'slow', data: { toggle: 'tooltip'}, title: 'Look up assignments for all synced OnCampus courses, an assignment titled: "Canvas Grade" will cause it to be synced through Classroom Console.' %>
-  |
-  <%= link_to 'Sync Canvas Sections', sync_all_canvas_sections_path, class: 'slow', data: { toggle: 'tooltip'}, title: 'If a course + sections are already present in Canvas (determined by section sis_id), add their canvas_ids here.' %>
-</div>
+<%= link_to 'Sync Grades Now', sync_all_grades_path, class: 'slow btn btn-primary m-2', data: { toggle: 'tooltip'}, title: 'Look up current grades for all sections where sync: true, update them here, and post them to OnCampus.' %>
+<%= link_to 'Check for Opt-Ins', sync_all_sis_assignments_path, class: 'slow btn btn-primary m-2', data: { toggle: 'tooltip'}, title: 'Look up assignments for all synced OnCampus courses, an assignment titled: "Canvas Grade" will cause it to be synced through Classroom Console.' %>
+<%= link_to 'Sync Canvas Sections', sync_all_canvas_sections_path, class: 'slow btn btn-primary m-2', data: { toggle: 'tooltip'}, title: 'If a course + sections are already present in Canvas (determined by section sis_id), add their canvas_ids here.' %>
