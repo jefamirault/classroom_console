@@ -61,3 +61,5 @@ gem 'mysql2'
 # Avoid incompatibility with Ruby 3.1
 # https://stackoverflow.com/questions/71191685/visit-psych-nodes-alias-unknown-alias-default-psychbadalias
 gem 'psych', '< 4'
+
+gem 'sidekiq'
