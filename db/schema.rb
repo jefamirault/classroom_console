@@ -2,34 +2,33 @@
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
 #
-# This file is the source Rails uses to define your schema when running `rails
-# db:schema:load`. When creating a new database, `rails db:schema:load` tends to
+# This file is the source Rails uses to define your schema when running `bin/rails
+# db:schema:load`. When creating a new database, `bin/rails db:schema:load` tends to
 # be faster and is potentially less error prone than running all of your
 # migrations from scratch. Old migrations may fail to apply correctly if those
 # migrations use external dependencies or application code.
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_07_26_000031) do
-
-  create_table "assignments", force: :cascade do |t|
+ActiveRecord::Schema[7.0].define(version: 2022_07_26_000031) do
+  create_table "assignments", charset: "utf8mb3", force: :cascade do |t|
     t.integer "sis_id"
     t.integer "section_id"
   end
 
-  create_table "courses", force: :cascade do |t|
+  create_table "courses", charset: "utf8mb3", force: :cascade do |t|
     t.string "name"
     t.integer "sis_id"
     t.boolean "is_active"
     t.integer "course_length"
     t.boolean "sync_course"
     t.boolean "sync_grades"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.integer "sections_count"
   end
 
-  create_table "enrollments", force: :cascade do |t|
+  create_table "enrollments", charset: "utf8mb3", force: :cascade do |t|
     t.integer "user_id"
     t.integer "section_id"
     t.boolean "enrolled_in_canvas"
@@ -38,71 +37,71 @@ ActiveRecord::Schema.define(version: 2022_07_26_000031) do
     t.integer "last_grade_change_id"
   end
 
-  create_table "grade_changes", force: :cascade do |t|
+  create_table "grade_changes", charset: "utf8mb3", force: :cascade do |t|
     t.integer "enrollment_id"
     t.float "old_value"
     t.float "new_value"
-    t.datetime "time"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "time", precision: nil
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.integer "previous_change_id"
     t.integer "next_change_id"
   end
 
-  create_table "sections", force: :cascade do |t|
+  create_table "sections", charset: "utf8mb3", force: :cascade do |t|
     t.string "name"
     t.integer "sis_id"
     t.integer "course_id"
     t.integer "canvas_id"
     t.integer "canvas_course_id"
     t.integer "term_id"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.boolean "sync_grades"
-    t.datetime "last_sync"
+    t.datetime "last_sync", precision: nil
     t.integer "enrollments_count"
   end
 
-  create_table "subscriptions", force: :cascade do |t|
+  create_table "subscriptions", charset: "utf8mb3", force: :cascade do |t|
     t.text "email"
     t.integer "user_id"
     t.boolean "subscribed"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
-  create_table "tenant_variables", force: :cascade do |t|
+  create_table "tenant_variables", charset: "utf8mb3", force: :cascade do |t|
     t.string "name"
     t.string "value"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
-  create_table "terms", force: :cascade do |t|
+  create_table "terms", charset: "utf8mb3", force: :cascade do |t|
     t.string "name"
     t.integer "canvas_id"
-    t.datetime "start"
-    t.datetime "end"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "start", precision: nil
+    t.datetime "end", precision: nil
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.integer "sis_id"
   end
 
-  create_table "users", force: :cascade do |t|
+  create_table "users", charset: "utf8mb3", force: :cascade do |t|
     t.integer "sis_id"
     t.string "name"
     t.boolean "active"
     t.string "email", default: ""
     t.string "encrypted_password", default: "", null: false
     t.string "reset_password_token"
-    t.datetime "reset_password_sent_at"
-    t.datetime "remember_created_at"
+    t.datetime "reset_password_sent_at", precision: nil
+    t.datetime "remember_created_at", precision: nil
     t.string "confirmation_token"
-    t.datetime "confirmed_at"
-    t.datetime "confirmation_sent_at"
+    t.datetime "confirmed_at", precision: nil
+    t.datetime "confirmation_sent_at", precision: nil
     t.string "unconfirmed_email"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.integer "canvas_id"
     t.boolean "login_enabled", default: false, null: false
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
