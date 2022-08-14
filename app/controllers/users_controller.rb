@@ -57,15 +57,20 @@ class UsersController < ApplicationController
     end
   end
 
-  def refresh_canvas_users
-    User.refresh_canvas_users
+  def sync_canvas_users
+    User.sync_canvas_users
     redirect_to users_path
   end
 
-  def create_missing_canvas_users
-    User.create_missing_canvas_users
-    redirect_to users_path
-  end
+  # def refresh_canvas_users
+  #   User.refresh_canvas_users
+  #   redirect_to users_path
+  # end
+  #
+  # def create_missing_canvas_users
+  #   User.create_missing_canvas_users
+  #   redirect_to users_path
+  # end
 
   def refresh_sis_emails
     User.refresh_sis_emails

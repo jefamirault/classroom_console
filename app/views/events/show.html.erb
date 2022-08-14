@@ -1,0 +1,44 @@
+<p>
+  <strong>Event Label:</strong>
+  <%= @event.label %>
+</p>
+
+<p>
+  <strong>Description:</strong>
+  <%= @event.description %>
+</p>
+
+<p>
+  <strong>Time:</strong>
+  <%= @event.created_at %>
+</p>
+
+
+<p>
+  <strong>Logs:</strong>
+</p>
+<table>
+  <thead>
+  <tr>
+    <th>Type</th>
+    <th>Name</th>
+    <th>Loggable ID</th>
+  </tr>
+  </thead>
+
+  <tbody>
+  <% @event.logs.each do |log| %>
+    <tr>
+      <td><%= log.loggable_type %></td>
+      <td><%= link_to log.loggable.name, loggable_path(log) %></td>
+      <td><%= log.loggable_id %></td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>
+
+
+
+<div class="links">
+  <%= link_to 'Back', events_path %>
+</div>

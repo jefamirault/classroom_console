@@ -1,28 +1,31 @@
 class Term < ApplicationRecord
 
   has_many :sections
+  has_many :logs, as: :loggable
+  has_many :events, through: :logs
 
+  def self.sync_terms
+    puts "Syncing Terms..."
+    result1 = Term.refresh_sis_terms
+    result2 = Term.match_canvas_terms
 
-  def self.get_sis_values(sections_json, courses_json)
-    sections_json.map do |s|
-      course_id = s['OfferingId']
-      course = courses_json.find {|c| c['OfferingId'] == course_id }
-      # ignore sections without courses
-      if course.nil?
-        next
+    description = ""
+    if result1[:updated_terms].any?
+      description << "Detected start/end times for #{result1[:updated_terms].size} terms. "
+    end
+    if result2[:detected_terms].any?
+      description << "Detected #{result2[:detected_terms].size} Canvas terms. "
+    end
+    if result2[:created_terms].any?
+      description << "Created #{result2[:created_terms].size} Canvas terms. "
+    end
+    description.strip!
+    if result1[:updated_terms].any?
+      event = Event.make 'Sync Terms', description
+      result1[:updated_terms].each do |t|
+        Log.create event_id: event.id, loggable_id: t.id, loggable_type: 'Term'
       end
-
-      # all courses should have a length of 1 or 2 (semesters)
-      # course length is 2 -> Full year course (Fall + Spring Semester)
-      # course length is 1 -> Single semester course (Fall OR Spring OR Summer)
-      # ESY (Extended School Year) may be used for some summer coursework
-      course_length = course['CourseLength']
-      if course_length == 1
-        s['Duration']['SchoolYearLabel'] + ' ' + s['Duration']['Name']
-      elsif course_length == 2
-        s['Duration']['SchoolYearLabel'] + " Full Year"
-      end
-    end.uniq.reject(&:nil?).map {|term| { name: term, created_at: Time.now, updated_at: Time.now }}
+    end
   end
 
   extend OnApiHelper
@@ -32,13 +35,16 @@ class Term < ApplicationRecord
   end
 
   def self.refresh_sis_terms
+    result = { updated_terms: [] }
     json = JSON.parse Term.get_sis_terms.body
     json.each do |term_json|
       term = Term.find_by_sis_id term_json['DurationId']
-      if term
+      if term && term.start.nil? && term.end.nil?
         term.start = DateTime.strptime(term_json['BeginDate'], '%m/%d/%Y %I:%M %p')
         term.end = DateTime.strptime(term_json['EndDate'], '%m/%d/%Y %I:%M %p')
-        term.save
+        if term.save
+          result[:updated_terms] << term
+        end
       end
     end
 
@@ -49,24 +55,27 @@ class Term < ApplicationRecord
       term2 = Term.find{|t| t.name.include?('2nd Semester') && t.name.include?(year)}
       term.start = term1.start
       term.end = term2.end
-      term.save
+      if term.save
+        result[:updated_terms] << term
+      end
     end
+
+    result
   end
 
   extend CanvasApiHelper
 
   def self.match_canvas_terms(terms_json = Term.get_canvas_terms['enrollment_terms'])
+    result = { created_terms: [], detected_terms: [] }
     Term.all.each do |term|
       # match terms by name
       match = terms_json.find {|t| t['name'] == term.name}
       # TODO: what if there are multiple canvas terms with the same name?
       if match
         if term.canvas_id.nil?
-          term.update({
-            canvas_id: match['id'],
-            start: match['start_at'] ? match['start_at'].to_datetime : nil,
-            end: match['end_at'] ? match['end_at'].to_datetime : nil
-          })
+          if term.update canvas_id: match['id']
+            result[:detected_terms] << term
+          end
         else
         #  TODO: overwrite or ignore existing canvas_id?
         end
@@ -84,10 +93,13 @@ class Term < ApplicationRecord
         response = canvas_api_post "accounts/#{ENV['ACCOUNT_ID']}/terms", body
         if response['id']
           term.canvas_id = response['id']
-          term.save
+          if term.save
+            result[:created_terms] << term
+          end
         end
       end
     end
+    result
   end
 
   def to_s

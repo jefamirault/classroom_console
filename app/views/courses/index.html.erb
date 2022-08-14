@@ -4,11 +4,12 @@
   <thead>
     <tr>
       <th>Course Name</th>
-      <th>Semesters</th>
+      <th>Course Length</th>
       <th>SIS ID</th>
       <th>Sections</th>
+      <th>Canvas Sections</th>
       <th>Enrollments</th>
-<!--      <th>Sync Course?</th>-->
+      <th>Canvas Enrollments</th>
       <th>Sync?</th>
       <th></th>
     </tr>
@@ -18,10 +19,12 @@
     <% @courses.each do |course| %>
       <tr>
         <td><%= link_to course.name, course %></td>
-        <td><%= course.course_length %></td>
+        <td><%= course.course_length == 1 ? '1-Semester' : 'Full-Year' %></td>
         <td><%= course.sis_id %></td>
         <td><%= course.sections.count %></td>
+        <td><%= course.sections.where.not(canvas_id: nil).count %></td>
         <td><%= course.enrollments.size %></td>
+        <td><%= course.enrollments.where(enrolled_in_canvas: true).size %></td>
         <td><%= course.sync_course %></td>
 <!--        <td><%#= course.sync_grades %></td>-->
         <td><%= link_to 'Edit', edit_course_path(course) %></td>
@@ -39,11 +42,12 @@
 </div>
 
 <br>
-
 <%= link_to 'Sync SIS Enrollments', sync_all_sis_enrollments_path, class: 'slow btn btn-primary m-2', data: { toggle: 'tooltip'}, title: 'For all courses where sync=true, look up OnCampus enrollments for each of their sections and add them to Classroom Console, creating new users when necessary.' %>
-<%= link_to 'Create Canvas Courses', create_canvas_courses_path, class: 'slow btn btn-primary m-2', data: { toggle: 'tooltip'}, title: 'For all courses where sync=true, create matching courses and sections in Canvas.' %>
+<%= link_to 'Sync Canvas Courses', sync_canvas_courses_path, class: 'slow btn btn-primary m-2', data: { toggle: 'tooltip'}, title: 'For all courses where sync=true, create matching courses and sections in Canvas.' %>
+<br>
+<%= link_to 'Full Sync', full_sync_path, class: 'slow btn btn-primary m-2', data: { toggle: 'tooltip'}, title: 'Sync Everything for All Courses where sync=true.' %>
 
-<% if ENV['DEMO'] %>
+<% if ENV['DEMO'] == 'true' %>
   <br>
   <%= link_to 'Generate Sample Data', generate_sample_data_path, class: 'btn btn-primary m-2' %>
 <% end %>

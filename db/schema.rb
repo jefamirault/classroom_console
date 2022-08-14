@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_07_26_000031) do
+ActiveRecord::Schema[7.0].define(version: 2022_08_13_180621) do
   create_table "assignments", charset: "utf8mb3", force: :cascade do |t|
     t.integer "sis_id"
     t.integer "section_id"
@@ -37,6 +37,13 @@ ActiveRecord::Schema[7.0].define(version: 2022_07_26_000031) do
     t.integer "last_grade_change_id"
   end
 
+  create_table "events", charset: "utf8mb3", force: :cascade do |t|
+    t.string "label"
+    t.text "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "grade_changes", charset: "utf8mb3", force: :cascade do |t|
     t.integer "enrollment_id"
     t.float "old_value"
@@ -46,6 +53,14 @@ ActiveRecord::Schema[7.0].define(version: 2022_07_26_000031) do
     t.datetime "updated_at", null: false
     t.integer "previous_change_id"
     t.integer "next_change_id"
+  end
+
+  create_table "logs", charset: "utf8mb3", force: :cascade do |t|
+    t.integer "event_id"
+    t.integer "loggable_id"
+    t.string "loggable_type"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "sections", charset: "utf8mb3", force: :cascade do |t|

@@ -4,8 +4,7 @@ Rails.application.routes.draw do
   resources :tenant_variables
 
   resources :terms
-  put 'refresh_canvas_terms', to: 'terms#refresh_canvas_terms'
-  put 'refresh_sis_terms', to: 'terms#refresh_sis_terms'
+  put 'sync_terms', to: 'terms#sync_terms'
 
   resources :sections do
     get 'sync'
@@ -18,19 +17,17 @@ Rails.application.routes.draw do
 
   resources :courses do
     get 'sync_sis_enrollments'
-    get 'create_canvas_sections'
-    get 'enroll_users_in_canvas'
+    get 'sync_with_canvas'
+    # get 'enroll_users_in_canvas'
   end
   get 'sync_all_sis_enrollments', to: 'courses#sync_all_sis_enrollments'
-  get 'create_canvas_courses', to: 'courses#create_canvas_courses'
+  get 'sync_canvas_courses', to: 'courses#sync_canvas_courses'
+  get 'full_sync', to: 'courses#full_sync'
 
   devise_scope :user do
     get "/sign_in" => "devise/sessions#new" # custom path to login/sign_in
     # get "/sign_up" => "devise/registrations#new", as: "new_user_registration" # custom path to sign_up/registration
   end
-  get 'refresh_sis_emails', to: 'users#refresh_sis_emails'
-  get 'create_missing_canvas_users', to: 'users#create_missing_canvas_users'
-  get 'sync_sis_teacher_enrollments', to:'users#sync_sis_teacher_enrollments'
 
   # devise_for :users, :skip => [:registrations]
   # as :user do
@@ -40,8 +37,9 @@ Rails.application.routes.draw do
 
   devise_for :users
   resources :users
-
-  get 'refresh_canvas_users', to: 'users#refresh_canvas_users'
+  get 'refresh_sis_emails', to: 'users#refresh_sis_emails'
+  get 'sync_sis_teacher_enrollments', to:'users#sync_sis_teacher_enrollments'
+  get 'sync_canvas_users', to: 'users#sync_canvas_users'
 
   get 'public', to: 'verify#index'
 
@@ -67,5 +65,9 @@ Rails.application.routes.draw do
   match '/404', to: 'errors#not_found', via: :all
   match '/500', to: 'errors#internal_server_error', via: :all
 
-  mount Sidekiq::Web => '/sidekiq'
+  authenticate :user do
+    mount Sidekiq::Web => '/sidekiq'
+  end
+
+  resources :events, only: [:index, :show]
 end

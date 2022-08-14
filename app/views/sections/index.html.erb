@@ -4,10 +4,12 @@
   <thead>
     <tr>
       <th>Section Name</th>
-      <th>Course SIS ID</th>
-      <th>Size</th>
       <th>SIS ID</th>
-      <th>Canvas ID</th>
+      <th>SIS Course ID</th>
+      <th>Size</th>
+      <th>Canvas Users</th>
+      <th>Canvas Course</th>
+      <th>Canvas Section</th>
       <th>Term</th>
       <th>Sync?</th>
       <th>Last Sync</th>
@@ -19,9 +21,11 @@
     <% @sections.each do |section| %>
       <tr>
         <td><%= link_to section.name, section %></td>
+        <td><%= section.sis_id %></td>
         <td><%= section.course ? section.course.sis_id : nil %></td>
         <td><%= section.enrollments.count %></td>
-        <td><%= section.sis_id %></td>
+        <td><%= section.enrollments.where(enrolled_in_canvas: true).count %></td>
+        <td><%= section.canvas_course_id ? link_to("#{section.canvas_course_id} ⧉", "#{ENV['CANVAS_PATH']}/courses/#{section.canvas_course_id}/settings#tab-sections") : '' %></td>
         <td><%= section.canvas_id && section.canvas_course_id ? link_to("#{section.canvas_id} ⧉", "#{ENV['CANVAS_PATH']}/courses/#{section.canvas_course_id}/sections/#{section.canvas_id}") : '' %></td>
         <td class="nowrap"><%= section.term %></td>
         <td><%= section.sync_grades %></td>
@@ -43,4 +47,6 @@
 <br>
 <%= link_to 'Sync Grades Now', sync_all_grades_path, class: 'slow btn btn-primary m-2', data: { toggle: 'tooltip'}, title: 'Look up current grades for all sections where sync: true, update them here, and post them to OnCampus.' %>
 <%= link_to 'Check for Opt-Ins', sync_all_sis_assignments_path, class: 'slow btn btn-primary m-2', data: { toggle: 'tooltip'}, title: 'Look up assignments for all synced OnCampus courses, an assignment titled: "Canvas Grade" will cause it to be synced through Classroom Console.' %>
-<%= link_to 'Sync Canvas Sections', sync_all_canvas_sections_path, class: 'slow btn btn-primary m-2', data: { toggle: 'tooltip'}, title: 'If a course + sections are already present in Canvas (determined by section sis_id), add their canvas_ids here.' %>
+<%#= link_to 'Sync Canvas Sections', sync_all_canvas_sections_path, class: 'slow btn btn-primary m-2', data: { toggle: 'tooltip'}, title: 'If a course + sections are already present in Canvas (determined by section sis_id), add their canvas_ids here.' %>
+<br>
+<%= link_to 'Full Sync', full_sync_path, class: 'slow btn btn-primary m-2', data: { toggle: 'tooltip'}, title: 'Sync Everything for All Courses where sync=true.' %>

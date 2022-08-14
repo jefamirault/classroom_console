@@ -6,6 +6,8 @@ class Enrollment < ApplicationRecord
 
   enum role: { student: 0, teacher: 1 }
 
+  validates :user, :section, presence: true
+
   before_update :log_changes
   after_create :log_create
 
@@ -63,9 +65,11 @@ class Enrollment < ApplicationRecord
 
   def post_to_canvas(options = {})
     raise 'Enrollment is missing a user' if user.nil?
-    raise 'Enrollment failed. Does user exist in Canvas?' if user.canvas_id.nil?
-    return nil if "Skipping Enrollment (id = #{self.id}). Does section (id = #{self.section_id}) exist in Canvas?" if section.nil? || section.canvas_id.nil?
-  
+
+    result = { created_canvas_enrollments: [] }
+
+    return result if user.canvas_id.nil?
+
     enrollment_type = self.role.capitalize + 'Enrollment'
 
     body = {
@@ -79,17 +83,22 @@ class Enrollment < ApplicationRecord
     response = canvas_api_post_response "sections/#{section.canvas_id}/enrollments", body, options
     if response.code == '200'
       self.enrolled_in_canvas = true
-      save
+      if save
+        result[:created_canvas_enrollments] << self
+      end
       unless options[:quiet]
         puts "Enrollment Added: User: #{user}, Section: #{section}"
       end
     end
-    response
+    result
   end
 
   extend OnApiHelper
 
-  def self.get_sis_teacher_enrollments
+  def self.get_sis_teacher_enrollments(options = {})
+    puts "Syncing SIS Teacher Enrollments..."
+    result = { detected_enrollments: [] }
+
     response = on_api_get "list/#{ENV['TEACHER_ENROLLMENTS_ID']}"
     raise "ON API Error" unless response.code == "200"
     enrollments = JSON.parse response.body
@@ -125,11 +134,30 @@ class Enrollment < ApplicationRecord
           e.section = section
           e.user = user
           e.role = 'teacher'
-          e.save
+          if e.save
+            result[:detected_enrollments] << e
+          end
         end
-        # add enrollment if it does not exist
       end
     end
+
+    if !options[:quiet] && result[:detected_enrollments].any?
+      event = Event.make 'Sync SIS Teacher Enrollments', "Detected #{result[:detected_enrollments].size} teacher enrollments."
+      affected_users = {}
+      affected_sections = {}
+      result[:detected_enrollments].each do |e|
+        affected_users[e.user_id] = true
+        affected_sections[e.section_id] = true
+      end
+      affected_users.each_key do |user_id|
+        Log.create event_id: event.id, loggable_id: user_id, loggable_type: 'User'
+      end
+      affected_sections.each_key do |section_id|
+        Log.create event_id: event.id, loggable_id: section_id, loggable_type: 'Section'
+      end
+    end
+
+    result
   end
 
   def self.remove_duplicate_enrollments

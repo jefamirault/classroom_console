@@ -63,12 +63,8 @@ class TermsController < ApplicationController
     end
   end
 
-  def refresh_canvas_terms
-    Term.match_canvas_terms
-    redirect_to terms_path
-  end
-  def refresh_sis_terms
-    Term.refresh_sis_terms
+  def sync_terms
+    Term.sync_terms
     redirect_to terms_path
   end
 

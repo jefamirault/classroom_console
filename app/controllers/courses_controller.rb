@@ -14,6 +14,7 @@ class CoursesController < ApplicationController
   # GET /courses/1
   # GET /courses/1.json
   def show
+    @course_events = @course.events + @course.sections.map(&:events).reduce(:+).uniq
   end
 
   # GET /courses/new
@@ -75,24 +76,30 @@ class CoursesController < ApplicationController
     Course.sync_all_sis_enrollments
     redirect_to courses_path
   end
-  def create_canvas_sections
-    @course = Course.find params[:course_id]
-    @course.create_canvas_sections
-    redirect_to course_path(@course)
-  end
-  def enroll_users_in_canvas
-    @course = Course.find params[:course_id]
-    @course.enroll_users_in_canvas
-    redirect_to course_path(@course)
-  end
 
-  def create_canvas_courses
-    Course.create_canvas_courses
+  def sync_with_canvas
+    @course = Course.find params[:course_id]
+    @course.sync_with_canvas
+    redirect_to @course
+  end
+  # def enroll_users_in_canvas
+  #   @course = Course.find params[:course_id]
+  #   @course.enroll_users_in_canvas
+  #   redirect_to course_path(@course)
+  # end
+
+  def sync_canvas_courses
+    Course.sync_canvas_courses
     redirect_to courses_path
   end
 
   def generate_sample_data
     generate_sample if ENV['DEMO']
+    redirect_to courses_path
+  end
+
+  def full_sync
+    Course.full_sync
     redirect_to courses_path
   end
 

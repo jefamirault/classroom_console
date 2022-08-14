@@ -1,0 +1,25 @@
+<h1>History</h1>
+
+<table>
+  <thead>
+  <tr>
+    <th>ID</th>
+    <th>Event Label</th>
+    <th>Description</th>
+    <th>Time</th>
+  </tr>
+  </thead>
+
+  <tbody>
+  <% @events.each do |event| %>
+    <tr>
+      <td><%= event.id %></td>
+      <td class="nowrap"><%= link_to event.label, event %></td>
+      <td><%= event.description %></td>
+      <td class="nowrap"><%= time_ago_in_words event.created_at %> ago</td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>
+<br>
+<%= link_to 'Full Sync', full_sync_path, class: 'slow btn btn-primary m-2', data: { toggle: 'tooltip'}, title: 'Sync Everything for All Courses where sync=true.' %>

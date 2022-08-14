@@ -11,8 +11,9 @@ module OnApiHelper
   include ExportHelper
 
   def on_authenticate
-    puts "Authenticating to ON API..."
-    uri = URI.parse("#{ON_API_URL}/authentication/login")
+    raw_uri = "#{ON_API_URL}/authentication/login"
+    puts "Authenticating to ON API: #{raw_uri}"
+    uri = URI.parse(raw_uri)
     request = Net::HTTP::Post.new(uri)
 
     request["Content-Type"] = 'application/json'
@@ -35,10 +36,10 @@ module OnApiHelper
   end
 
 
-  def on_api_token
+  def on_api_token(options = {})
     last_token = read_object 'timed_token'
     if last_token && last_token[:expire] > Time.now
-      # existing token has not expired
+      puts "Reusing existing ON API token. Expires at #{last_token[:expire]}" if options[:verbose]
       last_token[:token]
     else
       # token expired, reauthenticate for new token
@@ -49,9 +50,19 @@ module OnApiHelper
           token: token,
           expire: time + 20*60 # 20 minutes
       }
+      puts "Created new ON API token. Expires at #{timed_token[:expire]}" if options[:verbose]
       write_object timed_token, 'timed_token'
       token
     end
+  end
+
+  def force_new_on_api_token
+    response = on_authenticate
+    if response.code != '200'
+      puts response
+      raise 'Error. ON API authentication failed.'
+    end
+    JSON.parse(response.body)['Token']
   end
 
   def on_api_post(route, token, body)
@@ -74,9 +85,9 @@ module OnApiHelper
     response
   end
 
-  def on_api_get(route, parameters = nil)
+  def on_api_get(route, parameters = nil, options = {})
     uri = URI.parse("#{ON_API_URL}/#{route}?t=#{on_api_token}#{parameters}")
-    # puts "GET #{ON_API_URL}/#{route}?t=*#{parameters}..."
+    puts "GET #{ON_API_URL}/#{route}?t=*#{parameters}..." if options[:verbose]
 
     header = { 'Content-Type': 'application/json' }
 

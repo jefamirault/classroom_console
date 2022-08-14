@@ -57,11 +57,13 @@
   </ul>
 </p>
 
+<%= render partial: 'events/history', locals: { events: @section.events } %>
+
 <br>
 <div class="links">
   <%= link_to 'Edit', edit_section_path(@section) %> |
   <%= link_to 'Back', sections_path %>
 </div>
 <br>
-<%= link_to 'Sync Now', section_sync_path(@section), class: 'slow btn btn-primary m-2', data: { toggle: 'tooltip'}, title: 'Sync Canvas grades for this section.' %>
 <%= link_to 'Enroll Users in Canvas', section_enroll_users_in_canvas_path(@section), class: 'slow btn btn-primary m-2', data: { toggle: 'tooltip'}, title: 'Add enrolled users to matching section in Canvas.' %>
+<%= link_to 'Sync Grades Now', section_sync_path(@section), class: 'slow btn btn-primary m-2', data: { toggle: 'tooltip'}, title: 'Sync Canvas grades for this section.' %>

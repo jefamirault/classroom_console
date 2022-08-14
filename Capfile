@@ -44,3 +44,10 @@ require 'capistrano/rbenv'
 
 set :rbenv_type, :user
 set :rbenv_ruby, '3.1.2'
+
+
+require 'capistrano/sidekiq'
+# Default sidekiq tasks
+install_plugin Capistrano::Sidekiq
+# We specify that we want to use systemd to control sidekiq
+install_plugin Capistrano::Sidekiq::Systemd

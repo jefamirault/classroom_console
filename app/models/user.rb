@@ -1,3 +1,5 @@
+include CanvasApiHelper
+
 class User < ApplicationRecord
   # Include default devise modules. Others available are:
   # :lockable, :timeoutable, :trackable and :omniauthable
@@ -7,6 +9,8 @@ class User < ApplicationRecord
   has_many :enrollments
   has_many :sections, through: :enrollments
   has_many :courses, through: :sections
+  has_many :logs, as: :loggable
+  has_many :events, through: :logs
 
   ACCOUNT_ID = 1
 
@@ -15,49 +19,34 @@ class User < ApplicationRecord
     self.name
   end
 
+  def self.sync_canvas_users
+    puts "Syncing Canvas Users..."
+    result = { detected_canvas_users: [], created_canvas_users: [] }
+    description = ""
 
-  # TODO refactor into at least 2 methods
-  def self.refresh_sis_users(rosters_json, emails_json)
-    enrolled_users = rosters_json.map do |section|
-      section['roster']
-    end.flatten.uniq
+    result[:detected_canvas_users] += User.refresh_canvas_users[:detected_canvas_users]
+    result[:created_canvas_users] += User.create_missing_canvas_users[:created_canvas_users]
 
-    enrolled_users.each do |json|
-      user_attributes = {
-          sis_id: json['sis_id'],
-          name: json['name'],
-          # role: json['type'], TODO
-          email: json['email']
-      }
-      # Create user if missing
-      if !User.exists?(sis_id: json['sis_id'])
-        u = User.new user_attributes
-        u.save validate: false
-      else
-      #  Update user if any changes
-      #  TODO
+    description << "Detected #{result[:detected_canvas_users].count} existing Canvas users. " if result[:detected_canvas_users].any?
+    description << "Created #{result[:created_canvas_users].count} new Canvas users." if result[:created_canvas_users].any?
+    description.strip!
+
+    if result[:detected_canvas_users].any? || result[:created_canvas_users].any?
+      event = Event.make 'Sync Canvas Users', description
+      result[:detected_canvas_users].each do |u|
+        Log.create event_id: event.id, loggable_id: u.id, loggable_type: 'User'
+      end
+      result[:created_canvas_users].each do |u|
+        Log.create event_id: event.id, loggable_id: u.id, loggable_type: 'User'
       end
     end
 
-    # EMAILS
-    updated = []
-    User.all.each do |user|
-      match = emails_json.select{|i| i['UserID'] == user.sis_id}
-      if match.any?
-        u = match.first
-        email = u['EMail']
-        user.assign_attributes email: email
-        if user.changed?
-          updated << [user, user.changes]
-          user.save validate: false
-        end
-      end
-    end
-    puts "Updated #{updated.count} users."
+    result
   end
 
-
   def self.refresh_canvas_users(canvas_users = User.request_canvas_users)
+    result = { detected_canvas_users: [] }
+
     users_hash = Hash.new
     User.all.each do |user|
       users_hash[user.sis_id] = user
@@ -78,21 +67,33 @@ class User < ApplicationRecord
       user.assign_attributes canvas_id: canvas_id
       if user.changed?
         puts "User updated: #{user}, #{user.changes}"
-        user.save validate: false
+        if user.save validate: false
+          result[:detected_canvas_users] << user
+        end
       end
-
     end
+    result
   end
 
-
   def self.refresh_sis_emails(json = User.request_sis_emails)
-    json.each do |json|
-      user = User.find_by_sis_id json['UserID']
+    puts "Checking for new email addresses..."
+    result = { updated_users: [] }
+    json.each do |j|
+      user = User.find_by_sis_id j['UserID']
       if user && user.email.nil?
-        user.email = json['EMail']
-        user.save
+        user.email = j['EMail']
+        if user.save
+          result[:updated_users] << user
+        end
       end
     end
+    if result[:updated_users].any?
+      event = Event.make 'Refresh SIS Emails', "Detected new email address for #{result[:updated_users].count} users."
+      result[:updated_users].each do |u|
+        Log.create event_id: event.id, loggable_id: u.id, loggable_type: 'User'
+      end
+    end
+    result
   end
 
   extend OnApiHelper
@@ -105,8 +106,6 @@ class User < ApplicationRecord
     on_api_get_json "list/#{ENV['EMAIL_LIST_ID']}"
   end
 
-
-  # include CanvasApiHelper
   extend CanvasApiHelper
 
   def self.request_canvas_users
@@ -114,13 +113,23 @@ class User < ApplicationRecord
   end
 
   def self.create_missing_canvas_users
-    users = User.where(canvas_id: nil).where.not(email: nil)
-    users.each &:create_in_canvas
+    result = { created_canvas_users: [] }
+    users = User.where(canvas_id: nil).where.not(email: nil).where.not(sis_id: nil)
+
+    users.each do |u|
+      increment = u.create_in_canvas
+      if increment[:created_canvas_user]
+        result[:created_canvas_users] << increment[:created_canvas_user]
+      end
+    end
+    result
   end
 
   def create_in_canvas
     raise 'Cannot create. Canvas ID is already present for User.' if self.canvas_id
     raise 'Cannot create Canvas user without email.' if self.email.nil?
+
+    result = { created_canvas_user: nil }
 
     body = {
       user: {
@@ -136,12 +145,19 @@ class User < ApplicationRecord
     response = canvas_api_post "accounts/1/users", body
 
     if response['id']
-      self.update canvas_id: response['id']
+      if self.update canvas_id: response['id']
+        result[:created_canvas_user] = self
+      end
     else
-      raise "ERROR Could not create Canvas user: #{response}"
+      description = "ERROR: Could not create Canvas user: #{self} #{response}"
+      # don't log duplicate errors in the same day
+      if Event.where(description: description).select{|e| e.created_at > 1.day.ago }.empty?
+        event = Event.make "Create Canvas User", "ERROR: Could not create Canvas user: #{self} #{response}"
+        Log.create event_id: event.id, loggable_id: self.id, loggable_type: 'User'
+      end
     end
 
-    response
+    result
   end
 
   protected
