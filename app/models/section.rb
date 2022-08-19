@@ -39,7 +39,7 @@ class Section < ApplicationRecord
     Section.where(sync_grades: true).each &:sync
   end
 
-  def sync_sis_assignments
+  def sync_sis_assignments(options = {})
     result = { new_opt_in: nil }
     if self.assignment
     #  already synced
@@ -77,30 +77,24 @@ class Section < ApplicationRecord
         end
       end
     end
+
+    unless options[:quiet] || result[:new_opt_in].nil?
+      event = Event.make 'Check for new Opt-In', "Detected new opt-in assignment for section #{self}."
+      Log.create event_id: event.id, loggable_id: self.id, loggable_type: 'Section'
+    end
+
     result
   end
 
   def self.sync_all_sis_assignments
     puts "Checking OnCampus for Opt-In Assignments..."
-    result = { new_opt_ins: [] }
-    Section.all.each(&:sync_sis_assignments).each do |s|
-      if s[:new_opt_in]
-        result[:new_opt_ins] << s[:new_opt_in]
-      end
-    end
-    if result[:new_opt_ins].any?
-      event = Event.make 'Check for new Opt-Ins', "Detected #{result[:new_opt_ins].size} new opt-in assignments."
-      result[:new_opt_ins].each do |s|
-        Log.create event_id: event.id, loggable_id: s.id, loggable_type: 'Section'
-      end
-    end
-    result
+    RequestSisAssignmentsJob.perform_now
   end
 
   def enroll_users_in_canvas(options = {})
     result = { detected_canvas_enrollments: [], created_canvas_enrollments: [] }
     # detect existing Canvas enrollments
-    result1 = sync_canvas_enrollments
+    result1 = sync_canvas_enrollments options
     result[:detected_canvas_enrollments] += result1[:detected_canvas_enrollments]
 
     # add missing Canvas enrollments
@@ -350,25 +344,34 @@ class Section < ApplicationRecord
     new_users = []
     new_enrollments = []
 
+    old_enrollments_by_sis_id = {}
+    self.users.each do |user|
+      old_enrollments_by_sis_id[user.sis_id] = true
+    end
+
     sis_roster.each do |student|
       # match by sis_id if user exists, otherwise create user with sis_id + name
-      user = User.create_with(name: student['Name'], email: nil).find_or_create_by(sis_id: student['UserId'])
-      if user.new_record?
-        if user.sis_id.class != Fixnum || user.sis_id < 1
-          raise 'Cannot create user without valid SIS_ID'
-        end
-        if user.name.class != String
-          raise 'Cannot create user. Name must be a String'
-        end
-        # allow user to be created without a password
-        if user.save validate: false
-          new_users << user
-        end
-      end
-      # Enroll user if not enrolled
-      if enrollments.find_by_user_id user.id
-      #  good
+
+      sis_user_id = student['UserId']
+
+      if old_enrollments_by_sis_id[sis_user_id]
+      #  enrollment already synced
       else
+      #  Newly detected enrollment, create user if they do not exist, add user to section
+        user = User.create_with(name: student['Name'], email: nil).find_or_create_by(sis_id: sis_user_id)
+        if user.new_record?
+          if user.sis_id.class != Fixnum || user.sis_id < 1
+            raise 'Cannot create user without valid SIS_ID'
+          end
+          if user.name.class != String
+            raise 'Cannot create user. Name must be a String'
+          end
+          # allow user to be created without a password
+          if user.save validate: false
+            new_users << user
+          end
+        end
+
         new_enrollments << Enrollment.create(user_id: user.id, section_id: self.id, role: :student)
       end
     end

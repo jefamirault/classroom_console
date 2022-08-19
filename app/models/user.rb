@@ -6,7 +6,7 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
 
-  has_many :enrollments
+  has_many :enrollments, dependent: :destroy
   has_many :sections, through: :enrollments
   has_many :courses, through: :sections
   has_many :logs, as: :loggable
@@ -44,42 +44,45 @@ class User < ApplicationRecord
     result
   end
 
-  def self.refresh_canvas_users(canvas_users = User.request_canvas_users)
+  # for users where canvas_id = nil, create canvas users if they do not exist, otherwise record canvas_id
+  def self.refresh_canvas_users(canvas_users = nil)
     result = { detected_canvas_users: [] }
 
-    users_hash = Hash.new
-    User.all.each do |user|
-      users_hash[user.sis_id] = user
-    end
+    users_missing_canvas_id = User.where(canvas_id: nil).where.not(sis_id: nil)
+    return result if users_missing_canvas_id.empty?
 
-    canvas_users.each do |u|
-      # TODO: Sanitize string ids
-      sis_id = u['sis_user_id'].to_i
-      canvas_id = u['id'].to_i
+    canvas_users ||= User.request_canvas_users
 
-      user = users_hash[sis_id]
+    canvas_users_by_sis_id = {}
+    canvas_users.each {|u| next if u['sis_user_id'].nil?; canvas_users_by_sis_id[u['sis_user_id'].to_i] = true }
 
-      if user.nil?
-        # skip Canvas user without SIS counterpart
-        next
-      end
-
-      user.assign_attributes canvas_id: canvas_id
-      if user.changed?
-        puts "User updated: #{user}, #{user.changes}"
-        if user.save validate: false
-          result[:detected_canvas_users] << user
+    users_missing_canvas_id.each do |user|
+      if canvas_users_by_sis_id[user.id]
+        # update canvas_id
+        user.assign_attributes canvas_id: canvas_id
+        if user.changed?
+          puts "User updated: #{user}, #{user.changes}"
+          if user.save validate: false
+            result[:detected_canvas_users] << user
+          end
         end
+      else
+        # user is not present in Canvas
       end
     end
+
     result
   end
 
   def self.refresh_sis_emails(json = User.request_sis_emails)
     puts "Checking for new email addresses..."
     result = { updated_users: [] }
+
+    users_by_sis_id = {}
+    User.all.each {|u| users_by_sis_id[u.id] = true}
+
     json.each do |j|
-      user = User.find_by_sis_id j['UserID']
+      user = users_by_sis_id[j['UserID']]
       if user && user.email.nil?
         user.email = j['EMail']
         if user.save
@@ -107,6 +110,10 @@ class User < ApplicationRecord
   end
 
   extend CanvasApiHelper
+
+  def request_canvas_user
+
+  end
 
   def self.request_canvas_users
     canvas_api_get_paginated "accounts/#{ACCOUNT_ID}/users"

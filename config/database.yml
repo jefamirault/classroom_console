@@ -29,7 +29,7 @@ development:
   encoding: utf8
   reconnect: false
   database: classroom_console_development
-  pool: 5
+  pool: 10
   username: <%= ENV['DATABASE_USER'] %>
   password: <%= ENV['DATABASE_PASSWORD'] %>
 
@@ -69,7 +69,7 @@ test:
   encoding: utf8
   reconnect: false
   database: classroom_console_test
-  pool: 5
+  pool: 10
   username: <%= ENV['DATABASE_USER'] %>
   password: <%= ENV['DATABASE_PASSWORD'] %>
 
@@ -109,6 +109,6 @@ production:
   encoding: utf8
   reconnect: false
   database: classroom_console_production
-  pool: 5
+  pool: 10
   username: <%= ENV['DATABASE_USER'] %>
   password: <%= ENV['DATABASE_PASSWORD'] %>

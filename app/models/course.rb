@@ -205,7 +205,7 @@ class Course < ApplicationRecord
     result = { detected_canvas_enrollments: [], created_canvas_enrollments: [] }
 
     self.sections.each do |s|
-      increment = s.enroll_users_in_canvas quiet: true
+      increment = s.enroll_users_in_canvas options
       result[:detected_canvas_enrollments] += increment[:detected_canvas_enrollments]
       result[:created_canvas_enrollments] += increment[:created_canvas_enrollments]
     end
@@ -283,42 +283,7 @@ class Course < ApplicationRecord
 
   def self.sync_canvas_enrollments(options = {})
     puts "Syncing Canvas Enrollments..."
-    result = { detected_canvas_enrollments: [], created_canvas_enrollments: [] }
-
-    Course.where(sync_course: true).each do |c|
-      increment = c.enroll_users_in_canvas quiet: true
-      result[:detected_canvas_enrollments] += increment[:detected_canvas_enrollments]
-      result[:created_canvas_enrollments] += increment[:created_canvas_enrollments]
-    end
-
-    # create logs
-    unless options[:quiet]
-      description = ""
-      if result[:detected_canvas_enrollments].any?
-        description << "Detected #{result[:detected_canvas_enrollments].size} existing Canvas enrollments. "
-      end
-      if result[:created_canvas_enrollments].any?
-        description << "Created #{result[:created_canvas_enrollments].size} new Canvas enrollments. "
-      end
-      description.strip!
-      if result[:detected_canvas_enrollments].any? || result[:created_canvas_enrollments].any?
-        event = Event.make "Sync Canvas Enrollments", description
-        affected_sections = {}
-        result[:detected_canvas_enrollments].each do |e|
-          Log.create event_id: event.id, loggable_id: e.user_id, loggable_type: 'User'
-          affected_sections[e.section_id] = true
-        end
-        result[:created_canvas_enrollments].each do |e|
-          Log.create event_id: event.id, loggable_id: e.user_id, loggable_type: 'User'
-          affected_sections[e.section_id] = true
-        end
-        affected_sections.each_key do |id|
-          Log.create event_id: event.id, loggable_id: id, loggable_type: 'Section'
-        end
-      end
-    end
-
-    result
+    SyncCanvasEnrollmentsJob.perform_later
   end
   def post_to_canvas(term)
     raise 'Missing Canvas ID for term' if term.canvas_id.nil?

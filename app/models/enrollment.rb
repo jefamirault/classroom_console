@@ -103,6 +103,14 @@ class Enrollment < ApplicationRecord
     raise "ON API Error" unless response.code == "200"
     enrollments = JSON.parse response.body
 
+    # set up hashes for efficient access
+    sections_by_sis_id = {}
+    Section.all.each {|s| sections_by_sis_id[s.sis_id] = s}
+    users_by_sis_id = {}
+    User.all.each {|u| users_by_sis_id[u.sis_id] = u}
+    teacher_enrollments = {}
+    Enrollment.where(role: 'teacher').each {|e| teacher_enrollments["#{e.user_id}_#{e.section_id}"] = true}
+
     enrollments.filter! {|e| e['FacultyUserID'] != 0}
 
     enrollments.each do |enrollment|
@@ -115,9 +123,9 @@ class Enrollment < ApplicationRecord
       # don't sync user without an email
       next if teacher_email.nil?
 
-      section = Section.find_by_sis_id section_sis_id
+      section = sections_by_sis_id[section_sis_id]
       if section
-        user = User.find_by_sis_id sis_user_id
+        user = users_by_sis_id[sis_user_id]
         if user.nil?
           user_params = {
             sis_id: sis_user_id,
@@ -129,7 +137,7 @@ class Enrollment < ApplicationRecord
             puts "User created: #{user}"#  create user
           end
         end
-        unless section.users.include? user
+        unless teacher_enrollments["#{user.id}_#{section.id}"]
           e = Enrollment.new
           e.section = section
           e.user = user

@@ -56,13 +56,17 @@ module OnApiHelper
     end
   end
 
-  def force_new_on_api_token
+  def force_new_on_api_token(options = {})
+    time = Time.now
     response = on_authenticate
-    if response.code != '200'
-      puts response
-      raise 'Error. ON API authentication failed.'
-    end
-    JSON.parse(response.body)['Token']
+    token = JSON.parse(response.body)['Token']
+    timed_token = {
+      token: token,
+      expire: time + 20*60 # 20 minutes
+    }
+    puts "Created new ON API token. Expires at #{timed_token[:expire]}" if options[:verbose]
+    write_object timed_token, 'timed_token'
+    token
   end
 
   def on_api_post(route, token, body)
