@@ -162,7 +162,7 @@ class Course < ApplicationRecord
     puts "Checking for new SIS Enrollments..."
     new_users = []
     new_enrollments = []
-    Course.where(sync_course: true).each do |course|
+    Course.all.each do |course|
       result = course.sync_sis_enrollments quiet: true
       new_users += result[:new_users]
       new_enrollments += result[:new_enrollments]
