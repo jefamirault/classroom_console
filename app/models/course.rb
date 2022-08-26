@@ -217,7 +217,7 @@ class Course < ApplicationRecord
         description << "Detected #{result[:detected_canvas_enrollments].size} existing Canvas enrollments. "
       end
       if result[:created_canvas_enrollments].any?
-        description << "Created #{result[:created_canvas_enrollments]} new Canvas enrollments. "
+        description << "Created #{result[:created_canvas_enrollments].size} new Canvas enrollments. "
       end
       description.strip!
       if result[:detected_canvas_enrollments].any? || result[:created_canvas_enrollments].any?

@@ -15,7 +15,7 @@ class Enrollment < ApplicationRecord
   include CanvasApiHelper
 
   def log_create
-    change = GradeChange.create enrollment: self, old_value: nil, new_value: self.grade, time: Time.now.utc.to_s(:db)
+    change = GradeChange.create enrollment: self, old_value: nil, new_value: self.grade, time: Time.now.utc.to_fs(:db)
     self.last_grade_change_id = change.id
   end
 

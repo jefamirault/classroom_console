@@ -53,11 +53,12 @@ class User < ApplicationRecord
 
     canvas_users ||= User.request_canvas_users
 
-    canvas_users_by_sis_id = {}
-    canvas_users.each {|u| next if u['sis_user_id'].nil?; canvas_users_by_sis_id[u['sis_user_id'].to_i] = true }
+    canvas_user_ids_by_sis_id = {}
+    canvas_users.each {|u| next if u['sis_user_id'].nil?; canvas_user_ids_by_sis_id[u['sis_user_id'].to_i] = u['id'] }
 
     users_missing_canvas_id.each do |user|
-      if canvas_users_by_sis_id[user.id]
+      canvas_id = canvas_user_ids_by_sis_id[user.sis_id]
+      if canvas_id
         # update canvas_id
         user.assign_attributes canvas_id: canvas_id
         if user.changed?
@@ -79,13 +80,13 @@ class User < ApplicationRecord
     result = { updated_users: [] }
 
     users_by_sis_id = {}
-    User.all.each {|u| users_by_sis_id[u.id] = true}
+    User.all.each {|u| users_by_sis_id[u.sis_id] = u}
 
     json.each do |j|
       user = users_by_sis_id[j['UserID']]
       if user && user.email.nil?
         user.email = j['EMail']
-        if user.save
+        if user.save validate: false
           result[:updated_users] << user
         end
       end
