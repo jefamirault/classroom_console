@@ -133,12 +133,19 @@ class Section < ApplicationRecord
 
   # get grades from Canvas
   def sync_canvas_enrollments(options = {})
-    raise 'Cannot sync Canvas enrollments without canvas_id.' if canvas_id.nil?
+    raise "Cannot sync Canvas enrollments without canvas_id for #{self}." if canvas_id.nil?
 
     result = { detected_canvas_users: [], detected_canvas_enrollments: [] }
 
     errors = nil
-    canvas_api_get_paginated("sections/#{self.canvas_id}/enrollments").each do |e|
+
+
+    canvas_enrollments = canvas_api_get_paginated("sections/#{self.canvas_id}/enrollments")
+    if canvas_enrollments.nil?
+      raise "Error requesting Canvas enrollments for #{self}. Does Canvas course exist?"
+      binding.pry
+    end
+    canvas_enrollments.each do |e|
       json = {
           canvas_user_id: e['user_id'],
           sis_section_id: e['sis_section_id'],
@@ -168,11 +175,7 @@ class Section < ApplicationRecord
         enrollment = self.enrollments.find {|e| e.user == user}
         if enrollment.grade != json[:current_grade]
           enrollment.grade = json[:current_grade]
-          if enrollment.save
-            # TODO SKIP WHILE TESTING
-            # enrollment.post_grade
-            puts "ATTENTION: Skipping grade post: #{enrollment}"
-          end
+          enrollment.post_grade if enrollment.save
         end
       else
         puts "WARNING: Canvas section #{self} contains unexpected enrollment: #{json}"

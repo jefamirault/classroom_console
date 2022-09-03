@@ -184,7 +184,7 @@ class Course < ApplicationRecord
   def create_canvas_course(term)
     result = { created_canvas_course: nil }
     sections = self.sections.where(term: term)
-    raise 'Canvas Course ID already present for section' unless sections.map{|s| s.canvas_course_id.nil?}.reduce :&
+    raise "Canvas Course ID already present for section. Course: #{self}" unless sections.map{|s| s.canvas_course_id.nil?}.reduce :&
 
     response = self.post_to_canvas(term)
     raise 'Something went wrong. Failed to create Canvas course.' unless response.code == '200'

@@ -50,6 +50,10 @@ class Enrollment < ApplicationRecord
   end
 
   def post_grade(options = {})
+    if section.assignment.nil?
+      puts "Cannot post grade without OnCampus assignment for section: #{section}"
+      return nil
+    end
 
     grade_object = {
         'GradebookGrade' => grade,
