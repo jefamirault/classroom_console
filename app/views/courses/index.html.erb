@@ -7,9 +7,9 @@
       <th>Course Length</th>
       <th>SIS ID</th>
       <th>Sections</th>
-      <th>Canvas Sections</th>
+<!--      <th>Canvas Sections</th>-->
       <th>Enrollments</th>
-      <th>Canvas Enrollments</th>
+<!--      <th>Canvas Enrollments</th>-->
       <th>Sync?</th>
       <th></th>
     </tr>
@@ -21,10 +21,10 @@
         <td><%= link_to course.name, course %></td>
         <td><%= course.course_length == 1 ? '1-Semester' : 'Full-Year' %></td>
         <td><%= course.sis_id %></td>
-        <td><%= course.sections.count %></td>
-        <td><%= course.sections.where.not(canvas_id: nil).count %></td>
-        <td><%= course.enrollments.size %></td>
-        <td><%= course.enrollments.where(enrolled_in_canvas: true).size %></td>
+        <td><%= course.sections.size %></td>
+<!--        <td><%#= course.sections.where.not(canvas_id: nil).count %></td>-->
+        <td><%= course.enrollments_count %></td>
+<!--        <td><%#= course.enrollments.where(enrolled_in_canvas: true).size %></td>-->
         <td><%= course.sync_course %></td>
 <!--        <td><%#= course.sync_grades %></td>-->
         <td><%= link_to 'Edit', edit_course_path(course) %></td>
@@ -35,7 +35,7 @@
 
 <div class="text-center">
   <% if @courses.size == @full_count %>
-      <%= link_to "Show Only 50 Courses", courses_path, class: 'btn btn-outline-primary' %>
+      <%#= link_to "Show Only 50 Courses", courses_path, class: 'btn btn-outline-primary' %>
     <% else %>
       <%= link_to "See All #{@full_count} Courses", courses_path(all: true), class: 'btn btn-outline-primary' %>
     <% end %>

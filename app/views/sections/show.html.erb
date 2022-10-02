@@ -1,7 +1,5 @@
-<p>
-  <strong>Section Name:</strong>
-  <%= @section.name %>
-</p>
+<h1><%= @section.name %></h1>
+
 
 <p>
   <strong>Course:</strong>
@@ -44,7 +42,7 @@
 <p>
   <strong><%= @section.enrollments.count %> Enrolled Users:</strong>
   <ul class="links">
-    <% @section.enrollments.each do |enrollment| %>
+    <% @section.enrollments.order(role: :desc).each do |enrollment| %>
       <li>
         <%= link_to enrollment.user, user_path(enrollment.user) %>
         <% if enrollment.role == 'student' %>
@@ -57,7 +55,7 @@
   </ul>
 </p>
 
-<%= render partial: 'events/history', locals: { events: @section.events } %>
+<%= render partial: 'events/history', locals: { events: @section.events.order(created_at: :desc) } %>
 
 <br>
 <div class="links">

@@ -7,7 +7,7 @@
       <th>SIS ID</th>
       <th>SIS Course ID</th>
       <th>Size</th>
-      <th>Canvas Users</th>
+<!--      <th>Canvas Users</th>-->
       <th>Canvas Course</th>
       <th>Canvas Section</th>
       <th>Term</th>
@@ -23,8 +23,9 @@
         <td><%= link_to section.name, section %></td>
         <td><%= section.sis_id %></td>
         <td><%= section.course ? section.course.sis_id : nil %></td>
-        <td><%= section.enrollments.count %></td>
-        <td><%= section.enrollments.where(enrolled_in_canvas: true).count %></td>
+        <td><%= section.enrollments_count %></td>
+<!--        <td><%#= section.enrollments_count %></td>-->
+<!--        <td><%#= section.enrollments.where(enrolled_in_canvas: true).count %></td>-->
         <td><%= section.canvas_course_id ? link_to("#{section.canvas_course_id} ⧉", "#{ENV['CANVAS_PATH']}/courses/#{section.canvas_course_id}/settings#tab-sections") : '' %></td>
         <td><%= section.canvas_id && section.canvas_course_id ? link_to("#{section.canvas_id} ⧉", "#{ENV['CANVAS_PATH']}/courses/#{section.canvas_course_id}/sections/#{section.canvas_id}") : '' %></td>
         <td class="nowrap"><%= section.term %></td>
@@ -38,7 +39,7 @@
 
 <div class="links text-center">
   <% if @sections.size == @full_count %>
-    <%= link_to "Show Only 50 Sections", sections_path, class: 'btn btn-outline-primary' %>
+    <%#= link_to "Show Only 50 Sections", sections_path, class: 'btn btn-outline-primary' %>
   <% else %>
     <%= link_to "See All #{@full_count} Sections", sections_path(all: true), class: 'btn btn-outline-primary' %>
   <% end %>

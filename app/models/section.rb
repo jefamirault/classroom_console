@@ -143,7 +143,6 @@ class Section < ApplicationRecord
     canvas_enrollments = canvas_api_get_paginated("sections/#{self.canvas_id}/enrollments")
     if canvas_enrollments.nil?
       raise "Error requesting Canvas enrollments for #{self}. Does Canvas course exist?"
-      binding.pry
     end
     canvas_enrollments.each do |e|
       json = {

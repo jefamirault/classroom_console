@@ -297,6 +297,10 @@ class Course < ApplicationRecord
     canvas_api_post_response "accounts/#{ACCOUNT_ID}/courses", course_params
   end
 
+  def enrollments_count
+    self.sections.map(&:enrollments_count).reduce :+
+  end
+
   private
 
   def self.request_sis_courses

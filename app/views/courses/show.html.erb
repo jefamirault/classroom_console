@@ -56,7 +56,7 @@
 </table>
 <br>
 
-<%= render partial: 'events/history', locals: { events: @course_events } %>
+<%= render partial: 'events/history', locals: { events: @course_events.sort{|a,b| b.created_at <=> a.created_at }} %>
 
 <br>
 <div class="links">

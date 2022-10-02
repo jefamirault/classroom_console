@@ -1,5 +1,5 @@
 class Enrollment < ApplicationRecord
-  belongs_to :user
+  belongs_to :user, counter_cache: true
   belongs_to :section, counter_cache: true
   has_one :assignment, through: :section
   has_one :course, through: :section

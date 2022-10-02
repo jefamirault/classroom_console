@@ -19,7 +19,7 @@
       <td><%= user.email %></td>
       <td><%= user.sis_id %></td>
       <td><%= user.canvas_id ? link_to("#{user.canvas_id} ⧉", "#{ENV['CANVAS_PATH']}/users/#{user.canvas_id}") : '' %></td>
-      <td><%= user.enrollments.count %></td>
+      <td><%= user.enrollments.size %></td>
       <td><%= link_to 'Edit', edit_user_path(user) %></td>
     </tr>
   <% end %>

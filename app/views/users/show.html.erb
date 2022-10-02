@@ -21,22 +21,29 @@
 <p>
   <strong>Enrollments:</strong>
   <ul class="links">
-    <% @user.enrollments.each do |enrollment| %>
+    <% @enrollments_by_term.each do |term_id, enrollments| %>
       <li>
-        <%= link_to enrollment.section, section_path(enrollment.section.id) %> -
-        <% if enrollment.role == 'student' %>
-          Grade: <%= enrollment.grade ? enrollment.grade : 'n/a' %>
-        <% else %>
-          (Teacher)
-        <% end %>
+        <%= Term.find(term_id).name %>
+        <ul>
+          <% enrollments.each do |e| %>
+            <li>
+              <%= link_to e.section, section_path(e.section.id) %> -
+              <% if e.role == 'student' %>
+                Grade: <%= e.grade ? e.grade : 'n/a' %>
+              <% else %>
+                (Teacher)
+              <% end %>
+            </li>
+          <% end %>
+        </ul>
       </li>
     <% end %>
   </ul>
 </p>
 
-<%= render partial: 'events/history', locals: { events: @user.events } %>
+<%= render partial: 'events/history', locals: { events: @user.events.order(created_at: :desc) } %>
 
-<dv class="links">
+<div class="links">
   <%= link_to 'Edit', edit_user_path(@user) %> |
   <%= link_to 'Back', users_path %>
-</dv>
+</div>

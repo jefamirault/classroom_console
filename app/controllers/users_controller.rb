@@ -10,6 +10,17 @@ class UsersController < ApplicationController
   end
 
   def show
+    @enrollments_by_term = {}
+    @user.enrollments.sort { |a,b| a.section.term_id <=> b.section.term_id }.each do |e|
+      term_id = e.section.term_id
+      if @enrollments_by_term[term_id].nil?
+        @enrollments_by_term[term_id] = [e]
+      else
+        @enrollments_by_term[term_id] << e
+      end
+    end
+    @courses = @user.enrollments.sort { |a,b| a.section.term_id <=> b.section.term_id }.map(&:course).uniq
+    # binding.pry
   end
 
   def new
