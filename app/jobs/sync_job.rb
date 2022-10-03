@@ -10,7 +10,7 @@ class SyncJob < ApplicationJob
     Course.full_sync
 
     if options[:repeat]
-      SyncJob.set(wait: 10.minutes).perform_later options
+      SyncJob.set(wait: 20.minutes).perform_later options
     end
   end
 end
