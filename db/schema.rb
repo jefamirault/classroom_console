@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_09_17_170708) do
+ActiveRecord::Schema[7.0].define(version: 2022_10_03_004307) do
   create_table "assignments", charset: "utf8mb3", force: :cascade do |t|
     t.integer "sis_id"
     t.integer "section_id"
@@ -25,7 +25,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_09_17_170708) do
     t.boolean "sync_grades"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "sections_count"
+    t.integer "sections_count", null: false
   end
 
   create_table "enrollments", charset: "utf8mb3", force: :cascade do |t|
@@ -74,7 +74,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_09_17_170708) do
     t.datetime "updated_at", null: false
     t.boolean "sync_grades"
     t.datetime "last_sync", precision: nil
-    t.integer "enrollments_count"
+    t.integer "enrollments_count", default: 0, null: false
   end
 
   create_table "subscriptions", charset: "utf8mb3", force: :cascade do |t|
@@ -119,7 +119,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_09_17_170708) do
     t.datetime "updated_at", null: false
     t.integer "canvas_id"
     t.boolean "login_enabled", default: false, null: false
-    t.integer "enrollments_count"
+    t.integer "enrollments_count", default: 0, null: false
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
