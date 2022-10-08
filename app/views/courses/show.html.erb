@@ -22,7 +22,6 @@
   <strong>Sections:</strong>
 </p>
 
-
 <table>
   <thead>
   <tr>
@@ -33,6 +32,8 @@
     <th>SIS ID</th>
     <th>Canvas ID</th>
     <th>Canvas Course ID</th>
+    <th>Assignment</th>
+    <th>Sync Grades?</th>
     <th></th>
     <th></th>
   </tr>
@@ -48,9 +49,37 @@
       <td><%= section.sis_id %></td>
       <td><%= section.canvas_id && section.canvas_course_id ? link_to("#{section.canvas_id} ⧉", "#{ENV['CANVAS_PATH']}/courses/#{section.canvas_course_id}/sections/#{section.canvas_id}") : '' %></td>
       <td><%= section.canvas_course_id ? link_to("#{section.canvas_course_id} ⧉", "#{ENV['CANVAS_PATH']}/courses/#{section.canvas_course_id}/settings#tab-sections") : '' %></td>
+      <td><%= section.assignment ? section.assignment.sis_id : 'None' %></td>
+      <td><%= section.sync_grades %></td>
       <td><%= link_to 'Edit', edit_section_path(section) %></td>
       <td><%= link_to 'Destroy', section, method: :delete, data: { confirm: 'Are you sure?' } %></td>
     </tr>
+  <% end %>
+  </tbody>
+</table>
+
+<p>
+  <strong>Students:</strong>
+</p>
+
+<table>
+  <thead>
+  <tr>
+    <th>User</th>
+    <th>Grade</th>
+    <th>Last Changed</th>
+    <th>Section</th>
+  </tr>
+  </thead>
+
+  <tbody>
+  <% @course.enrollments.select{|e| e.role == 'student'}.each do |enrollment| %>
+    <tr>
+      <td><%= link_to enrollment.user %></td>
+      <td><%= enrollment.grade %></td>
+      <td><%= enrollment.grade_updated_at ? "#{time_ago_in_words(enrollment.grade_updated_at)} ago" : 'Never' %></td>
+      <td><%= enrollment.section %></td>
+      </tr>
   <% end %>
   </tbody>
 </table>

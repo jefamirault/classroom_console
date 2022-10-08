@@ -30,6 +30,11 @@
 </p>
 
 <p>
+  <strong>Assignment ID:</strong>
+  <%= @section.assignment ? @section.assignment.sis_id : 'None' %>
+</p>
+
+<p>
   <strong>Sync Grades?:</strong>
   <%= @section.sync_grades %>
 </p>
@@ -40,20 +45,37 @@
 </p>
 
 <p>
-  <strong><%= @section.enrollments.count %> Enrolled Users:</strong>
+  <strong>Teacher(s):</strong>
   <ul class="links">
-    <% @section.enrollments.order(role: :desc).each do |enrollment| %>
-      <li>
-        <%= link_to enrollment.user, user_path(enrollment.user) %>
-        <% if enrollment.role == 'student' %>
-        - <strong>Grade: <%= enrollment.grade ? enrollment.grade : 'None' %></strong>
-        - Changed: <%= enrollment.grade_updated_at ? "#{time_ago_in_words(enrollment.grade_updated_at)} ago" : 'Never' %>
-        <% end %>
-        <%= enrollment.role == 'teacher' ? ' - (Teacher)' : '' %>
-      </li>
+    <% @section.enrollments.where(role: 'teacher').each do |e| %>
+      <li><%= link_to e.user %></li>
     <% end %>
-  </ul>
+
+  </ul><%= @section.last_sync ? "#{time_ago_in_words(@section.last_sync)} ago" : 'Never' %>
 </p>
+
+<strong>Students:</strong>
+<table>
+  <thead>
+  <tr>
+    <th>User</th>
+    <th>Grade</th>
+    <th>Last Changed</th>
+    <th>Section</th>
+  </tr>
+  </thead>
+
+  <tbody>
+  <% @section.enrollments.select{|e| e.role == 'student'}.each do |enrollment| %>
+    <tr>
+      <td><%= link_to enrollment.user %></td>
+      <td><%= enrollment.grade %></td>
+      <td><%= enrollment.grade_updated_at ? "#{time_ago_in_words(enrollment.grade_updated_at)} ago" : 'Never' %></td>
+      <td><%= enrollment.section %></td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>
 
 <%= render partial: 'events/history', locals: { events: @section.events.order(created_at: :desc) } %>
 
