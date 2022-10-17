@@ -10,6 +10,9 @@ class Section < ApplicationRecord
   scope :missing_canvas_id, -> { where(canvas_id: nil) }
   scope :has_canvas_id, -> { where.not(canvas_id: nil) }
 
+  has_one :quarantine, as: :quarantinable, dependent: :destroy
+  include Quarantinable
+
   include CanvasApiHelper
   include OnApiHelper
 
@@ -93,6 +96,7 @@ class Section < ApplicationRecord
 
   def enroll_users_in_canvas(options = {})
     result = { detected_canvas_enrollments: [], created_canvas_enrollments: [] }
+    return result if quarantined
     # detect existing Canvas enrollments
     result1 = sync_canvas_enrollments options
     result[:detected_canvas_enrollments] += result1[:detected_canvas_enrollments]
@@ -135,14 +139,19 @@ class Section < ApplicationRecord
   def sync_canvas_enrollments(options = {})
     raise "Cannot sync Canvas enrollments without canvas_id for #{self}." if canvas_id.nil?
 
+
     result = { detected_canvas_users: [], detected_canvas_enrollments: [] }
+
+    return result if quarantined?
 
     errors = nil
 
 
     canvas_enrollments = canvas_api_get_paginated("sections/#{self.canvas_id}/enrollments")
     if canvas_enrollments.nil?
-      raise "Error requesting Canvas enrollments for #{self}. Does Canvas course exist?"
+      Event.make "Sync Canvas Enrollments", "Error requesting Canvas enrollments for #{self}. Course has been quarantined."
+      quarantine!
+      raise "Error requesting Canvas enrollments for #{self}. Course has been quarantined."
     end
     canvas_enrollments.each do |e|
       json = {

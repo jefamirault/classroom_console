@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_10_04_165712) do
+ActiveRecord::Schema[7.0].define(version: 2022_10_17_182313) do
   create_table "assignments", charset: "utf8mb3", force: :cascade do |t|
     t.integer "sis_id"
     t.integer "section_id"
@@ -59,6 +59,14 @@ ActiveRecord::Schema[7.0].define(version: 2022_10_04_165712) do
     t.integer "event_id"
     t.integer "loggable_id"
     t.string "loggable_type"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "quarantines", charset: "utf8mb3", force: :cascade do |t|
+    t.datetime "end"
+    t.integer "quarantinable_id"
+    t.string "quarantinable_type"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

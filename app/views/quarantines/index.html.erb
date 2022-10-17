@@ -1,0 +1,25 @@
+<h1>Quarantine</h1>
+
+<table>
+  <thead>
+  <tr>
+    <th>ID</th>
+    <th>Record Type</th>
+    <th>Name</th>
+    <th>Created At</th>
+    <th>End Time</th>
+  </tr>
+  </thead>
+
+  <tbody>
+  <% @quarantines.each do |q| %>
+    <tr>
+      <td><%= q.id %></td>
+      <td class="nowrap"><%= q.quarantinable_type %></td>
+      <td><%= link_to q.quarantinable %></td>
+      <td><%= q.created_at %></td>
+      <td><%= q.end %></td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>

@@ -14,6 +14,8 @@ class User < ApplicationRecord
 
   ACCOUNT_ID = 1
 
+  has_one :quarantine, as: :quarantinable
+  include Quarantinable
 
   def to_s
     self.name
@@ -139,6 +141,8 @@ class User < ApplicationRecord
 
     result = { created_canvas_user: nil }
 
+    return result if self.quarantined
+
     body = {
       user: {
         name: self.name
@@ -162,6 +166,7 @@ class User < ApplicationRecord
       if Event.where(description: description).select{|e| e.created_at > 1.day.ago }.empty?
         event = Event.make "Create Canvas User", "ERROR: Could not create Canvas user: #{self} #{response}"
         Log.create event_id: event.id, loggable_id: self.id, loggable_type: 'User'
+        quarantine!
       end
     end
 

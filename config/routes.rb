@@ -70,4 +70,6 @@ Rails.application.routes.draw do
   end
 
   resources :events, only: [:index, :show]
+
+  resources :quarantines, only: [:index]
 end

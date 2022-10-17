@@ -45,6 +45,11 @@
 </p>
 
 <p>
+  <strong>Quarantined?:</strong>
+  <%= @section.quarantined? %>
+</p>
+
+<p>
   <strong>Teacher(s):</strong>
   <ul class="links">
     <% @section.enrollments.where(role: 'teacher').each do |e| %>

@@ -19,6 +19,11 @@
 </p>
 
 <p>
+  <strong>Quarantined:</strong>
+  <%= @user.quarantined? %>
+</p>
+
+<p>
   <strong>Enrollments:</strong>
   <ul class="links">
     <% @enrollments_by_term.each do |term_id, enrollments| %>
