@@ -13,12 +13,12 @@
 
 <p>
   <strong>Canvas ID:</strong>
-  <%= @section.canvas_id && @section.canvas_course_id ? link_to("#{@section.canvas_id} ⧉", "#{ENV['CANVAS_PATH']}/courses/#{@section.canvas_course_id}/sections/#{@section.canvas_id}") : '' %>
+  <%= @section.canvas_id && @section.canvas_course_id ? link_to("#{@section.canvas_id} ⧉", "#{AdminSetting.canvas_path}/courses/#{@section.canvas_course_id}/sections/#{@section.canvas_id}") : '' %>
 </p>
 
 <p>
   <strong>Canvas course:</strong>
-  <%= @section.canvas_course_id ? link_to("#{@section.canvas_course_id} ⧉", "#{ENV['CANVAS_PATH']}/courses/#{@section.canvas_course_id}") : '' %>
+  <%= @section.canvas_course_id ? link_to("#{@section.canvas_course_id} ⧉", "#{AdminSetting.canvas_path}/courses/#{@section.canvas_course_id}") : '' %>
   <% if @section.canvas_course_id.nil? %>
     <%= link_to 'Create Canvas Course', section_create_canvas_course_path(@section) %>
   <% end %>

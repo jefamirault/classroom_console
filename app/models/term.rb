@@ -31,14 +31,14 @@ class Term < ApplicationRecord
   extend OnApiHelper
 
   def self.get_sis_terms
-    on_api_get 'schoolinfo/term/', "&schoolYear=#{ENV['SIS_SCHOOL_YEAR']}"
+    on_api_get 'schoolinfo/term/', "&schoolYear=#{AdminSetting.sis_school_year}"
   end
 
   def self.refresh_sis_terms
     result = { updated_terms: [] }
     json = JSON.parse Term.get_sis_terms.body
     json.each do |term_json|
-      term = Term.find_by_sis_id term_json['DurationId']
+      term = Term.find_by_sis_id term_json['DurationId'].to_i
       if term && term.start.nil? && term.end.nil?
         term.start = DateTime.strptime(term_json['BeginDate'], '%m/%d/%Y %I:%M %p')
         term.end = DateTime.strptime(term_json['EndDate'], '%m/%d/%Y %I:%M %p')
@@ -90,7 +90,7 @@ class Term < ApplicationRecord
             end_at: term.end - Time.zone_offset('EST')
           }
         }.to_json
-        response = canvas_api_post "accounts/#{ENV['ACCOUNT_ID']}/terms", body
+        response = canvas_api_post "accounts/#{AdminSetting.account_id}/terms", body
         if response['id']
           term.canvas_id = response['id']
           if term.save
@@ -115,7 +115,7 @@ class Term < ApplicationRecord
   end
 
   def self.get_canvas_terms
-    canvas_api_get_json "accounts/#{ENV['ACCOUNT_ID']}/terms"
+    canvas_api_get_json "accounts/#{AdminSetting.account_id}/terms"
   end
 
 end

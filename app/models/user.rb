@@ -109,7 +109,7 @@ class User < ApplicationRecord
   end
 
   def self.request_sis_emails
-    on_api_get_json "list/#{ENV['EMAIL_LIST_ID']}"
+    on_api_get_json "list/#{AdminSetting.sis_email_list_id}"
   end
 
   extend CanvasApiHelper

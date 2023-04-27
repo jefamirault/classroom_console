@@ -23,7 +23,7 @@ class Enrollment < ApplicationRecord
     previous_change = last_grade_change
     change = changes['grade']
     if change
-      change = GradeChange.create enrollment: self, old_value: change[0], new_value: change[1], time: Time.now.utc.to_s(:db)
+      change = GradeChange.create enrollment: self, old_value: change[0], new_value: change[1], time: Time.now.utc.to_fs(:db)
       self.last_grade_change_id = change.id
       change.update previous_change_id: previous_change ? previous_change.id : nil
       if previous_change
@@ -64,7 +64,8 @@ class Enrollment < ApplicationRecord
     if options[:debug]
       puts grade_object
     end
-    on_api_post 'academics/assignmentgrade', on_api_token, grade_object
+    # TODO Enable Grade Posting for production
+    # on_api_post 'academics/assignmentgrade', on_api_token, grade_object
   end
 
   def post_to_canvas(options = {})
@@ -103,7 +104,7 @@ class Enrollment < ApplicationRecord
     puts "Syncing SIS Teacher Enrollments..."
     result = { detected_enrollments: [] }
 
-    response = on_api_get "list/#{ENV['TEACHER_ENROLLMENTS_ID']}"
+    response = on_api_get "list/#{AdminSetting.sis_teacher_enrollments_list_id}"
     raise "ON API Error" unless response.code == "200"
     enrollments = JSON.parse response.body
 
@@ -139,6 +140,7 @@ class Enrollment < ApplicationRecord
           user = User.create user_params
           if user
             puts "User created: #{user}"#  create user
+          #  TODO User may already exist, avoid duplicate extra logging
           end
         end
         unless teacher_enrollments["#{user.id}_#{section.id}"]

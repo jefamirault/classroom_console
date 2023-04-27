@@ -4,9 +4,9 @@ require_relative 'export_helper'
 require 'logger'
 
 module OnApiHelper
-  ON_API_URL = ENV['ON_API_URL']
-  ON_API_KEY = ENV['ON_API_KEY']
-  ON_API_SECRET = ENV['ON_API_SECRET']
+  ON_API_URL = AdminSetting.on_api_path
+  ON_API_KEY = AdminSetting.on_api_key
+  ON_API_SECRET = AdminSetting.on_api_secret
 
   include ExportHelper
 

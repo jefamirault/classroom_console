@@ -1,0 +1,58 @@
+<h1>Administrator Settings</h1>
+
+<%= form_with model: @admin_settings do |form| %>
+  <div class="field">
+    <%= form.label :canvas_path, 'Canvas Path' %>
+    <%= form.text_field :canvas_path, class: 'form-control' %>
+  </div>
+  <div class="field">
+    <%= form.label :canvas_access_token, 'Canvas Access Token' %>
+    <%= form.text_field :canvas_access_token, class: 'form-control' %>
+  </div>
+  <%= link_to 'Test Canvas Connection', test_canvas_api_path, data: { remote: true} %>
+  <br>
+  <br>
+
+  <div class="field">
+    <%= form.label :on_api_path, 'ON API Path' %>
+    <%= form.text_field :on_api_path, class: 'form-control' %>
+  </div>
+  <div class="field">
+    <%= form.label :on_api_username, 'ON API Username' %>
+    <%= form.text_field :on_api_username, class: 'form-control' %>
+  </div>
+  <div class="field">
+    <%= form.label :on_api_key, 'ON API Key' %>
+    <%= form.text_field :on_api_key, class: 'form-control' %>
+  </div>
+  <div class="field">
+    <%= form.label :on_api_secret, 'ON API Secret' %>
+    <%= form.text_field :on_api_secret, class: 'form-control' %>
+  </div>
+  <%= link_to 'Test ON API Connection', test_on_api_path, data: { remote: true} %>
+  <br><br>
+
+  <div class="field">
+    <%= form.label :account_id, 'Account ID' %>
+    <%= form.number_field :account_id, class: 'form-control' %>
+  </div>
+  <div class="field">
+    <%= form.label :on_api_key, 'SIS School Year' %>
+    <%= form.text_field :sis_school_year, class: 'form-control' %>
+  </div>
+  <div class="field">
+    <%= form.label :sis_level_num, 'SIS Level Num' %>
+    <%= form.number_field :sis_level_num, class: 'form-control' %>
+  </div>
+  <div class="field">
+    <%= form.label :sis_email_list_id, 'SIS Email List ID' %>
+    <%= form.number_field :sis_email_list_id, class: 'form-control' %>
+  </div>
+  <div class="field">
+    <%= form.label :sis_teacher_enrollments_list_id, 'SIS Teacher Enrollments List ID' %>
+    <%= form.number_field :sis_teacher_enrollments_list_id, class: 'form-control' %>
+  </div>
+  <%= form.submit class: 'btn btn-primary' %>
+<% end %>
+
+Last updated <%= time_ago_in_words(@admin_settings.updated_at) %> ago: <%= @admin_settings.updated_at %>

@@ -11,8 +11,14 @@ class SyncCanvasEnrollmentsJob < ApplicationJob
     if options[:id]
       Course.find(options[:id]).enroll_users_in_canvas
     elsif options[:ids]
-      options[:ids].each_slice((options[:ids].size / 10.0).ceil) do |ids|
-        SyncCanvasEnrollmentsJob.perform_later batch: ids
+      slice_size = (options[:ids].size / 10.0).ceil
+      begin
+        options[:ids].each_slice(slice_size) do |ids|
+          SyncCanvasEnrollmentsJob.perform_later batch: ids
+        end
+      rescue
+        binding.pry
+        raise "Invalid Slice Size: #{slice_size}"
       end
     elsif options[:batch]
       Course.find(options[:batch]).each do |course|

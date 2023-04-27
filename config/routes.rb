@@ -72,4 +72,9 @@ Rails.application.routes.draw do
   resources :events, only: [:index, :show]
 
   resources :quarantines, only: [:index]
+
+  get 'admin', to: 'admin#index'
+  patch 'admin_setting', to: 'admin#update'
+  get 'test_canvas_api', to: 'admin#test_canvas_api'
+  get 'test_on_api', to: 'admin#test_on_api'
 end

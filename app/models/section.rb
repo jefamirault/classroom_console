@@ -16,8 +16,8 @@ class Section < ApplicationRecord
   include CanvasApiHelper
   include OnApiHelper
 
-  SIS_SCHOOL_YEAR = ENV['SIS_SCHOOL_YEAR']
-  SIS_LEVEL_NUM = ENV['SIS_LEVEL_NUM']
+  SIS_SCHOOL_YEAR = AdminSetting.sis_school_year
+  SIS_LEVEL_NUM = AdminSetting.sis_level_num
 
   validates_uniqueness_of :sis_id
 

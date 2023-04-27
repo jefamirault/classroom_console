@@ -6,7 +6,7 @@ class Course < ApplicationRecord
 
   validates_uniqueness_of :sis_id
 
-  ACCOUNT_ID = ENV['ACCOUNT_ID']
+  ACCOUNT_ID = AdminSetting.account_id
 
   def to_s
     self.name
@@ -26,9 +26,9 @@ class Course < ApplicationRecord
     Course.refresh_sis_courses
     Section.refresh_sis_sections
     Term.sync_terms
-    return 'Select which courses to sync with Canvas' if Course.where(sync_course: true).count == 0
-    Section.sync_all_sis_assignments
-    Course.sync_all_sis_enrollments
+    # return 'Select which courses to sync with Canvas' if Course.where(sync_course: true).count == 0
+    # Section.sync_all_sis_assignments
+    # Course.sync_all_sis_enrollments
     Enrollment.get_sis_teacher_enrollments
     User.refresh_sis_emails
     User.sync_canvas_users
@@ -139,6 +139,7 @@ class Course < ApplicationRecord
     new_users = []
     new_enrollments = []
     self.sections.each do |section|
+      # sync the enrollments one section at a time
       result = section.sync_sis_enrollments
       new_users += result[:new_users]
       new_enrollments += result[:new_enrollments]
@@ -151,8 +152,9 @@ class Course < ApplicationRecord
         new_enrollments.map(&:section).uniq.each do |s|
           Log.create event_id: event.id, loggable_id: s.id, loggable_type: 'Section'
         end
-        new_users.each do |u|
-          Log.create event_id: event.id, loggable_id: u.id, loggable_type: 'User'
+        # Log newly created and existing users for new enrollments
+        (new_enrollments.map(&:user) + new_users).uniq.each do |u|
+          Log.create event_id: event.id, loggable_id: e.user.id, loggable_type: 'User'
         end
       end
     end
@@ -163,6 +165,7 @@ class Course < ApplicationRecord
     new_users = []
     new_enrollments = []
     Course.all.each do |course|
+      # sync enrollments one course at a time
       result = course.sync_sis_enrollments quiet: true
       new_users += result[:new_users]
       new_enrollments += result[:new_enrollments]
@@ -184,7 +187,25 @@ class Course < ApplicationRecord
   def create_canvas_course(term)
     result = { created_canvas_course: nil }
     sections = self.sections.where(term: term)
-    raise "Canvas Course ID already present for section. Course: #{self}" unless sections.map{|s| s.canvas_course_id.nil?}.reduce :&
+    canvas_course_ids = sections.map {|s| s.canvas_course_id}.uniq
+    canvas_course_ids.delete nil
+    if canvas_course_ids.size > 1
+      msg "Error: Cannot infer Canvas course id for section, multiple Canvas courses found for term. Course :#{self}"
+        event = Event.make msg, msg
+        Log.create event_id: event.id, loggable_id: self.id, loggable_type: 'Course'
+        raise msg
+    end
+    # unless sections.map{|s| s.canvas_course_id.nil?}.reduce :&
+    #   msg = "Error: Canvas Course ID already present for section. Course: #{self}"
+    #   event = Event.make msg, msg
+    #   Log.create event_id: event.id, loggable_id: self.id, loggable_type: 'Course'
+    #   raise msg
+    # end
+    sections.where(canvas_course_id: nil) do |s|
+      canvas_course_id = canvas_course_ids.first
+      s.canvas_course_id = canvas_course_id
+      s.save
+    end
 
     response = self.post_to_canvas(term)
     raise 'Something went wrong. Failed to create Canvas course.' unless response.code == '200'

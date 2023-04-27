@@ -26,8 +26,8 @@
         <td><%= section.enrollments_count %></td>
 <!--        <td><%#= section.enrollments_count %></td>-->
 <!--        <td><%#= section.enrollments.where(enrolled_in_canvas: true).count %></td>-->
-        <td><%= section.canvas_course_id ? link_to("#{section.canvas_course_id} ⧉", "#{ENV['CANVAS_PATH']}/courses/#{section.canvas_course_id}/settings#tab-sections") : '' %></td>
-        <td><%= section.canvas_id && section.canvas_course_id ? link_to("#{section.canvas_id} ⧉", "#{ENV['CANVAS_PATH']}/courses/#{section.canvas_course_id}/sections/#{section.canvas_id}") : '' %></td>
+        <td><%= section.canvas_course_id ? link_to("#{section.canvas_course_id} ⧉", "#{AdminSetting.canvas_path}/courses/#{section.canvas_course_id}/settings#tab-sections") : '' %></td>
+        <td><%= section.canvas_id && section.canvas_course_id ? link_to("#{section.canvas_id} ⧉", "#{AdminSetting.canvas_path}/courses/#{section.canvas_course_id}/sections/#{section.canvas_id}") : '' %></td>
         <td class="nowrap"><%= section.term %></td>
         <td><%= section.sync_grades %></td>
         <td class="nowrap"><%= section.last_sync ? "#{time_ago_in_words(section.last_sync)} ago" : 'Never' %></td>

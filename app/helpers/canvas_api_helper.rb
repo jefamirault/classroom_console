@@ -4,14 +4,18 @@ require 'json'
 
 module CanvasApiHelper
 
-  CANVAS_URL = ENV['CANVAS_URL']
-  ACCESS_TOKEN = ENV['ACCESS_TOKEN']
+  def canvas_url
+    AdminSetting.canvas_api_path
+  end
+  def access_token
+    AdminSetting.canvas_access_token
+  end
 
   def canvas_api_get(route = 'courses', parameters = nil, body = nil)
-    uri = URI.parse("#{CANVAS_URL}/#{route}/#{parameters}")
+    uri = URI.parse("#{canvas_url}/#{route}/#{parameters}")
     # puts "GET #{uri}..."
     request = Net::HTTP::Get.new(uri)
-    request["Authorization"] = "Bearer #{ACCESS_TOKEN}"
+    request["Authorization"] = "Bearer #{access_token}"
 
     request["Content-Type"] = 'application/json'
     request.body = body
@@ -39,10 +43,10 @@ module CanvasApiHelper
   end
 
   def canvas_api_post(route, body, options = {})
-    puts "POST #{CANVAS_URL}/#{route}..." unless options[:quiet]
-    uri = URI.parse("#{CANVAS_URL}/#{route}")
+    puts "POST #{canvas_url}/#{route}..." unless options[:quiet]
+    uri = URI.parse("#{canvas_url}/#{route}")
     request = Net::HTTP::Post.new(uri)
-    request["Authorization"] = "Bearer #{ACCESS_TOKEN}"
+    request["Authorization"] = "Bearer #{access_token}"
     request["Content-Type"] = 'application/json'
     request.body = body
 
@@ -59,10 +63,10 @@ module CanvasApiHelper
 
 
   def canvas_api_post_response(route, body, options = {})
-    puts "POST #{CANVAS_URL}/#{route}..." unless options[:quiet]
-    uri = URI.parse("#{CANVAS_URL}/#{route}")
+    puts "POST #{canvas_url}/#{route}..." unless options[:quiet]
+    uri = URI.parse("#{canvas_url}/#{route}")
     request = Net::HTTP::Post.new(uri)
-    request["Authorization"] = "Bearer #{ACCESS_TOKEN}"
+    request["Authorization"] = "Bearer #{access_token}"
     request["Content-Type"] = 'application/json'
     request.body = body
 
@@ -79,7 +83,7 @@ module CanvasApiHelper
     uri = URI.parse("#{route}/#{parameters}")
     # puts "GET #{uri}..."
     request = Net::HTTP::Get.new(uri)
-    request["Authorization"] = "Bearer #{ACCESS_TOKEN}"
+    request["Authorization"] = "Bearer #{access_token}"
 
     request["Content-Type"] = 'application/json'
     request.body = body
@@ -103,10 +107,10 @@ module CanvasApiHelper
 
 
   def canvas_api_put(route, body)
-    puts "PUT #{CANVAS_URL}/#{route}..."
-    uri = URI.parse("#{CANVAS_URL}/#{route}")
+    puts "PUT #{canvas_url}/#{route}..."
+    uri = URI.parse("#{canvas_url}/#{route}")
     request = Net::HTTP::Put.new(uri)
-    request["Authorization"] = "Bearer #{ACCESS_TOKEN}"
+    request["Authorization"] = "Bearer #{access_token}"
     request["Content-Type"] = 'application/json'
     request.body = body
 
@@ -123,10 +127,10 @@ module CanvasApiHelper
   end
 
   def canvas_api_delete(route, body)
-    puts "DELETE #{CANVAS_URL}/#{route}..."
-    uri = URI.parse("#{CANVAS_URL}/#{route}")
+    puts "DELETE #{canvas_url}/#{route}..."
+    uri = URI.parse("#{canvas_url}/#{route}")
     request = Net::HTTP::Delete.new(uri)
-    request["Authorization"] = "Bearer #{ACCESS_TOKEN}"
+    request["Authorization"] = "Bearer #{access_token}"
     request["Content-Type"] = 'application/json'
     request.body = body
 

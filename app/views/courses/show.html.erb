@@ -47,8 +47,8 @@
       <td><%= section.users.count %></td>
       <td><%= section.enrollments.where(enrolled_in_canvas: true).count %></td>
       <td><%= section.sis_id %></td>
-      <td><%= section.canvas_id && section.canvas_course_id ? link_to("#{section.canvas_id} ⧉", "#{ENV['CANVAS_PATH']}/courses/#{section.canvas_course_id}/sections/#{section.canvas_id}") : '' %></td>
-      <td><%= section.canvas_course_id ? link_to("#{section.canvas_course_id} ⧉", "#{ENV['CANVAS_PATH']}/courses/#{section.canvas_course_id}/settings#tab-sections") : '' %></td>
+      <td><%= section.canvas_id && section.canvas_course_id ? link_to("#{section.canvas_id} ⧉", "#{AdminSetting.canvas_path}/courses/#{section.canvas_course_id}/sections/#{section.canvas_id}") : '' %></td>
+      <td><%= section.canvas_course_id ? link_to("#{section.canvas_course_id} ⧉", "#{AdminSetting.canvas_path}/courses/#{section.canvas_course_id}/settings#tab-sections") : '' %></td>
       <td><%= section.assignment ? section.assignment.sis_id : 'None' %></td>
       <td><%= section.sync_grades %></td>
       <td><%= link_to 'Edit', edit_section_path(section) %></td>
