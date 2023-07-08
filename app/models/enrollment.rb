@@ -49,6 +49,16 @@ class Enrollment < ApplicationRecord
     change.new_value
   end
 
+  # list of current and all previous grade changes for the given enrollment with times
+  def grade_history
+    grades = []
+    current_change = self.last_grade_change
+    until current_change.nil?
+      grades << [current_change.new_value, current_change.time]
+      current_change = current_change.prev
+    end
+  end
+
   def post_grade(options = {})
     if section.assignment.nil?
       puts "Cannot post grade without OnCampus assignment for section: #{section}"

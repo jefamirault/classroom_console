@@ -17,7 +17,6 @@ class SyncCanvasEnrollmentsJob < ApplicationJob
           SyncCanvasEnrollmentsJob.perform_later batch: ids
         end
       rescue
-        binding.pry
         raise "Invalid Slice Size: #{slice_size}"
       end
     elsif options[:batch]
