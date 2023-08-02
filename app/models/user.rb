@@ -112,6 +112,24 @@ class User < ApplicationRecord
     on_api_get_json "list/#{AdminSetting.sis_email_list_id}"
   end
 
+  def get_relationships
+    response = on_api_get "user/relationshipsettings/#{self.sis_id}"
+    JSON.parse response.body
+  end
+
+  def get_parents
+    sis_ids = get_relationships.select {|r| r['User1RoleName'] == 'Parent'}.map {|s| s['User1Id']}
+    sis_ids.map {|id| JSON.parse User.get_sis_user(id).body }
+  end
+
+  def parent_emails
+    get_parents.map {|p| p['Email']}
+  end
+
+  def self.get_sis_user(sis_id)
+    on_api_get "user/#{sis_id}"
+  end
+
   extend CanvasApiHelper
 
   def request_canvas_user

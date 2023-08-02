@@ -28,7 +28,7 @@ class Course < ApplicationRecord
     Term.sync_terms
     # return 'Select which courses to sync with Canvas' if Course.where(sync_course: true).count == 0
     # Section.sync_all_sis_assignments
-    # Course.sync_all_sis_enrollments
+    Course.sync_all_sis_enrollments
     Enrollment.get_sis_teacher_enrollments
     User.refresh_sis_emails
     User.sync_canvas_users
@@ -225,7 +225,7 @@ class Course < ApplicationRecord
   def enroll_users_in_canvas(options = {})
     result = { detected_canvas_enrollments: [], created_canvas_enrollments: [] }
 
-    self.sections.each do |s|
+    self.sections.select{|s| !s.term.ended? }.each do |s|
       increment = s.enroll_users_in_canvas options
       result[:detected_canvas_enrollments] += increment[:detected_canvas_enrollments]
       result[:created_canvas_enrollments] += increment[:created_canvas_enrollments]

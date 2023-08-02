@@ -102,7 +102,7 @@ class Section < ApplicationRecord
     result[:detected_canvas_enrollments] += result1[:detected_canvas_enrollments]
 
     # add missing Canvas enrollments
-    enrollments.where(enrolled_in_canvas: nil).each do |e|
+    enrollments.where(enrolled_in_canvas: [nil, false]).each do |e|
       result[:created_canvas_enrollments] += e.post_to_canvas[:created_canvas_enrollments]
     end
 
@@ -481,7 +481,11 @@ class Section < ApplicationRecord
         sis_section_id: ''
       }
     }.to_json
-    canvas_api_put "sections/#{self.canvas_id}", body
+    # responds with section object
+    response = canvas_api_put "sections/#{self.canvas_id}", body
+
+    # return true if canvas section sis_id is nil
+    response.class == Hash && response['sis_section_id'].nil?
   end
 
   def delete_course_from_canvas
@@ -489,5 +493,15 @@ class Section < ApplicationRecord
       event: 'delete'
     }.to_json
     canvas_api_delete "courses/#{self.canvas_course_id}", body
+  end
+
+  def safe_delete_from_canvas
+    if canvas_id.nil?
+      raise "Missing Canvas section for #{self.name}. Cannot delete from Canvas."
+    elsif remove_sis_id_from_canvas
+      delete_course_from_canvas
+    else
+      raise "Failed to purge SIS ID in Canvas for section: #{self.name}"
+    end
   end
 end
