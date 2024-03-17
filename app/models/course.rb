@@ -190,10 +190,11 @@ class Course < ApplicationRecord
     canvas_course_ids = sections.map {|s| s.canvas_course_id}.uniq
     canvas_course_ids.delete nil
     if canvas_course_ids.size > 1
-      msg "Error: Cannot infer Canvas course id for section, multiple Canvas courses found for term. Course :#{self}"
+      msg = "Error: Cannot infer Canvas course id for section, multiple Canvas courses found for term. Course :#{self}"
         event = Event.make msg, msg
         Log.create event_id: event.id, loggable_id: self.id, loggable_type: 'Course'
-        raise msg
+      result[:warnings] = [msg]
+      return result
     end
     # unless sections.map{|s| s.canvas_course_id.nil?}.reduce :&
     #   msg = "Error: Canvas Course ID already present for section. Course: #{self}"

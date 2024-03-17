@@ -60,6 +60,11 @@ class Enrollment < ApplicationRecord
   end
 
   def post_grade(options = {})
+    if AdminSetting.first_or_create.allow_on_api_write
+    #   Proceed if action is permitted
+    else
+      return "Not posting grade. Writing to ON API disabled."
+    end
     if section.assignment.nil?
       puts "Cannot post grade without OnCampus assignment for section: #{section}"
       return nil

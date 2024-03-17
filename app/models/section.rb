@@ -411,12 +411,14 @@ class Section < ApplicationRecord
     result = { updated_section: nil }
 
     if self.canvas_course_id.nil?
-      raise 'Error: Cannot create Canvas section before course'
+      msg = 'Error: Cannot create Canvas section before course'
+      result[:warnings] = [msg]
+      return result
     end
 
-    unless canvas_id.nil?
+    unless canvas_id.nil? && canvas_course_id.nil?
       puts 'Skipping create Canvas Section, canvas_id is already present.'
-      return nil
+      return result
     end
 
     # canvas_id not present, check if course/section already exist in canvas
@@ -431,7 +433,7 @@ class Section < ApplicationRecord
       }
     }.to_json
 
-
+    # TODO handle "sis_id already in use" by updating local records
     response = canvas_api_post "courses/#{self.canvas_course_id}/sections", body
     raise "Something went wrong. #{response['errors']}" if response['errors']
     self.canvas_id = response['id']

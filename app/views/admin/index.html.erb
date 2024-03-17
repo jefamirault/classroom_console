@@ -52,6 +52,22 @@
     <%= form.label :sis_teacher_enrollments_list_id, 'SIS Teacher Enrollments List ID' %>
     <%= form.number_field :sis_teacher_enrollments_list_id, class: 'form-control' %>
   </div>
+  <div class="field">
+    <%= form.label :allow_on_api_read, 'Allow ON API Read' %>
+    <%= form.check_box :allow_on_api_read, class: 'form-control' %>
+  </div>
+  <div class="field">
+    <%= form.label :allow_on_api_write, 'Allow ON API Write' %>
+    <%= form.check_box :allow_on_api_write, class: 'form-control' %>
+  </div>
+  <div class="field">
+    <%= form.label :allow_canvas_api_read, 'Allow Canvas API Read' %>
+    <%= form.check_box :allow_canvas_api_read, class: 'form-control' %>
+  </div>
+  <div class="field">
+    <%= form.label :allow_canvas_api_write, 'Allow Canvas API Write' %>
+    <%= form.check_box :allow_canvas_api_write, class: 'form-control' %>
+  </div>
   <%= form.submit class: 'btn btn-primary' %>
 <% end %>
 

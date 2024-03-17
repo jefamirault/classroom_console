@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_01_02_140818) do
+ActiveRecord::Schema[7.0].define(version: 2024_03_17_133611) do
   create_table "admin_settings", charset: "utf8mb3", force: :cascade do |t|
     t.string "canvas_path"
     t.string "canvas_access_token"
@@ -25,6 +25,10 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_02_140818) do
     t.integer "sis_teacher_enrollments_list_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "allow_on_api_read", default: false
+    t.boolean "allow_on_api_write", default: false
+    t.boolean "allow_canvas_api_read", default: false
+    t.boolean "allow_canvas_api_write", default: false
   end
 
   create_table "assignments", charset: "utf8mb3", force: :cascade do |t|

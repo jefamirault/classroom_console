@@ -95,7 +95,7 @@ class SectionsController < ApplicationController
 
   def create_canvas_course
     @section = Section.find params[:section_id]
-    @section.create_canvas_course
+    @section.course.create_canvas_course(@section.term)
     redirect_to @section
   end
 
