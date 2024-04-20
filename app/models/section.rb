@@ -137,8 +137,9 @@ class Section < ApplicationRecord
 
   # get grades from Canvas
   def sync_canvas_enrollments(options = {})
-    raise "Cannot sync Canvas enrollments without canvas_id for #{self}." if canvas_id.nil?
-
+    if canvas_id.nil?
+      raise "Cannot sync Canvas enrollments without canvas_id for #{self}."
+    end
 
     result = { detected_canvas_users: [], detected_canvas_enrollments: [] }
 
@@ -181,10 +182,8 @@ class Section < ApplicationRecord
 
       if self.users.include? user
         enrollment = self.enrollments.find {|e| e.user == user}
-        if enrollment.grade != json[:current_grade]
-          enrollment.grade = json[:current_grade]
-          enrollment.post_grade if enrollment.save
-        end
+        enrollment.grade = json[:current_grade]
+        enrollment.post_grade if enrollment.save
       else
         puts "WARNING: Canvas section #{self} contains unexpected enrollment: #{json}"
       end
