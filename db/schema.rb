@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_03_17_133611) do
+ActiveRecord::Schema[7.0].define(version: 2024_04_20_152455) do
   create_table "admin_settings", charset: "utf8mb3", force: :cascade do |t|
     t.string "canvas_path"
     t.string "canvas_access_token"
@@ -106,9 +106,20 @@ ActiveRecord::Schema[7.0].define(version: 2024_03_17_133611) do
   end
 
   create_table "subscriptions", charset: "utf8mb3", force: :cascade do |t|
-    t.text "email"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "section_sis_id"
+    t.integer "section_id"
+    t.integer "sync_profile_id"
+    t.boolean "enabled"
+    t.boolean "sis_enrollments"
+    t.boolean "maintain_canvas_section"
+    t.boolean "post_canvas_grades"
+  end
+
+  create_table "sync_profiles", charset: "utf8mb3", force: :cascade do |t|
     t.integer "user_id"
-    t.boolean "subscribed"
+    t.integer "term_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

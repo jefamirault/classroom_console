@@ -1,0 +1,31 @@
+<h1>Subscriptions</h1>
+
+<table>
+  <thead>
+  <tr>
+    <th>ID</th>
+    <th>Section SIS ID</th>
+    <th>Section Name</th>
+    <th>Section Term</th>
+    <th>Enabled</th>
+    <th>Sync Enrollments</th>
+    <th>Sync Canvas Section</th>
+    <th>Sync Grades</th>
+  </tr>
+  </thead>
+
+  <tbody>
+  <% @subscriptions.each do |subscription| %>
+    <tr>
+      <td><%= link_to subscription.id, subscription %></td>
+      <td><%= subscription.section_sis_id %></td>
+      <td><%= subscription.section ? link_to(subscription.section.name, section_path(subscription.section)) : '' %></td>
+      <td><%= subscription.section ? subscription.section.term : '' %></td>
+      <td><%= boolstr subscription.enabled %></td>
+      <td><%= boolstr subscription.sis_enrollments %></td>
+      <td><%= boolstr subscription.maintain_canvas_section %></td>
+      <td><%= boolstr subscription.post_canvas_grades %></td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>

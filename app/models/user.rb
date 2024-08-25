@@ -11,6 +11,7 @@ class User < ApplicationRecord
   has_many :courses, through: :sections
   has_many :logs, as: :loggable
   has_many :events, through: :logs
+  has_many :sync_profiles
 
   ACCOUNT_ID = 1
 

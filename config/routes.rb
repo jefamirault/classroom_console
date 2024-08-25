@@ -43,6 +43,13 @@ Rails.application.routes.draw do
 
   get 'public', to: 'verify#index'
 
+
+  resources :sync_profiles do |p|
+    get 'generate_subscriptions'
+    get 'sync_now'
+  end
+
+  resources 'subscriptions'
   post 'subscribe', to: 'subscriptions#create', as: 'subscribe'
 
   root to: 'verify#index'

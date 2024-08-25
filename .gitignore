@@ -42,3 +42,5 @@ db/*.db
 /config/credentials/production.key
 
 .rbenv-vars
+
+dump.rdb

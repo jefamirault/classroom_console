@@ -1,0 +1,20 @@
+<h1>Sync Profiles</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>User</th>
+      <th>Term</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @sync_profiles.each do |p| %>
+      <tr>
+        <td><%= link_to p.id, sync_profile_path(p) %></td>
+        <td><%= link_to p.user, user_path(p.user) %></td>
+        <td><%= p.term %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

@@ -7,6 +7,8 @@ class Section < ApplicationRecord
   has_many :logs, as: :loggable
   has_many :events, through: :logs
 
+  has_one :subscription
+
   scope :missing_canvas_id, -> { where(canvas_id: nil) }
   scope :has_canvas_id, -> { where.not(canvas_id: nil) }
 
@@ -343,6 +345,13 @@ class Section < ApplicationRecord
     end
   end
 
+  def create_canvas_course
+    if term.nil?
+      raise 'Cannot infer term from section, unable to create Canvas course'
+    end
+    self.course.create_canvas_course(self.term)
+  end
+
   extend OnApiHelper
 
   def sync_sis_enrollments
@@ -415,7 +424,7 @@ class Section < ApplicationRecord
       return result
     end
 
-    unless canvas_id.nil? && canvas_course_id.nil?
+    unless canvas_id.nil? && !canvas_course_id.nil?
       puts 'Skipping create Canvas Section, canvas_id is already present.'
       return result
     end
@@ -434,7 +443,7 @@ class Section < ApplicationRecord
 
     # TODO handle "sis_id already in use" by updating local records
     response = canvas_api_post "courses/#{self.canvas_course_id}/sections", body
-    raise "Something went wrong. #{response['errors']}" if response['errors']
+    raise "Something went wrong. Section SIS_ID: #{self.sis_id} #{response['errors']}" if response['errors']
     self.canvas_id = response['id']
     if save
       result[:updated_section] = self
@@ -489,13 +498,19 @@ class Section < ApplicationRecord
     response.class == Hash && response['sis_section_id'].nil?
   end
 
+  # CAUTION: Deleting a canvas section with an SIS ID will still block that SIS ID from being used again
   def delete_course_from_canvas
     body = {
       event: 'delete'
     }.to_json
+    self.canvas_id = nil
+    self.canvas_course_id = nil
+    save
+    self.enrollments.each {|e| e.update enrolled_in_canvas: false}
     canvas_api_delete "courses/#{self.canvas_course_id}", body
   end
 
+  # TODO: Safe delete should also remove canvas_course_id and set all enrollments to enrolled_in_canvas = false
   def safe_delete_from_canvas
     if canvas_id.nil?
       raise "Missing Canvas section for #{self.name}. Cannot delete from Canvas."

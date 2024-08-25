@@ -1,0 +1,85 @@
+<h1>Subscription</h1>
+
+<p>
+  <strong>ID:</strong>
+  <%= @subscription.id %>
+</p>
+
+<p>
+  <strong>Sync Profile ID:</strong>
+  <% if @subscription.sync_profile %>
+    <%= link_to @subscription.sync_profile_id, @subscription.sync_profile %>
+  <% end %>
+</p>
+
+<p>
+  <strong>Section:</strong>
+  <% if @subscription.section %>
+    <%= link_to @subscription.section %>
+  <% end %>
+</p>
+
+<p>
+  <strong>Section SIS ID:</strong>
+  <%= @subscription.section_sis_id %>
+</p>
+
+<p>
+  <strong>Sync Enabled:</strong>
+  <%= boolstr @subscription.enabled %>
+</p>
+
+<p>
+  <strong>Sync SIS Enrollments:</strong>
+  <%= boolstr @subscription.sis_enrollments %>
+</p>
+
+<p>
+  <strong>Sync Canvas Section:</strong>
+  <%= boolstr @subscription.maintain_canvas_section %>
+</p>
+
+<p>
+  <strong>Sync Canvas Grades to SIS:</strong>
+  <%= boolstr @subscription.post_canvas_grades %>
+</p>
+
+<p>
+  <strong>Generated:</strong>
+  <%= @subscription.created_at %>
+</p>
+
+<!--<p>-->
+  <%#= link_to 'Generate Subscriptions', '' %>
+<!--</p>-->
+
+<!--<h2>Subscriptions</h2>-->
+
+<!--<table>-->
+<!--  <thead>-->
+<!--  <tr>-->
+<!--    <th>ID</th>-->
+<!--    <th>Section</th>-->
+<!--    <th>Section SIS ID</th>-->
+<!--    <th>Sync Enabled</th>-->
+<!--    <th>Sync SIS Enrollments</th>-->
+<!--    <th>Sync Canvas Section</th>-->
+<!--    <th>Sync Canvas Grades to SIS</th>-->
+<!--    <th>Generated</th>-->
+<!--  </tr>-->
+<!--  </thead>-->
+<!--  <tbody>-->
+  <%# @sync_profile.subscriptions.each do |p| %>
+<!--    <tr>-->
+<!--      <td><%#= link_to p.id, subscription_path(p) %></td>-->
+<!--      <td><%#= p.section %></td>-->
+<!--      <td><%#= p.section_sis_id %></td>-->
+<!--      <td><%#= boolstr p.enabled %></td>-->
+<!--      <td><%#= boolstr p.sis_enrollments %></td>-->
+<!--      <td><%#= boolstr p.maintain_canvas_section %></td>-->
+<!--      <td><%#= boolstr p.post_canvas_grades %></td>-->
+<!--      <td><%#= p.created_at %></td>-->
+<!--    </tr>-->
+  <%# end %>
+<!--  </tbody>-->
+<!--</table>-->

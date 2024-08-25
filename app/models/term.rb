@@ -3,7 +3,7 @@ class Term < ApplicationRecord
   has_many :sections
   has_many :logs, as: :loggable
   has_many :events, through: :logs
-
+  has_many :sync_profiles
   def self.sync_terms
     puts "Syncing Terms..."
     result1 = Term.refresh_sis_terms

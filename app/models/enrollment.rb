@@ -87,6 +87,7 @@ class Enrollment < ApplicationRecord
 
     result = { created_canvas_enrollments: [] }
 
+    # User must be created in Canvas before they can be enrolled in a Canvas course
     return result if user.canvas_id.nil?
 
     enrollment_type = self.role.capitalize + 'Enrollment'
@@ -95,7 +96,7 @@ class Enrollment < ApplicationRecord
       enrollment: {
         user_id: user.canvas_id,
         type: enrollment_type,
-        enrollment_status: 'active'
+        enrollment_state: 'active'
       }
     }.to_json
 

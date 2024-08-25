@@ -67,6 +67,7 @@
     <th>Grade</th>
     <th>Last Changed</th>
     <th>Section</th>
+    <th>Canvas ID</th>
   </tr>
   </thead>
 
@@ -77,6 +78,7 @@
       <td><%= enrollment.grade %></td>
       <td><%= enrollment.grade_updated_at ? "#{time_ago_in_words(enrollment.grade_updated_at)} ago" : 'Never' %></td>
       <td><%= enrollment.section %></td>
+      <td><%= enrollment.user.canvas_id %></td>
     </tr>
   <% end %>
   </tbody>

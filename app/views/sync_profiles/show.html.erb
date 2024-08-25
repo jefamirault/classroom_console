@@ -1,0 +1,53 @@
+<h1>Sync Profile</h1>
+
+<p>
+  <strong>ID:</strong>
+  <%= @sync_profile.id %>
+</p>
+
+<p>
+  <strong>User:</strong>
+  <%= @sync_profile.user %>
+</p>
+
+<p>
+  <strong>Term:</strong>
+  <%= @sync_profile.term %>
+</p>
+
+<p>
+  <%= link_to 'Generate Subscriptions', '' %>
+</p>
+
+<%= link_to 'Sync Now', sync_profile_sync_now_path(@sync_profile.id), class: 'slow btn btn-primary m-2', data: { toggle: 'tooltip'}, title: "Sync this profile's enabled subscriptions immediately." %>
+
+<h2>Subscriptions</h2>
+
+<table>
+  <thead>
+  <tr>
+    <th>ID</th>
+    <th>Section</th>
+    <th>Section SIS ID</th>
+    <th>Sync Enabled</th>
+    <th>Sync SIS Enrollments</th>
+    <th>Sync Canvas Section</th>
+    <th>Sync Canvas Grades to SIS</th>
+    <th>Generated</th>
+  </tr>
+  </thead>
+  <tbody>
+  <% @sync_profile.subscriptions.each do |p| %>
+    <tr>
+      <td><%= link_to p.id, subscription_path(p) %></td>
+      <td><%= link_to p.section %></td>
+      <td><%= p.section_sis_id %></td>
+      <td><%= boolstr p.enabled %></td>
+      <td><%= boolstr p.sis_enrollments %></td>
+      <td><%= boolstr p.maintain_canvas_section %></td>
+      <td><%= boolstr p.post_canvas_grades %></td>
+      <td><%= p.created_at %></td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>

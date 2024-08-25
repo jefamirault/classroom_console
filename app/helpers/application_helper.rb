@@ -28,3 +28,7 @@ module ApplicationHelper
 
   end
 end
+
+def boolstr(val)
+  (!!val).to_s.titleize
+end
