@@ -1,0 +1,5 @@
+<h1>Dashboard</h1>
+
+<h4><%= link_to "#{@subscriptions.count} sections", subscriptions_path %> are being synced, managed by <%= link_to "#{@profiles.count} profiles", sync_profiles_path %> .</h4>
+
+<h4><%= link_to "#{@grades.count} grade changes", grades_path %> detected in the last 24 hours.</h4>

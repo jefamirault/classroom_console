@@ -84,4 +84,9 @@ Rails.application.routes.draw do
   patch 'admin_setting', to: 'admin#update'
   get 'test_canvas_api', to: 'admin#test_canvas_api'
   get 'test_on_api', to: 'admin#test_on_api'
+
+  get 'dashboard', to: 'dashboard#index'
+
+  get 'grades', to: 'grades#index'
+
 end

@@ -1,0 +1,24 @@
+<h1>Grades</h1>
+
+<table>
+  <thead>
+  <tr>
+    <th>New Grade</th>
+    <th>Old Grade</th>
+    <th>Student</th>
+    <th>Section</th>
+  </tr>
+  </thead>
+
+  <tbody>
+  <% @grades.each do |grade| %>
+    <tr>
+      <td><%= grade.new_value %></td>
+      <td><%= grade.old_value %></td>
+      <td><%= grade.enrollment.user %></td>
+      <td><%= grade.enrollment.section %></td>
+
+    </tr>
+  <% end %>
+  </tbody>
+</table>
