@@ -41,4 +41,11 @@ class SyncProfile < ApplicationRecord
   def sync_now
     self.subscriptions.where(enabled: true).each &:sync
   end
+
+  def enabled_subscriptions
+    subscriptions.where(enabled: true)
+  end
+  def enabled_subscriptions_count
+    enabled_subscriptions.count
+  end
 end

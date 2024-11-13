@@ -5,6 +5,7 @@
     <tr>
       <th>ID</th>
       <th>User</th>
+      <th>Sections Syncing</th>
       <th>Term</th>
     </tr>
   </thead>
@@ -13,6 +14,7 @@
       <tr>
         <td><%= link_to p.id, sync_profile_path(p) %></td>
         <td><%= link_to p.user, user_path(p.user) %></td>
+        <td><%= p.enabled_subscriptions_count %></td>
         <td><%= p.term %></td>
       </tr>
     <% end %>
