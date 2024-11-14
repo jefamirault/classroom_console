@@ -1,0 +1,35 @@
+<h1>Get Teacher Sections</h1>
+
+<h3>Current School Year: <%= AdminSetting.sis_school_year.gsub('%20', ' ') %></h3>
+
+<%= form_with url: on_api_get_teacher_sections_path, local: true, method: :get do |form| %>
+  <%= form.label :teacher_sis_id, "Teacher SIS ID:" %>
+  <%= form.search_field :teacher_sis_id, value: params['teacher_sis_id'] %>
+  <%= form.submit "Search" %>
+<% end %>
+
+<% if @teacher_sections %>
+  <table>
+    <thead>
+    <tr>
+      <th>SIS ID</th>
+      <th>Lead Section ID</th>
+      <th>Section Name</th>
+      <th>Section Identifier</th>
+      <th>Duration ID</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    <% @teacher_sections.each do |teacher_section| %>
+      <tr>
+        <td><%= teacher_section['Id'] %></td>
+        <td><%= teacher_section['LeadSectionId'] %></td>
+        <td><%= teacher_section['Name'] %></td>
+        <td><%= teacher_section['SectionIdentifier'] %></td>
+        <td><%= teacher_section['Duration']['DurationId'] %></td>
+      </tr>
+    <% end %>
+    </tbody>
+  </table>
+<% end %>

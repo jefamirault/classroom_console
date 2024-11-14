@@ -1,0 +1,39 @@
+<h1>Get Assignments</h1>
+
+<%= form_with url: on_api_get_assignments_path, local: true, method: :get do |form| %>
+  <%= form.label :section_sis_id, "Section SIS ID:" %>
+  <%= form.search_field :section_sis_id, value: params['section_sis_id'] %>
+  <%= form.submit "Search" %>
+<% end %>
+
+<% if @assignments %>
+  <table>
+    <thead>
+    <tr>
+      <th>SIS ID</th>
+      <th>Assignment Type</th>
+      <th>Assignment Name</th>
+      <th> Description</th>
+      <th>Max Points</th>
+      <th>Scale Factor</th>
+      <th>IncGradeBook</th>
+      <th>PublishGrade</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    <% @assignments.each do |assignment| %>
+      <tr>
+        <td><%= assignment['AssignmentId'] %></td>
+        <td><%= assignment['AssignmentType'] %></td>
+        <td><%= assignment['ShortDescription'] %></td>
+        <td><%= assignment['LongDescription'].html_safe %></td>
+        <td><%= assignment['MaxPoints'] %></td>
+        <td><%= assignment['Factor'] %></td>
+        <td><%= assignment['IncGradeBook'] %></td>
+        <td><%= assignment['PublishGrade'] %></td>
+      </tr>
+    <% end %>
+    </tbody>
+  </table>
+<% end %>

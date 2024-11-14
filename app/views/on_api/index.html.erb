@@ -1,0 +1,7 @@
+<h1>Make Calls to the ON API</h1>
+
+<ul>
+  <% %w[school_years terms courses sections teacher_sections assignments assignment_grades departments roles users].each do |record| %>
+    <li><%= link_to "Get #{record.titleize}", send("on_api_get_#{record}_path") %></li>
+  <% end %>
+</ul>

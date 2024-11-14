@@ -1,0 +1,21 @@
+<h1>Get Departments</h1>
+
+<h3>Current School Year: <%= AdminSetting.sis_school_year.gsub('%20', ' ') %></h3>
+
+<table>
+  <thead>
+  <tr>
+    <th>Department SIS ID</th>
+    <th>Department Name</th>
+  </tr>
+  </thead>
+
+  <tbody>
+  <% @departments.each do |department| %>
+    <tr>
+      <td><%= department['department_id'] %></td>
+      <td><%= department['department_description'] %></td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>

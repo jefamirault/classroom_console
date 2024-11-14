@@ -8,6 +8,9 @@ module OnApiHelper
   ON_API_KEY = AdminSetting.on_api_key
   ON_API_SECRET = AdminSetting.on_api_secret
 
+  SIS_SCHOOL_YEAR = AdminSetting.sis_school_year
+  SIS_LEVEL_NUM = AdminSetting.sis_level_num
+
   include ExportHelper
 
   def on_authenticate
@@ -110,4 +113,118 @@ module OnApiHelper
   def on_api_get_json(route, parameters = nil)
     JSON.parse on_api_get(route, parameters).body
   end
+
+
+  def on_api_get_school_years(options = {})
+    response = on_api_get 'schoolinfo/allschoolyears'
+    school_years = JSON.parse response.body
+    {
+      success: response.code == '200',
+      response: response,
+      data: school_years
+    }
+  end
+
+  def on_api_get_terms(school_year = SIS_SCHOOL_YEAR)
+    response = on_api_get 'schoolinfo/term', "&schoolYear=#{school_year}"
+    terms = JSON.parse response.body
+    {
+      success: response.code == '200',
+      response: response,
+      data: terms
+    }
+  end
+
+  def on_api_get_courses
+    response = on_api_get 'academics/course'
+    courses = JSON.parse response.body
+    {
+      success: response.code == '200',
+      response: response.body,
+      data: courses
+    }
+  end
+
+  def on_api_get_sections
+    parameters = "&schoolYear=#{SIS_SCHOOL_YEAR}&levelNum=#{SIS_LEVEL_NUM}"
+    response = on_api_get 'academics/section', parameters
+    sections = JSON.parse response.body
+    {
+      success: response.code == '200',
+      response: response,
+      data: sections
+    }
+  end
+
+  def on_api_get_teacher_sections(user_sis_id)
+    response = on_api_get '/academics/TeacherSection', "&schoolYear=#{SIS_SCHOOL_YEAR}&userID=#{user_sis_id}"
+    teacher_sections = JSON.parse response.body
+    {
+      success: response.code == '200',
+      response: response,
+      data: teacher_sections
+    }
+  end
+
+  def on_api_get_assignments(section_sis_id)
+    response = on_api_get '/academics/assignment', "&leadSectionId=#{section_sis_id}"
+    assignments = JSON.parse response.body
+    {
+      success: response.code == '200',
+      response: response,
+      data: assignments
+    }
+  end
+  def on_api_get_assignment_grades(assignment_sis_id, section_sis_id)
+    response = on_api_get '/academics/AssignmentGrade', "&assignmentId=#{assignment_sis_id}&sectionId=#{section_sis_id}"
+    assignment_grades = JSON.parse response.body
+    {
+      success: response.code == '200',
+      response: response,
+      data: assignment_grades
+    }
+  end
+
+  def on_api_post_grade(grade, user_sis_id, assignment_sis_id, section_sis_id)
+    grade_object = {
+      'GradebookGrade' => grade,
+      'StudentUserId' => user_sis_id,
+      'AssignmentId' => assignment_sis_id,
+      'SectionId' => section_sis_id
+    }
+    on_api_post 'academics/assignmentgrade', on_api_token, grade_object
+  end
+
+  def on_api_get_departments(options = {})
+    response = on_api_get '/academics/department'
+    departments = JSON.parse response.body
+    {
+      success: response.code == '200',
+      response: response,
+      data: departments
+    }
+  end
+
+  def on_api_get_roles(options = {})
+    response = on_api_get '/role/ListAll'
+    roles = JSON.parse(response.body)
+    {
+      success: response.code == '200',
+      response: response,
+      data: roles
+    }
+  end
+  def on_api_get_users(options = {})
+    role_ids = options[:role_ids] || '29906,29907'
+    start_row = options[:start_row] || 1
+    end_row = options[:end_row] || 200
+    response = on_api_get '/user/all', "&roleIDs=#{role_ids}&startrow=#{start_row}&endrow=#{end_row}"
+    users = JSON.parse response.body
+    {
+      success: response.code == '200',
+      response: response,
+      data: users
+    }
+  end
+
 end

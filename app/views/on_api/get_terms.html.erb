@@ -1,0 +1,23 @@
+<h1>Get Terms</h1>
+
+<h3>School Year: <%= AdminSetting.sis_school_year.gsub('%20', ' ') %></h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Duration ID</th>
+      <th>Term Name</th>
+      <th>School Year</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @terms.each do |term| %>
+      <tr>
+        <td><%= term['DurationId'] %></td>
+        <td><%= term['Description'] %></td>
+        <td><%= term['SchoolYear'] %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

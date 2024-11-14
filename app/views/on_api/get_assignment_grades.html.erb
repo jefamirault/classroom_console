@@ -1,0 +1,31 @@
+<h1>Get Assignment Grades</h1>
+
+<%= form_with url: on_api_get_assignment_grades_path, local: true, method: :get do |form| %>
+  <%= form.label :section_sis_id, "Section SIS ID:" %>
+  <%= form.search_field :section_sis_id, value: params['section_sis_id'] %>
+  <%= form.label :assignment_sis_id, "Assignment SIS ID:" %>
+  <%= form.search_field :assignment_sis_id, value: params['assignment_sis_id'] %>
+  <%= form.submit "Search" %>
+<% end %>
+
+<% if @assignment_grades %>
+  <table>
+    <thead>
+      <tr>
+        <th>Student SIS ID</th>
+        <th>Assignment Type ID</th>
+        <th>Points</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @assignment_grades.each do |assignment_grade| %>
+        <tr>
+          <td><%= assignment_grade['StudentUserId'] %></td>
+          <td><%= assignment_grade['AssignmentTypeId'] %></td>
+          <td><%= assignment_grade['Grade'].to_f.round(2) %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% end %>

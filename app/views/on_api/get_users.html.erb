@@ -1,0 +1,31 @@
+<h1>Get Users</h1>
+
+<h3>Searching Teachers and Students</h3>
+
+<%= form_with url: on_api_get_users_path, local: true, method: :get do |form| %>
+  <%= form.label :start_row, "Start Row:" %>
+  <%= form.search_field :start_row, value: params['start_row'] %>
+  <%= form.label :end_row, "End Row: (Max 200 Results)" %>
+  <%= form.search_field :end_row, value: params['end_row'] %>
+  <%= form.submit "Search" %>
+<% end %>
+
+<table>
+  <thead>
+  <tr>
+    <th>SIS ID</th>
+    <th>Display Name</th>
+    <th>Email</th>
+  </tr>
+  </thead>
+
+  <tbody>
+  <% @users.each do |user| %>
+    <tr>
+      <td><%= user['UserId'] %></td>
+      <td><%= user['StudentDisplay'] %></td>
+      <td><%= user['Email'] %></td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>

@@ -1,0 +1,25 @@
+<h1>Get School Years</h1>
+
+<h3>Current School Year: <%= AdminSetting.sis_school_year.gsub('%20', ' ') %></h3>
+
+<table>
+  <thead>
+  <tr>
+    <th>School Year Name</th>
+    <th>School Year ID</th>
+    <th>Current</th>
+    <th>Published</th>
+  </tr>
+  </thead>
+
+  <tbody>
+  <% @school_years.each do |school_year| %>
+    <tr>
+      <td><%= school_year['SchoolYearLabel'] %></td>
+      <td><%= school_year['SchoolYearId'] %></td>
+      <td><%= school_year['Current'] %></td>
+      <td><%= school_year['Published'] %></td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>

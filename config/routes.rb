@@ -89,4 +89,16 @@ Rails.application.routes.draw do
 
   get 'grades', to: 'grades#index'
 
+  scope 'on_api' do
+    get '', to: 'on_api#index', as: 'on_api'
+    %w[school_years terms courses sections teacher_sections assignments assignment_grades departments roles users].each do |record|
+      get "get_#{record}", to: "on_api#get_#{record}", as: "on_api_get_#{record}"
+    end
+  end
+
+  scope 'canvas_api' do
+    get '', to: 'canvas_api#index', as: 'canvas_api'
+    get 'get_roles', to: 'canvas_api#get_roles', as: 'canvas_api_get_roles'
+  end
+
 end

@@ -1,0 +1,25 @@
+<h1>Get Courses</h1>
+
+<h3>Current School Year: <%= AdminSetting.sis_school_year.gsub('%20', ' ') %></h3>
+
+<table>
+  <thead>
+  <tr>
+    <th>Course SIS ID</th>
+    <th>Course Name</th>
+    <th>Course Length</th>
+    <th>Active?</th>
+  </tr>
+  </thead>
+
+  <tbody>
+  <% @courses.each do |course| %>
+    <tr>
+      <td><%= course['OfferingId'] %></td>
+      <td><%= course['CourseTitle'] %></td>
+      <td><%= course['CourseLength'] %></td>
+      <td><%= course['IsActive'] %></td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>

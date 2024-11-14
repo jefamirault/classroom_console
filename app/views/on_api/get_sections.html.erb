@@ -1,0 +1,29 @@
+<h1>Get Sections</h1>
+
+<h3>Current School Year: <%= AdminSetting.sis_school_year.gsub('%20', ' ') %></h3>
+
+<table>
+  <thead>
+  <tr>
+    <th>Section SIS ID</th>
+    <th>Lead Section SIS ID</th>
+    <th>Parent Section SIS ID</th>
+    <th>Course (Offering) SIS ID</th>
+    <th>Section Name</th>
+    <th>School Year</th>
+  </tr>
+  </thead>
+
+  <tbody>
+  <% @sections.each do |section| %>
+    <tr>
+      <td><%= section['Id'] %></td>
+      <td><%= section['LeadSectionId'] %></td>
+      <td><%= section['ParentSectionId'] %></td>
+      <td><%= section['OfferingId'] %></td>
+      <td><%= section['Name'] %></td>
+      <td><%= section['SchoolYearLabel'] %></td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>
