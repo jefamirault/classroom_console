@@ -38,12 +38,6 @@ class Section < ApplicationRecord
     sync_canvas_enrollments
   end
 
-
-
-  def self.sync_all_grades
-    Section.where(sync_grades: true).each &:sync
-  end
-
   def sync_sis_assignments(options = {})
     result = { new_opt_in: nil }
     if self.assignment
@@ -67,13 +61,9 @@ class Section < ApplicationRecord
         # check if assignment exists locally
         if self.assignment.nil?
           # add if missing
-          puts "Adding Opt-In Assignment locally for section: #{self}"
+          puts "Adding Grade Passback Assignment locally for section: #{self}"
           a = Assignment.new sis_id: sis_id
           self.assignment = a
-          if self.sync_grades.nil?
-            self.sync_grades = true
-            self.course.update sync_course: true
-          end
           if self.save
             result[:new_opt_in] = self
           end

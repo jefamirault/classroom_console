@@ -1,12 +1,12 @@
 class SectionsController < ApplicationController
 
   before_action :authenticate_user!, if: -> { !demo_mode? }
-  before_action :set_section, only: [:show, :edit, :update, :destroy]
+  before_action :set_section, only: [:show, :edit, :update, :destroy, :sync_sis_assignments, :clear_sis_assignments]
 
   # GET /sections
   # GET /sections.json
   def index
-    @sections = Section.includes(:course).all.order(canvas_id: :desc, sync_grades: :desc, name: :asc)
+    @sections = Section.includes(:course).all.order(canvas_id: :desc, name: :asc)
     @full_count = @sections.size
     # @sections = @sections.first(50) unless params[:all]
   end
@@ -72,11 +72,16 @@ class SectionsController < ApplicationController
     redirect_to @section
   end
 
-  def sync_all_grades
-    Section.sync_all_grades
-    redirect_to sections_path
+  def sync_sis_assignments
+    @section.sync_sis_assignments
+    redirect_to @section
   end
 
+  def clear_sis_assignments
+    @section.assignment = nil
+    @section.save
+    redirect_to @section
+  end
   def sync_all_sis_assignments
     Section.sync_all_sis_assignments
     redirect_to sections_path
@@ -107,6 +112,6 @@ class SectionsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def section_params
-      params.require(:section).permit(:name, :sis_id, :course_id, :canvas_id, :canvas_course_id, :term_id, :sync_grades)
+      params.require(:section).permit(:name, :sis_id, :course_id, :canvas_id, :canvas_course_id, :term_id)
     end
 end

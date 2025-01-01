@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_04_20_152455) do
+ActiveRecord::Schema[7.0].define(version: 2024_12_31_222713) do
   create_table "admin_settings", charset: "utf8mb3", force: :cascade do |t|
     t.string "canvas_path"
     t.string "canvas_access_token"
@@ -42,7 +42,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_20_152455) do
     t.boolean "is_active"
     t.integer "course_length"
     t.boolean "sync_course"
-    t.boolean "sync_grades"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "sections_count", default: 0, null: false
@@ -100,7 +99,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_20_152455) do
     t.integer "term_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.boolean "sync_grades"
     t.datetime "last_sync", precision: nil
     t.integer "enrollments_count", default: 0, null: false
   end

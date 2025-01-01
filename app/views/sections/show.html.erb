@@ -30,13 +30,13 @@
 </p>
 
 <p>
-  <strong>Assignment ID:</strong>
-  <%= @section.assignment ? @section.assignment.sis_id : 'None' %>
-</p>
-
-<p>
-  <strong>Sync Grades?:</strong>
-  <%= @section.sync_grades %>
+  <strong>SIS Assignment:</strong>
+  <% if @section.assignment %>
+    <%= @section.assignment.sis_id %>
+    (<%= link_to 'x', clear_sis_assignments_section_path(@section) , confirm: 'Are you Sure?' %>)
+  <% else %>
+    <%= link_to 'Sync Assignment', sync_sis_assignments_section_path(@section) %>
+  <% end %>
 </p>
 
 <p>

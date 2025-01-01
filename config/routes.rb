@@ -10,8 +10,11 @@ Rails.application.routes.draw do
     get 'sync'
     get 'enroll_users_in_canvas'
     get 'create_canvas_course'
+    member do
+      get 'sync_sis_assignments'
+      get 'clear_sis_assignments'
+    end
   end
-  get 'sync_all_grades', to: 'sections#sync_all_grades', as: 'sync_all_grades'
   get 'sync_all_sis_assignments', to: 'sections#sync_all_sis_assignments', as: 'sync_all_sis_assignments'
   get 'sync_all_canvas_sections', to: 'sections#sync_all_canvas_sections'
 
