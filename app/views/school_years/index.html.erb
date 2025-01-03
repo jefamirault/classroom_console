@@ -1,0 +1,14 @@
+<p style="color: green"><%= notice %></p>
+
+<h1>School years</h1>
+
+<div id="school_years">
+  <% @school_years.each do |school_year| %>
+    <%= render school_year %>
+    <p>
+      <%= link_to "Show this school year", school_year %>
+    </p>
+  <% end %>
+</div>
+
+<%= link_to "New school year", new_school_year_path %>

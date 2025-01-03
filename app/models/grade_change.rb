@@ -3,6 +3,8 @@ class GradeChange < ApplicationRecord
   has_one :user, through: :enrollment
   has_one :section, through: :enrollment
 
+  validates :enrollment, presence: true
+
   def previous_change
     self.previous_change_id ? GradeChange.find(self.previous_change_id) : nil
   end

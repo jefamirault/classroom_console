@@ -7,6 +7,8 @@
     <th>Canvas ID</th>
     <th>Start</th>
     <th>End</th>
+    <th>School Year</th>
+    <th>Status</th>
     <th></th>
   </tr>
   </thead>
@@ -18,6 +20,8 @@
       <td><%= term.canvas_id %></td>
       <td><%= format_date term.start %></td>
       <td><%= format_date term.end %></td>
+      <td><%= term.school_year %></td>
+      <td><%= term.status %></td>
       <td><%= link_to 'Edit', edit_term_path(term) %></td>
     </tr>
   <% end %>

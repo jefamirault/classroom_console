@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_12_31_222713) do
+ActiveRecord::Schema[7.0].define(version: 2025_01_03_233458) do
   create_table "admin_settings", charset: "utf8mb3", force: :cascade do |t|
     t.string "canvas_path"
     t.string "canvas_access_token"
@@ -90,6 +90,14 @@ ActiveRecord::Schema[7.0].define(version: 2024_12_31_222713) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "school_years", charset: "utf8mb3", force: :cascade do |t|
+    t.string "name"
+    t.date "start_date"
+    t.date "end_date"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "sections", charset: "utf8mb3", force: :cascade do |t|
     t.string "name"
     t.integer "sis_id"
@@ -120,6 +128,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_12_31_222713) do
     t.integer "term_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "school_year_id"
   end
 
   create_table "tenant_variables", charset: "utf8mb3", force: :cascade do |t|
@@ -137,6 +146,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_12_31_222713) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "sis_id"
+    t.integer "school_year_id"
   end
 
   create_table "users", charset: "utf8mb3", force: :cascade do |t|

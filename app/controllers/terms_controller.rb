@@ -6,7 +6,7 @@ class TermsController < ApplicationController
   # GET /terms
   # GET /terms.json
   def index
-    @terms = Term.all
+    @terms = Term.all.order start: :desc
   end
 
   # GET /terms/1
@@ -76,6 +76,6 @@ class TermsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def term_params
-      params.require(:term).permit(:name, :canvas_id, :start, :end)
+      params.require(:term).permit(:name, :canvas_id, :start, :end, :school_year_id)
     end
 end

@@ -1,5 +1,6 @@
 class Term < ApplicationRecord
 
+  belongs_to :school_year
   has_many :sections
   has_many :logs, as: :loggable
   has_many :events, through: :logs
@@ -117,5 +118,21 @@ class Term < ApplicationRecord
   def self.get_canvas_terms
     canvas_api_get_json "accounts/#{AdminSetting.account_id}/terms"
   end
+  def current?
+    if !self.start.nil? && !self.end.nil?
+      self.start <= Date.today && Date.today <= self.end
+    else
+      nil
+    end
+  end
 
+  def status
+    if self.current?
+      'Active'
+    elsif self.start > Date.today
+      'Not Started'
+    else
+      'Concluded'
+    end
+  end
 end

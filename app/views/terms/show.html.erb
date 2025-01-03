@@ -1,7 +1,6 @@
-<p>
-  <strong>Name:</strong>
+<h1>
   <%= @term.name %>
-</p>
+</h1>
 
 <p>
   <strong>Canvas ID:</strong>
@@ -16,6 +15,16 @@
 <p>
   <strong>End:</strong>
   <%= format_datetime @term.end %>
+</p>
+
+<p>
+  <strong>School Year:</strong>
+  <%= @term.school_year %>
+</p>
+
+<p>
+  <strong>Status:</strong>
+  <%= @term.status %>
 </p>
 
 <%= render partial: 'events/history', locals: { events: @term.events.order(created_at: :desc) } %>

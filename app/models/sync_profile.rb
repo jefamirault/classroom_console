@@ -1,6 +1,7 @@
 class SyncProfile < ApplicationRecord
   belongs_to :user
   belongs_to :term
+  belongs_to :school_year
   has_many :subscriptions
 
   def get_teacher_sections
@@ -9,8 +10,8 @@ class SyncProfile < ApplicationRecord
     sections_json = JSON.parse response.body
     sections_json.map {|s| "SIS_ID: #{s['Id']} - #{s['Name']} #{s['SectionIdentifier']}"}
   end
-  def get_teacher_sections_json
-    response = on_api_get '/academics/TeacherSection', "&schoolYear=#{AdminSetting.sis_school_year}&userID=#{user.sis_id}"
+  def get_teacher_sections_json(year = AdminSetting.sis_school_year)
+    response = on_api_get '/academics/TeacherSection', "&schoolYear=#{year}&userID=#{user.sis_id}"
     raise 'Error' if response.code != '200'
     sections_json = JSON.parse response.body
     sections_json

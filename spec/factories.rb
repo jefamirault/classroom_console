@@ -1,4 +1,10 @@
 FactoryBot.define do
+  factory :school_year do
+    name { "MyString" }
+    start_date { "2025-01-03" }
+    end_date { "2025-01-03" }
+  end
+
   factory :user do
     sequence(:name) { |n| "User##{n}" }
     # sequence(:sis_id, 10000)

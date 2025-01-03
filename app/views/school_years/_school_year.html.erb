@@ -1,0 +1,25 @@
+<div id="<%= dom_id school_year %>">
+  <h1>
+    <%= school_year.name %>
+  </h1>
+  <p>
+    <strong>Start date:</strong>
+    <%= school_year.start_date %>
+  </p>
+
+  <p>
+    <strong>End date:</strong>
+    <%= school_year.end_date %>
+  </p>
+
+  <p>
+    <strong>Status:</strong>
+    <%= school_year.status %>
+  </p>
+
+  <ul>
+    <% school_year.terms.each do |term| %>
+      <li><%= link_to term %></li>
+    <% end %>
+  </ul>
+</div>

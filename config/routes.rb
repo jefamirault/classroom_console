@@ -1,6 +1,7 @@
 require 'sidekiq/web'
 
 Rails.application.routes.draw do
+  resources :school_years
   resources :tenant_variables
 
   resources :terms

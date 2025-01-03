@@ -1,6 +1,7 @@
 class Section < ApplicationRecord
   belongs_to :course, counter_cache: true
   belongs_to :term
+  has_one :school_year, through: :term
   has_many :enrollments, dependent: :destroy
   has_many :users, through: :enrollments
   has_one :assignment, dependent: :destroy
@@ -361,7 +362,13 @@ class Section < ApplicationRecord
     sis_roster.each do |student|
       # match by sis_id if user exists, otherwise create user with sis_id + name
 
-      sis_user_id = student['UserId']
+      begin
+        sis_user_id = student['UserId']
+      rescue
+        puts "Error"
+        puts "student: #{student}"
+      end
+
 
       if old_enrollments_by_sis_id[sis_user_id]
       #  enrollment already synced

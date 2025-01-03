@@ -31,6 +31,9 @@
     <%= form.datetime_select :end %>
   </div>
 
+  <%= form.label :school_year_id, "School Year" %>
+  <%= form.collection_select :school_year_id, SchoolYear.all, :id, :name, { prompt: "Select a school year" } %>
+
   <div class="actions">
     <%= form.submit %>
   </div>
