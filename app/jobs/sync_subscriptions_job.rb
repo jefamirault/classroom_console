@@ -8,12 +8,12 @@ class SyncSubscriptionsJob < ApplicationJob
 
     puts
     if options[:sync_profile_id]
-      # Sync a single profile
+      puts "Syncing a single profile: #{options[:sync_profile_id]}"
       # TODO: sanitize params
       # raise 'Invalid ID for Sync' if options[:sync_profile_id].class != Fixnum
       SyncProfile.find(options[:sync_profile_id]).subscriptions.where(enabled: true).each &:sync
     else
-      # Sync everything
+      puts 'Syncing everything...'
       Subscription.where(enabled: true).all.each do |s|
         s.sync
       end
@@ -22,7 +22,8 @@ class SyncSubscriptionsJob < ApplicationJob
     puts
 
     if options[:repeat]
-      SyncSubscriptionsJob.set(wait: 10.minutes).perform_later options
+      interval = options[:interval] || 10.minutes
+      SyncSubscriptionsJob.set(wait: interval).perform_later options
     end
   end
 end

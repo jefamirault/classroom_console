@@ -66,7 +66,7 @@ class Enrollment < ApplicationRecord
       return "Cannot post grade. Writing to ON API disabled."
     end
     if section.assignment.nil?
-      puts "Cannot post grade without OnCampus assignment for section: #{section}"
+      puts "Cannot post grade (#{grade} - #{user.name} without OnCampus assignment for section: #{section}"
       return nil
     end
 

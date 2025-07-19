@@ -129,10 +129,12 @@ class Term < ApplicationRecord
   def status
     if self.current?
       'Active'
-    elsif self.start > Date.today
+    elsif self.start && self.start > Date.today
       'Not Started'
-    else
+    elsif self.end && self.end < Date.today
       'Concluded'
+    else
+      ''
     end
   end
 end

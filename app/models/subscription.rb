@@ -84,7 +84,8 @@ class Subscription < ApplicationRecord
       if self.post_canvas_grades
         # post grades to SIS
 
-        if section.assignment
+        # if section.assignment
+        if true
           msg += ' Syncing grades...'# if options[:verbose]
           section.sync_canvas_enrollments
         else

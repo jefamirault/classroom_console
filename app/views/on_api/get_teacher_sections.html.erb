@@ -8,7 +8,9 @@
   <%= form.submit "Search" %>
 <% end %>
 
-<% if @teacher_sections %>
+<% if @teacher_sections.class == Hash %>
+  <p><%= @teacher_sections['Message'] %></p>
+<% else %>
   <table>
     <thead>
     <tr>

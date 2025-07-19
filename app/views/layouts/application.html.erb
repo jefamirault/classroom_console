@@ -8,20 +8,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
-    <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
-    <%= stylesheet_pack_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%= javascript_importmap_tags %>
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/dt-1.10.23/datatables.min.css"/>
     <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.10.23/datatables.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
 
     <%= auto_discovery_link_tag :rss, assignments_url(:format => :rss) %>
+    <%= javascript_importmap_tags %>
   </head>
 
   <body>
-    <%= render partial: 'layouts/nav' %>
-
-    <div id="content">
-      <%= yield %>
-    </div>
+    <header>
+      <div id="logoContainer">
+        <%#= image_tag 'autofauna_icon.png' %>
+        <div id="logoText"><a class="navbar-brand" href="<%= root_path %>">Classroom Console</a></div>
+      </div>
+    </header>
+    <aside id="sidebar">
+      <%= render partial: 'layouts/nav' %>
+    </aside>
+    <main id="content">
+      <section id="primary">
+        <%= yield %>
+      </section>
+      <footer>
+        Footer
+      </footer>
+    </main>
 
     <div id="loading" style="display:none;">
       <img id="loading-image" src="https://bulldog.burrburton.org/devices/loader.gif" alt="Loading..." />

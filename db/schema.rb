@@ -10,8 +10,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2025_01_03_233458) do
-  create_table "admin_settings", charset: "utf8mb3", force: :cascade do |t|
+ActiveRecord::Schema[7.0].define(version: 2025_07_19_143847) do
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
+  create_table "admin_settings", force: :cascade do |t|
     t.string "canvas_path"
     t.string "canvas_access_token"
     t.string "on_api_path"
@@ -31,12 +34,12 @@ ActiveRecord::Schema[7.0].define(version: 2025_01_03_233458) do
     t.boolean "allow_canvas_api_write", default: false
   end
 
-  create_table "assignments", charset: "utf8mb3", force: :cascade do |t|
+  create_table "assignments", force: :cascade do |t|
     t.integer "sis_id"
     t.integer "section_id"
   end
 
-  create_table "courses", charset: "utf8mb3", force: :cascade do |t|
+  create_table "courses", force: :cascade do |t|
     t.string "name"
     t.integer "sis_id"
     t.boolean "is_active"
@@ -47,7 +50,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_01_03_233458) do
     t.integer "sections_count", default: 0, null: false
   end
 
-  create_table "enrollments", charset: "utf8mb3", force: :cascade do |t|
+  create_table "enrollments", force: :cascade do |t|
     t.integer "user_id"
     t.integer "section_id"
     t.boolean "enrolled_in_canvas"
@@ -56,14 +59,14 @@ ActiveRecord::Schema[7.0].define(version: 2025_01_03_233458) do
     t.integer "last_grade_change_id"
   end
 
-  create_table "events", charset: "utf8mb3", force: :cascade do |t|
+  create_table "events", force: :cascade do |t|
     t.string "label"
     t.text "description"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
-  create_table "grade_changes", charset: "utf8mb3", force: :cascade do |t|
+  create_table "grade_changes", force: :cascade do |t|
     t.integer "enrollment_id"
     t.float "old_value"
     t.float "new_value"
@@ -74,7 +77,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_01_03_233458) do
     t.integer "next_change_id"
   end
 
-  create_table "logs", charset: "utf8mb3", force: :cascade do |t|
+  create_table "logs", force: :cascade do |t|
     t.integer "event_id"
     t.integer "loggable_id"
     t.string "loggable_type"
@@ -82,7 +85,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_01_03_233458) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "quarantines", charset: "utf8mb3", force: :cascade do |t|
+  create_table "quarantines", force: :cascade do |t|
     t.datetime "end"
     t.integer "quarantinable_id"
     t.string "quarantinable_type"
@@ -90,15 +93,17 @@ ActiveRecord::Schema[7.0].define(version: 2025_01_03_233458) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "school_years", charset: "utf8mb3", force: :cascade do |t|
+  create_table "school_years", force: :cascade do |t|
     t.string "name"
     t.date "start_date"
     t.date "end_date"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "sis_id"
+    t.index ["sis_id", "name"], name: "index_school_years_on_sis_id_and_name", unique: true
   end
 
-  create_table "sections", charset: "utf8mb3", force: :cascade do |t|
+  create_table "sections", force: :cascade do |t|
     t.string "name"
     t.integer "sis_id"
     t.integer "course_id"
@@ -111,7 +116,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_01_03_233458) do
     t.integer "enrollments_count", default: 0, null: false
   end
 
-  create_table "subscriptions", charset: "utf8mb3", force: :cascade do |t|
+  create_table "subscriptions", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "section_sis_id"
@@ -123,7 +128,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_01_03_233458) do
     t.boolean "post_canvas_grades"
   end
 
-  create_table "sync_profiles", charset: "utf8mb3", force: :cascade do |t|
+  create_table "sync_profiles", force: :cascade do |t|
     t.integer "user_id"
     t.integer "term_id"
     t.datetime "created_at", null: false
@@ -131,14 +136,14 @@ ActiveRecord::Schema[7.0].define(version: 2025_01_03_233458) do
     t.integer "school_year_id"
   end
 
-  create_table "tenant_variables", charset: "utf8mb3", force: :cascade do |t|
+  create_table "tenant_variables", force: :cascade do |t|
     t.string "name"
     t.string "value"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
-  create_table "terms", charset: "utf8mb3", force: :cascade do |t|
+  create_table "terms", force: :cascade do |t|
     t.string "name"
     t.integer "canvas_id"
     t.datetime "start", precision: nil
@@ -149,7 +154,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_01_03_233458) do
     t.integer "school_year_id"
   end
 
-  create_table "users", charset: "utf8mb3", force: :cascade do |t|
+  create_table "users", force: :cascade do |t|
     t.integer "sis_id"
     t.string "name"
     t.boolean "active"

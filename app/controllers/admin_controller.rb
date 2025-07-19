@@ -11,9 +11,7 @@ class AdminController < ApplicationController
 
   def test_canvas_api
     @result = AdminSetting.canvas_api_test ? "Success!" : "Failure."
-    respond_to do |format|
-      format.js
-    end
+    redirect_to admin_path(message: "Canvas API test: #{@result}")
   end
   def test_on_api
     @result = AdminSetting.on_api_test ? "Success!" : "Failure."

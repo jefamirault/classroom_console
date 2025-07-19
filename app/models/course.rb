@@ -23,6 +23,8 @@ class Course < ApplicationRecord
   end
 
   def self.full_sync
+    SchoolYear.sync_sis_school_years
+    User.sync_sis_users
     Course.refresh_sis_courses
     Section.refresh_sis_sections
     Term.sync_terms
@@ -30,7 +32,7 @@ class Course < ApplicationRecord
     # Section.sync_all_sis_assignments
     Course.sync_all_sis_enrollments
     Enrollment.get_sis_teacher_enrollments
-    User.refresh_sis_emails
+    # User.refresh_sis_emails
     User.sync_canvas_users
     Course.sync_canvas_courses
     Course.sync_canvas_enrollments

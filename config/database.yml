@@ -25,8 +25,7 @@ default: &default
 #  adapter: sqlite3
 #  database: db/classroom_console_development.db
 development:
-  adapter: mysql2
-  encoding: utf8
+  <<: *default
   reconnect: false
   database: classroom_console_development
   pool: 10

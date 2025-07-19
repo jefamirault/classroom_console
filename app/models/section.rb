@@ -176,7 +176,14 @@ class Section < ApplicationRecord
       if self.users.include? user
         enrollment = self.enrollments.find {|e| e.user == user}
         enrollment.grade = json[:current_grade]
-        enrollment.post_grade if enrollment.save
+        if enrollment.save
+          # Update from Canvas finished
+          if self.assignment
+            enrollment.post_grade
+          else
+            puts "Cannot post grade without connected OnCampus assignment for #{self}."
+          end
+        end
       else
         puts "WARNING: Canvas section #{self} contains unexpected enrollment: #{json}"
       end
@@ -293,7 +300,8 @@ class Section < ApplicationRecord
 
     term = Term.find_by_name term_name
     if term.nil?
-      term = Term.create name: term_name, sis_id: json['Duration']['Id']
+      school_year = SchoolYear.find_by_name json['Duration']['SchoolYearLabel']
+      term = Term.create name: term_name, sis_id: json['Duration']['Id'], school_year: school_year
       result[:new_term] = term
     end
     section.term_id = term.id

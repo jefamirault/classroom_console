@@ -131,6 +131,31 @@ class User < ApplicationRecord
     on_api_get "user/#{sis_id}"
   end
 
+  def self.sync_sis_users
+    page_size = 200
+    @users = []
+    page = 0
+    more_pages = true
+    while more_pages
+      page += 1
+      puts "Requesting SIS users page #{page}..."
+      response = on_api_get_users(start_row: page * page_size + 1, end_row: (page + 1) * page_size)
+      if response[:success]
+        result_page = response[:data].map do |user|
+          {
+            name: "#{user['FirstName']} #{user['LastName']}",
+            email: user['Email'],
+            sis_id: user['UserId']
+          }
+        end
+        @users << result_page
+      end
+      more_pages = result_page.size == 200
+    end
+    @users = @users.reduce(:+).reject{|u| u[:email] == ''}
+    User.upsert_all(@users, unique_by: :email)
+  end
+
   extend CanvasApiHelper
 
   def request_canvas_user
