@@ -63,3 +63,6 @@ gem 'devise'
 gem 'psych', '< 4'
 
 gem 'sidekiq'
+
+gem 'ed25519'
+gem 'bcrypt_pbkdf'

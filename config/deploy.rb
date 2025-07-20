@@ -10,9 +10,7 @@ set :repo_url, "https://github.com/jefamirault/classroom_console.git"
 ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp
 
 # Default deploy_to directory is /var/www/my_app_name
-set :deploy_to, "#{ENV['DEPLOY_DIRECTORY'].delete("\r")}/#{fetch :application}"
-
-set :rbenv_path, ENV['DEPLOY_RBENV_PATH'].delete("\r")
+set :deploy_to, "/home/devops/#{fetch :application}"
 
 # Default value for :format is :airbrussh.
 # set :format, :airbrussh
