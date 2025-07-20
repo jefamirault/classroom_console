@@ -6,8 +6,6 @@ class Course < ApplicationRecord
 
   validates_uniqueness_of :sis_id
 
-  ACCOUNT_ID = AdminSetting.account_id
-
   def to_s
     self.name
   end
@@ -318,7 +316,7 @@ class Course < ApplicationRecord
         term_id: term.canvas_id
       }
     }.to_json
-    canvas_api_post_response "accounts/#{ACCOUNT_ID}/courses", course_params
+    canvas_api_post_response "accounts/#{AdminSetting.first.account_id}/courses", course_params
   end
 
   def enrollments_count

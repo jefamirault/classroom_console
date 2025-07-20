@@ -4,17 +4,26 @@ require_relative 'export_helper'
 require 'logger'
 
 module OnApiHelper
-  ON_API_URL = AdminSetting.on_api_path
-  ON_API_KEY = AdminSetting.on_api_key
-  ON_API_SECRET = AdminSetting.on_api_secret
-
-  SIS_SCHOOL_YEAR = AdminSetting.sis_school_year
-  SIS_LEVEL_NUM = AdminSetting.sis_level_num
+  def on_api_url
+    AdminSetting.first.on_api_path
+  end
+  def on_api_key
+    AdminSetting.first.on_api_key
+  end
+  def on_api_secret
+    AdminSetting.first.on_api_secret
+  end
+  def sis_school_year
+    AdminSetting.first.sis_school_year
+  end
+  def sis_level_num
+    AdminSetting.first.sis_level_num
+  end
 
   include ExportHelper
 
   def on_authenticate
-    raw_uri = "#{ON_API_URL}/authentication/login"
+    raw_uri = "#{on_api_url}/authentication/login"
     puts "Authenticating to ON API: #{raw_uri}"
     uri = URI.parse(raw_uri)
     request = Net::HTTP::Post.new(uri)
@@ -26,8 +35,8 @@ module OnApiHelper
     }
 
     request.body = {
-        username: ON_API_KEY,
-        password: ON_API_SECRET
+        username: on_api_key,
+        password: on_api_secret
     }.to_json
 
     response = Net::HTTP.start(uri.hostname, uri.port, req_options) do |http|
@@ -73,8 +82,8 @@ module OnApiHelper
   end
 
   def on_api_post(route, token, body)
-    # puts "POST #{ON_API_URL}/#{route}..."
-    uri = URI.parse("#{ON_API_URL}/#{route}?t=#{token}")
+    # puts "POST #{on_api_url}/#{route}..."
+    uri = URI.parse("#{on_api_url}/#{route}?t=#{token}")
 
     header = { 'Content-Type': 'application/json' }
 
@@ -93,8 +102,8 @@ module OnApiHelper
   end
 
   def on_api_get(route, parameters = nil, options = {})
-    uri = URI.parse("#{ON_API_URL}/#{route}?t=#{on_api_token}#{parameters}")
-    puts "GET #{ON_API_URL}/#{route}?t=*#{parameters}..." if options[:verbose]
+    uri = URI.parse("#{on_api_url}/#{route}?t=#{on_api_token}#{parameters}")
+    puts "GET #{on_api_url}/#{route}?t=*#{parameters}..." if options[:verbose]
 
     header = { 'Content-Type': 'application/json' }
 
@@ -125,7 +134,7 @@ module OnApiHelper
     }
   end
 
-  def on_api_get_terms(school_year = SIS_SCHOOL_YEAR)
+  def on_api_get_terms(school_year = sis_school_year)
     response = on_api_get 'schoolinfo/term', "&schoolYear=#{school_year}"
     terms = JSON.parse response.body
     {
@@ -146,7 +155,7 @@ module OnApiHelper
   end
 
   def on_api_get_sections
-    parameters = "&schoolYear=#{SIS_SCHOOL_YEAR}&levelNum=#{SIS_LEVEL_NUM}"
+    parameters = "&schoolYear=#{sis_school_year}&levelNum=#{sis_level_num}"
     response = on_api_get 'academics/section', parameters
     sections = JSON.parse response.body
     {
@@ -157,7 +166,7 @@ module OnApiHelper
   end
 
   def on_api_get_teacher_sections(user_sis_id)
-    response = on_api_get '/academics/TeacherSection', "&schoolYear=#{SIS_SCHOOL_YEAR}&userID=#{user_sis_id}"
+    response = on_api_get '/academics/TeacherSection', "&schoolYear=#{sis_school_year}&userID=#{user_sis_id}"
     teacher_sections = JSON.parse response.body
     {
       success: response.code == '200',

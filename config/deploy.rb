@@ -24,6 +24,7 @@ set :deploy_to, "/home/devops/#{fetch :application}"
 
 # Default value for :linked_files is []
 # append :linked_files, "config/database.yml"
+set :linked_files, %w{config/credentials/production.key}
 
 # Default value for linked_dirs is []
 append :linked_dirs, "log", "tmp/pids", "tmp/cache", "tmp/sockets", "vendor/bundle", ".bundle", "public/system", "public/uploads", "node_modules"

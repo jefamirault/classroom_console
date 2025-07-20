@@ -5,10 +5,10 @@ require 'json'
 module CanvasApiHelper
 
   def canvas_url
-    AdminSetting.canvas_api_path
+    AdminSetting.first.canvas_api_path
   end
   def access_token
-    AdminSetting.canvas_access_token
+    AdminSetting.first.canvas_access_token
   end
 
   def canvas_api_get(route = 'courses', parameters = nil, body = nil)

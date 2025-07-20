@@ -18,10 +18,7 @@ class Section < ApplicationRecord
 
   include CanvasApiHelper
   include OnApiHelper
-
-  SIS_SCHOOL_YEAR = AdminSetting.sis_school_year
-  SIS_LEVEL_NUM = AdminSetting.sis_level_num
-
+  
   validates_uniqueness_of :sis_id
 
   def to_s
@@ -403,8 +400,8 @@ class Section < ApplicationRecord
   end
 
   def self.request_sis_sections(options = {})
-    puts "Getting SIS Sections for School Year #{SIS_SCHOOL_YEAR.gsub("%20", " ")}..."
-    parameters = "&schoolYear=#{SIS_SCHOOL_YEAR}&levelNum=#{SIS_LEVEL_NUM}"
+    puts "Getting SIS Sections for School Year #{AdminSetting.first.sis_school_year.gsub("%20", " ")}..."
+    parameters = "&schoolYear=#{AdminSetting.first.sis_school_year}&levelNum=#{AdminSetting.first.sis_level_num}"
     response = on_api_get 'academics/section', parameters, options
     if response.code == '200'
       JSON.parse(response.body).uniq!
