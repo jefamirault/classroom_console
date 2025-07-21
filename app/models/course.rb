@@ -29,8 +29,8 @@ class Course < ApplicationRecord
     # return 'Select which courses to sync with Canvas' if Course.where(sync_course: true).count == 0
     # Section.sync_all_sis_assignments
     Course.sync_all_sis_enrollments
-    Enrollment.get_sis_teacher_enrollments
-    # User.refresh_sis_emails
+    # Enrollment.get_sis_teacher_enrollments
+    User.refresh_sis_emails
     User.sync_canvas_users
     Course.sync_canvas_courses
     Course.sync_canvas_enrollments

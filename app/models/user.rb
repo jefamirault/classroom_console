@@ -137,7 +137,6 @@ class User < ApplicationRecord
     page = 0
     more_pages = true
     while more_pages
-      page += 1
       puts "Requesting SIS users page #{page}..."
       response = on_api_get_users(start_row: page * page_size + 1, end_row: (page + 1) * page_size)
       if response[:success]
@@ -151,9 +150,11 @@ class User < ApplicationRecord
         @users << result_page
       end
       more_pages = result_page.size == 200
+      page += 1
     end
-    @users = @users.reduce(:+).reject{|u| u[:email] == ''}
-    User.upsert_all(@users, unique_by: :email)
+    @users = @users.reduce(:+)
+    @users.reject{|u| u[:email] == '' || u[:email].nil?}
+    User.upsert_all(@users, unique_by: :sis_id)
   end
 
   extend CanvasApiHelper
