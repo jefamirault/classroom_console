@@ -23,8 +23,8 @@ class AdminController < ApplicationController
   private
 
   def admin_params
-    params.require(:admin_setting).permit(:canvas_path, :canvas_access_token, :on_api_path, :on_api_username, :on_api_key, :on_api_secret, :account_id,
-                                          :sis_school_year, :sis_level_num, :sis_email_list_id, :sis_teacher_enrollments_list_id,
+    params.require(:admin_setting).permit(:canvas_path, :canvas_access_token, :on_api_path, :on_api_username, :on_api_key,
+                                          :on_api_secret, :account_id, :sis_school_year, :sis_level_num,
                                           :allow_on_api_read, :allow_on_api_write, :allow_canvas_api_read, :allow_canvas_api_write)
   end
 end

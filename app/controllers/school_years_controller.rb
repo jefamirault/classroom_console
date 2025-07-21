@@ -57,6 +57,11 @@ class SchoolYearsController < ApplicationController
     end
   end
 
+  def sync_school_years
+    SchoolYear.sync_sis_school_years
+    redirect_to school_years_path
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_school_year

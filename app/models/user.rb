@@ -109,10 +109,6 @@ class User < ApplicationRecord
     response = on_api_get ''
   end
 
-  def self.request_sis_emails
-    on_api_get_json "list/#{AdminSetting.sis_email_list_id}"
-  end
-
   def get_relationships
     response = on_api_get "user/relationshipsettings/#{self.sis_id}"
     JSON.parse response.body

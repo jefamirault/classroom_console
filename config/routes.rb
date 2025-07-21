@@ -2,6 +2,8 @@ require 'sidekiq/web'
 
 Rails.application.routes.draw do
   resources :school_years
+  get 'sync_school_years', to: 'school_years#sync_school_years'
+
   resources :tenant_variables
 
   resources :terms
@@ -41,9 +43,8 @@ Rails.application.routes.draw do
 
   devise_for :users
   resources :users
-  get 'refresh_sis_emails', to: 'users#refresh_sis_emails'
-  get 'sync_sis_teacher_enrollments', to:'users#sync_sis_teacher_enrollments'
   get 'sync_canvas_users', to: 'users#sync_canvas_users'
+  get 'sync_sis_users', to: 'users#sync_sis_users'
 
   get 'public', to: 'verify#index'
 

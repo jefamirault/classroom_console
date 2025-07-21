@@ -28,10 +28,8 @@
 
 <br>
 
-<%= link_to 'Refresh SIS Emails', refresh_sis_emails_path, class: 'slow btn btn-primary m-2', data: { toggle: 'tooltip'}, title: 'For users present in Classroom Console, look up their email and add it here.' %>
-<%= link_to 'Sync SIS Teacher Enrollments', sync_sis_teacher_enrollments_path, class: 'slow btn btn-primary m-2', data: { toggle: 'tooltip'}, title: 'Look up teacher enrollments in OnCampus and add them here.' %>
+<%= link_to 'Sync SIS Users', sync_sis_users_path, data: { toggle: 'tooltip'}, title: 'Detect new/updated users from OnCampus.' %>
+|
 <%= link_to 'Sync Canvas Users', sync_canvas_users_path, class: 'slow btn btn-primary m-2', data: { toggle: 'tooltip'}, title: 'Create new Canvas users where canvas_id is missing, or record canvas user_id if they already exist. ' %>
-<%#= link_to 'Refresh Canvas Users', refresh_canvas_users_path, class: 'slow btn btn-primary m-2', data: { toggle: 'tooltip'}, title: 'Add canvas_id to users here if they already exist in Canvas.' %>
-<%#= link_to 'Create Missing Canvas Users', create_missing_canvas_users_path, class: 'slow btn btn-primary m-2', data: { toggle: 'tooltip'}, title: 'Create users that do not already exist in Canvas and record their canvas_ids here.' %>
 <br>
 <%= link_to 'Full Sync', full_sync_path, class: 'slow btn btn-primary m-2', data: { toggle: 'tooltip'}, title: 'Sync Everything for All Courses where sync=true.' %>

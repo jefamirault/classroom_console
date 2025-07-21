@@ -68,28 +68,12 @@ class UsersController < ApplicationController
     end
   end
 
+  def sync_sis_users
+    User.sync_sis_users
+    redirect_to users_path
+  end
   def sync_canvas_users
     User.sync_canvas_users
-    redirect_to users_path
-  end
-
-  # def refresh_canvas_users
-  #   User.refresh_canvas_users
-  #   redirect_to users_path
-  # end
-  #
-  # def create_missing_canvas_users
-  #   User.create_missing_canvas_users
-  #   redirect_to users_path
-  # end
-
-  def refresh_sis_emails
-    User.refresh_sis_emails
-    redirect_to users_path
-  end
-
-  def sync_sis_teacher_enrollments
-    Enrollment.get_sis_teacher_enrollments
     redirect_to users_path
   end
 

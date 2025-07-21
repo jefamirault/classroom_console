@@ -2,6 +2,8 @@
 
 <h1>School years</h1>
 
+<%= link_to 'Sync SIS School Years', sync_school_years_path %>
+
 <div id="school_years">
   <% @school_years.each do |school_year| %>
     <%= render school_year %>

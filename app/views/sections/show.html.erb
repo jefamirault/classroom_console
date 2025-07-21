@@ -55,8 +55,7 @@
     <% @section.enrollments.where(role: 'teacher').each do |e| %>
       <li><%= link_to e.user %></li>
     <% end %>
-
-  </ul><%= @section.last_sync ? "#{time_ago_in_words(@section.last_sync)} ago" : 'Never' %>
+  </ul>
 </p>
 
 <strong>Students:</strong>

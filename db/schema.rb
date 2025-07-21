@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2025_07_21_184611) do
+ActiveRecord::Schema[7.0].define(version: 2025_07_21_210427) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -24,8 +24,6 @@ ActiveRecord::Schema[7.0].define(version: 2025_07_21_184611) do
     t.integer "account_id"
     t.string "sis_school_year"
     t.integer "sis_level_num"
-    t.integer "sis_email_list_id"
-    t.integer "sis_teacher_enrollments_list_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "allow_on_api_read", default: false

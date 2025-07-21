@@ -33,12 +33,6 @@ module AdminSettingHelper
   def self.sis_level_num
     AdminSetting.first_or_create.sis_level_num
   end
-  def self.sis_email_list_id
-    AdminSetting.first_or_create.sis_email_list_id
-  end
-  def self.sis_teacher_enrollments_list_id
-    AdminSetting.first_or_create.sis_teacher_enrollments_list_id
-  end
 
   def self.canvas_api_test
     canvas_api_get('accounts')['status'] == '200 OK'

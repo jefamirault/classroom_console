@@ -1,3 +1,6 @@
+
+include OnApiHelper
+
 class SchoolYear < ApplicationRecord
   has_many :terms
 
