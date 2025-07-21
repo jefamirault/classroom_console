@@ -94,7 +94,7 @@ Rails.application.routes.draw do
   get 'grades', to: 'grades#index'
 
   scope 'on_api' do
-    get '', to: 'on_api#index', as: 'on_api'
+    get '', to: 'on_api#index', as: 'on_api_interface'
     %w[school_years terms courses sections teacher_sections assignments assignment_grades departments roles users].each do |record|
       get "get_#{record}", to: "on_api#get_#{record}", as: "on_api_get_#{record}"
     end

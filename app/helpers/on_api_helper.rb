@@ -112,7 +112,6 @@ module OnApiHelper
     http = Net::HTTP.new(uri.host, uri.port)
     http.use_ssl = true
     request = Net::HTTP::Get.new(uri.request_uri, header)
-
   # Send the request
     response = http.request(request)
 

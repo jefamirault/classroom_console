@@ -32,7 +32,7 @@ class Term < ApplicationRecord
   extend OnApiHelper
 
   def self.get_sis_terms
-    on_api_get 'schoolinfo/term/', "&schoolYear=#{AdminSetting.sis_school_year}"
+    on_api_get 'schoolinfo/term/', "&schoolYear=#{AdminSetting.first.sis_school_year}"
   end
 
   def self.refresh_sis_terms
@@ -91,7 +91,7 @@ class Term < ApplicationRecord
             end_at: term.end - Time.zone_offset('EST')
           }
         }.to_json
-        response = canvas_api_post "accounts/#{AdminSetting.account_id}/terms", body
+        response = canvas_api_post "accounts/#{AdminSetting.first.account_id}/terms", body
         if response['id']
           term.canvas_id = response['id']
           if term.save
@@ -116,7 +116,7 @@ class Term < ApplicationRecord
   end
 
   def self.get_canvas_terms
-    canvas_api_get_json "accounts/#{AdminSetting.account_id}/terms"
+    canvas_api_get_json "accounts/#{AdminSetting.first.account_id}/terms"
   end
   def current?
     if !self.start.nil? && !self.end.nil?
