@@ -1,6 +1,5 @@
 class SyncProfile < ApplicationRecord
   belongs_to :user
-  belongs_to :term
   belongs_to :school_year
   has_many :subscriptions
 

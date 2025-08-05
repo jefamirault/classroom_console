@@ -8,8 +8,9 @@ class SyncProfilesController < ApplicationController
   end
 
   def generate_subscriptions
-    @sync_profile = SyncProfile.find(params[:id])
-    @sync_profile.generate_subscriptions
+    @sync_profile = SyncProfile.find(params[:sync_profile_id])
+    created = @sync_profile.generate_subscriptions
+    flash.notice = "Created #{created.count} subscriptions."
     redirect_to @sync_profile
   end
 

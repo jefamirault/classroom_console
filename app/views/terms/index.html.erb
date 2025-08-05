@@ -4,6 +4,8 @@
   <thead>
   <tr>
     <th>Term Name</th>
+    <th>Courses</th>
+    <th>Sections</th>
     <th>Canvas ID</th>
     <th>Start</th>
     <th>End</th>
@@ -17,6 +19,8 @@
   <% @terms.each do |term| %>
     <tr>
       <td><%= link_to term.name, term %></td>
+      <td><%= term.courses.count %></td>
+      <td><%= term.sections.count %></td>
       <td><%= term.canvas_id %></td>
       <td><%= format_date term.start %></td>
       <td><%= format_date term.end %></td>
@@ -29,6 +33,5 @@
 </table>
 <br>
 
-<%= link_to 'Sync Terms', sync_terms_path, class: 'slow btn btn-primary m-2', data: { method: :put, toggle: 'tooltip'}, title: 'Look up term start and end times in OnCampus and update them here. Create canvas terms if they do not already exist.' %>
-<br>
-<%= link_to 'Full Sync', full_sync_path, class: 'slow btn btn-primary m-2', data: { toggle: 'tooltip'}, title: 'Sync Everything for All Courses where sync=true.' %>
+<%#= link_to 'Sync Terms', sync_terms_path, class: 'slow btn btn-primary m-2', data: { method: :put, toggle: 'tooltip'}, title: 'Look up term start and end times in OnCampus and update them here. Create canvas terms if they do not already exist.' %>
+<%= button_to 'Sync Terms', sync_terms_path, method: :put, class: 'slow btn btn-primary m-2', data: {  toggle: 'tooltip'}, title: 'Look up term start and end times in OnCampus and update them here. Create canvas terms if they do not already exist.' %>

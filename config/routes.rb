@@ -50,8 +50,8 @@ Rails.application.routes.draw do
 
 
   resources :sync_profiles do |p|
-    get 'generate_subscriptions'
-    get 'sync_now'
+    put 'generate_subscriptions'
+    put 'sync_now'
   end
 
   resources 'subscriptions'

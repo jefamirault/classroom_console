@@ -1,7 +1,7 @@
 class Term < ApplicationRecord
-
   belongs_to :school_year
   has_many :sections
+  has_many :courses, -> {distinct}, through: :sections
   has_many :logs, as: :loggable
   has_many :events, through: :logs
   has_many :sync_profiles

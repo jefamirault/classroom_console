@@ -8,6 +8,17 @@
 </p>
 
 <p>
+  <strong>Courses:</strong>
+  <%= @term.courses.count %>
+</p>
+
+
+<p>
+  <strong>Sections:</strong>
+  <%= @term.sections.count %>
+</p>
+
+<p>
   <strong>Start:</strong>
   <%= format_datetime @term.start %>
 </p>

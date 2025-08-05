@@ -29,15 +29,18 @@ class SyncTeacherEnrollmentsJob < ApplicationJob
     end
 
     # Make sure the user is enrolled in each section in @teacher_sections
-
-    @teacher_sections.each do |s|
-      section = Section.find_by_sis_id (s[:section_sis_id])
-      if section
-      #   make sure the enrollment exists
-        Enrollment.find_or_create_by(user: @user, section: section, role: 'teacher')
-      else
-      # Do nothing
+    if @teacher_sections
+      @teacher_sections.each do |s|
+        section = Section.find_by_sis_id (s[:section_sis_id])
+        if section
+          #   make sure the enrollment exists
+          Enrollment.find_or_create_by(user: @user, section: section, role: 'teacher')
+        else
+          # Do nothing
+        end
       end
+    else
+      puts "Could not find teacher sections for user: #{@user}"
     end
   end
 end

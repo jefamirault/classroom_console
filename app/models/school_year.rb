@@ -3,6 +3,8 @@ include OnApiHelper
 
 class SchoolYear < ApplicationRecord
   has_many :terms
+  has_many :sections, through: :terms
+  has_many :courses, -> {distinct}, through: :sections
 
   validates :sis_id, uniqueness: true
 
