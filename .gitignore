@@ -44,3 +44,5 @@ db/*.db
 .rbenv-vars
 
 dump.rdb
+
+util/client

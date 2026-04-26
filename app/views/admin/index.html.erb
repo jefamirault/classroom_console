@@ -61,7 +61,18 @@
     <%= form.label :allow_canvas_api_write, 'Allow Canvas API Write' %>
     <%= form.check_box :allow_canvas_api_write, class: 'form-control' %>
   </div>
-  <%= form.submit class: 'btn btn-primary' %>
+  <br>
+  <div class="field">
+    <%= form.label :oneroster_key, 'OneRoster API Key' %>
+    <%= form.text_field :oneroster_key, class: 'form-control' %>
+  </div>
+  <div class="field">
+    <%= form.label :oneroster_secret, 'OneRoster API Secret' %>
+    <%= form.text_field :oneroster_secret, class: 'form-control' %>
+  </div>
+  <%= link_to 'Test OneRoster Connection', '', data: { remote: true} %>
+  <br><br>
+  <%= form.submit class: 'btn btn-primary', style: 'font-size: 1.125rem; padding: 0.5rem' %>
 <% end %>
-
+<br>
 Last updated <%= time_ago_in_words(@admin_settings.updated_at) %> ago: <%= @admin_settings.updated_at %>
