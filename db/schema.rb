@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2025_08_05_204047) do
+ActiveRecord::Schema[7.0].define(version: 2026_04_26_153436) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -32,6 +32,10 @@ ActiveRecord::Schema[7.0].define(version: 2025_08_05_204047) do
     t.boolean "allow_canvas_api_write", default: false
     t.string "oneroster_key"
     t.string "oneroster_secret"
+    t.string "on_api_session_token"
+    t.datetime "on_api_session_token_expires_at"
+    t.string "oneroster_api_path"
+    t.string "oneroster_scope"
   end
 
   create_table "assignments", force: :cascade do |t|

@@ -1,0 +1,24 @@
+<h1>GET Roles</h1>
+
+<p><%= link_to '← Back', on_api_interface_path %></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Label</th>
+      <th>Base Role Type</th>
+      <th>State</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% Array(@roles).each do |role| %>
+      <tr>
+        <td><%= role['id'] %></td>
+        <td><%= role['label'] %></td>
+        <td><%= role['base_role_type'] %></td>
+        <td><%= role['workflow_state'] %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

@@ -5,12 +5,27 @@
 <%= link_to 'Sync SIS School Years', sync_school_years_path %>
 
 <div id="school_years">
-  <% @school_years.each do |school_year| %>
+  <% @current_and_future_school_years.each do |school_year| %>
     <%= render school_year %>
     <p>
       <%= link_to "Show this school year", school_year %>
     </p>
   <% end %>
 </div>
+
+<% if @past_school_years.any? %>
+  <button type="button" onclick="document.getElementById('past_school_years').hidden = !document.getElementById('past_school_years').hidden; this.textContent = document.getElementById('past_school_years').hidden ? 'Show past school years' : 'Hide past school years';">
+    Show past school years
+  </button>
+
+  <div id="past_school_years" hidden>
+    <% @past_school_years.each do |school_year| %>
+      <%= render school_year %>
+      <p>
+        <%= link_to "Show this school year", school_year %>
+      </p>
+    <% end %>
+  </div>
+<% end %>
 
 <%= link_to "New school year", new_school_year_path %>

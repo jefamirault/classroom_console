@@ -1,0 +1,26 @@
+<h1>GET Users</h1>
+
+<p><%= link_to '← Back', on_api_interface_path %></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Name</th>
+      <th>Login ID</th>
+      <th>SIS User ID</th>
+      <th>Email</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% Array(@users).each do |user| %>
+      <tr>
+        <td><%= user['id'] %></td>
+        <td><%= user['name'] %></td>
+        <td><%= user['login_id'] %></td>
+        <td><%= user['sis_user_id'] %></td>
+        <td><%= user['email'] %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

@@ -4,6 +4,14 @@ class SchoolYearsController < ApplicationController
   # GET /school_years or /school_years.json
   def index
     @school_years = SchoolYear.all
+
+    @past_school_years = @school_years
+      .select { |sy| sy.end_date && sy.end_date < Date.today }
+      .sort_by { |sy| sy.start_date || Date.new(0) }
+
+    # Current active school year first, then future years in increasing date order.
+    @current_and_future_school_years = (@school_years - @past_school_years)
+      .sort_by { |sy| [sy.current? ? 0 : 1, sy.start_date || Date.new(9999)] }
   end
 
   # GET /school_years/1 or /school_years/1.json

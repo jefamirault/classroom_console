@@ -48,36 +48,42 @@ module OnApiHelper
   end
 
 
+  TOKEN_REFRESH_BUFFER = 30.seconds
+
   def on_api_token(options = {})
-    last_token = read_object 'timed_token'
-    if last_token && last_token[:expire] > Time.now
-      puts "Reusing existing ON API token. Expires at #{last_token[:expire]}" if options[:verbose]
-      last_token[:token]
-    else
-      # token expired, reauthenticate for new token
-      time = Time.now
-      response = on_authenticate
-      token = JSON.parse(response.body)['Token']
-      timed_token = {
-          token: token,
-          expire: time + 20*60 # 20 minutes
-      }
-      puts "Created new ON API token. Expires at #{timed_token[:expire]}" if options[:verbose]
-      write_object timed_token, 'timed_token'
-      token
+    setting = AdminSetting.first
+    if on_api_session_token_fresh?(setting)
+      puts "Reusing existing ON API token. Expires at #{setting.on_api_session_token_expires_at}" if options[:verbose]
+      return setting.on_api_session_token
+    end
+
+    setting.with_lock do
+      setting.reload
+      if on_api_session_token_fresh?(setting)
+        puts "Reusing existing ON API token. Expires at #{setting.on_api_session_token_expires_at}" if options[:verbose]
+        return setting.on_api_session_token
+      end
+      refresh_on_api_session_token!(setting, verbose: options[:verbose])
     end
   end
 
   def force_new_on_api_token(options = {})
-    time = Time.now
+    setting = AdminSetting.first
+    setting.with_lock { refresh_on_api_session_token!(setting, verbose: options[:verbose]) }
+  end
+
+  def on_api_session_token_fresh?(setting)
+    setting.on_api_session_token.present? &&
+      setting.on_api_session_token_expires_at.present? &&
+      setting.on_api_session_token_expires_at > Time.current + TOKEN_REFRESH_BUFFER
+  end
+
+  def refresh_on_api_session_token!(setting, verbose: false)
     response = on_authenticate
     token = JSON.parse(response.body)['Token']
-    timed_token = {
-      token: token,
-      expire: time + 20*60 # 20 minutes
-    }
-    puts "Created new ON API token. Expires at #{timed_token[:expire]}" if options[:verbose]
-    write_object timed_token, 'timed_token'
+    expires_at = Time.current + 20.minutes
+    setting.update!(on_api_session_token: token, on_api_session_token_expires_at: expires_at)
+    puts "Created new ON API token. Expires at #{expires_at}" if verbose
     token
   end
 

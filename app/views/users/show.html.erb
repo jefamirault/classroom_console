@@ -1,7 +1,6 @@
-<p>
-  <strong>Name:</strong>
+<h1>
   <%= @user.name %>
-</p>
+</h1>
 
 <p>
   <strong>SIS ID:</strong>
@@ -23,32 +22,73 @@
   <%= @user.quarantined? %>
 </p>
 
-<p>
-  <strong>Enrollments:</strong>
-  <ul class="links">
-    <% @enrollments_by_term.each do |term_id, enrollments| %>
-      <li>
-        <%= Term.find(term_id).name %>
-        <ul>
-          <% enrollments.each do |e| %>
-            <li>
-              <%= link_to e.section, section_path(e.section.id) %> -
-              <% if e.role == 'student' %>
-                Grade: <%= e.grade ? e.grade : 'n/a' %>
-              <% else %>
-                (Teacher)
-              <% end %>
-            </li>
-          <% end %>
-        </ul>
-      </li>
-    <% end %>
-  </ul>
-</p>
-
-<%= render partial: 'events/history', locals: { events: @user.events.order(created_at: :desc) } %>
-
 <div class="links">
   <%= link_to 'Edit', edit_user_path(@user) %> |
   <%= link_to 'Back', users_path %>
 </div>
+
+<% if @sync_profiles.any? %>
+  <p>
+    <strong>Sync Profiles:</strong>
+    <ul class="links">
+      <% @sync_profiles.each do |sp| %>
+        <li>
+          <%= link_to sp.school_year&.name || 'Unknown Year', sync_profile_path(sp) %> —
+          <%= sp.subscriptions.count %> subscription<%= sp.subscriptions.count == 1 ? '' : 's' %>
+          (<%= sp.enabled_subscriptions_count %> enabled)
+        </li>
+      <% end %>
+    </ul>
+  </p>
+<% end %>
+
+<% if @syncing_courses.any? %>
+  <p>
+    <strong>Syncing Courses:</strong>
+    <ul class="links">
+      <% @syncing_courses.each do |data| %>
+        <li><%= link_to data[:course], course_path(data[:course].id) %> (syncing <%= data[:section_count] %> section<%= data[:section_count] == 1 ? '' : 's' %>)</li>
+      <% end %>
+    </ul>
+  </p>
+<% end %>
+
+<% if @active_courses.any? %>
+  <p>
+    <strong>Active Courses:</strong>
+    <ul class="links">
+      <% @active_courses.each do |data| %>
+        <li>
+          <%= link_to data[:course], course_path(data[:course].id) %> —
+          <% if data[:role] == 'student' %>
+            Student
+          <% else %>
+            Teacher
+          <% end %>
+          <span style="color: #666; font-size: 0.9em;">(<%= data[:sections].map(&:to_s).join(', ') %>)</span>
+        </li>
+      <% end %>
+    </ul>
+  </p>
+<% end %>
+
+<% if @inactive_courses.any? %>
+  <p>
+    <strong>Inactive Courses:</strong>
+    <ul class="links">
+      <% @inactive_courses.each do |data| %>
+        <li>
+          <%= link_to data[:course], course_path(data[:course].id) %> —
+          <% if data[:role] == 'student' %>
+            Student
+          <% else %>
+            Teacher
+          <% end %>
+          <span style="color: #666; font-size: 0.9em;">(<%= data[:terms].map(&:name).join(', ') %>)</span>
+        </li>
+      <% end %>
+    </ul>
+  </p>
+<% end %>
+
+<%= render partial: 'events/history', locals: { events: @user.events.order(created_at: :desc) } %>

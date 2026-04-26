@@ -1,0 +1,26 @@
+<h1>GET Courses</h1>
+
+<p><%= link_to '← Back', on_api_interface_path %></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Name</th>
+      <th>SIS Course ID</th>
+      <th>Course Code</th>
+      <th>State</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% Array(@courses).each do |course| %>
+      <tr>
+        <td><%= course['id'] %></td>
+        <td><%= course['name'] %></td>
+        <td><%= course['sis_course_id'] %></td>
+        <td><%= course['course_code'] %></td>
+        <td><%= course['workflow_state'] %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

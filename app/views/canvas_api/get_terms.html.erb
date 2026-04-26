@@ -1,0 +1,26 @@
+<h1>GET Terms</h1>
+
+<p><%= link_to '← Back', on_api_interface_path %></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Name</th>
+      <th>SIS Term ID</th>
+      <th>Start</th>
+      <th>End</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% Array(@terms).each do |term| %>
+      <tr>
+        <td><%= term['id'] %></td>
+        <td><%= term['name'] %></td>
+        <td><%= term['sis_term_id'] %></td>
+        <td><%= term['start_at'] %></td>
+        <td><%= term['end_at'] %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

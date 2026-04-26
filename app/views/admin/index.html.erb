@@ -1,5 +1,9 @@
 <h1>Administrator Settings</h1>
 
+<% if params[:message].present? %>
+  <div class="alert alert-info"><%= params[:message] %></div>
+<% end %>
+
 <%= form_with model: @admin_settings do |form| %>
   <div class="field">
     <%= form.label :canvas_path, 'Canvas Path' %>
@@ -9,7 +13,7 @@
     <%= form.label :canvas_access_token, 'Canvas Access Token' %>
     <%= form.text_field :canvas_access_token, class: 'form-control' %>
   </div>
-  <%= link_to 'Test Canvas Connection', test_canvas_api_path, data: { remote: true} %>
+  <%= link_to 'Test Canvas Connection', test_canvas_api_path %>
   <br>
   <br>
 
@@ -29,7 +33,7 @@
     <%= form.label :on_api_secret, 'ON API Secret' %>
     <%= form.text_field :on_api_secret, class: 'form-control' %>
   </div>
-  <%= link_to 'Test ON API Connection', test_on_api_path, data: { remote: true} %>
+  <%= link_to 'Test ON API Connection', test_on_api_path %>
 
   <br><br>
 
@@ -63,6 +67,10 @@
   </div>
   <br>
   <div class="field">
+    <%= form.label :oneroster_api_path, 'OneRoster OAuth Token URL' %>
+    <%= form.text_field :oneroster_api_path, class: 'form-control', placeholder: 'https://oauth2.sky.blackbaud.com/token' %>
+  </div>
+  <div class="field">
     <%= form.label :oneroster_key, 'OneRoster API Key' %>
     <%= form.text_field :oneroster_key, class: 'form-control' %>
   </div>
@@ -70,7 +78,12 @@
     <%= form.label :oneroster_secret, 'OneRoster API Secret' %>
     <%= form.text_field :oneroster_secret, class: 'form-control' %>
   </div>
-  <%= link_to 'Test OneRoster Connection', '', data: { remote: true} %>
+  <div class="field">
+    <%= form.label :oneroster_scope, 'OneRoster OAuth Scope' %>
+    <%= form.text_field :oneroster_scope, class: 'form-control', placeholder: 'e.g. https://purl.imsglobal.org/spec/or/v1p1/scope/roster-core.readonly' %>
+    <small>Space-separated list of scopes your app is provisioned for.</small>
+  </div>
+  <%= link_to 'Test OneRoster Connection', test_oneroster_api_path %>
   <br><br>
   <%= form.submit class: 'btn btn-primary', style: 'font-size: 1.125rem; padding: 0.5rem' %>
 <% end %>

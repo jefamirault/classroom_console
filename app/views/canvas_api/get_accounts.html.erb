@@ -1,0 +1,22 @@
+<h1>GET Accounts</h1>
+
+<p><%= link_to '← Back', on_api_interface_path %></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Name</th>
+      <th>Parent Account ID</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% Array(@accounts).each do |account| %>
+      <tr>
+        <td><%= account['id'] %></td>
+        <td><%= account['name'] %></td>
+        <td><%= account['parent_account_id'] %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

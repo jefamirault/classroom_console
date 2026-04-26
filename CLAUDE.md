@@ -50,7 +50,7 @@ User.sync_canvas_users
 - **Helper**: `app/helpers/on_api_helper.rb`
 - **Controller**: `app/controllers/on_api_controller.rb`
 - **Currently used for**: Syncing school years, users, courses, sections, assignments, grades
-- **Auth**: API key + secret stored in `AdminSetting`
+- **Auth**: `on_api_key` + `on_api_secret` (in `AdminSetting`) are exchanged for a 20-minute bearer session token at `/authentication/login`. The token is cached in `admin_settings.on_api_session_token` (with `on_api_session_token_expires_at`) and refreshed under a Postgres row-level lock (`with_lock`) so parallel Sidekiq workers single-flight refreshes. `on_api_token` is the public method that returns a valid token; `force_new_on_api_token` is a manual refresh override.
 - **Status**: Core sync still relies on this; being phased out
 
 ### Canvas API
@@ -59,10 +59,11 @@ User.sync_canvas_users
 - **Auth**: Bearer token stored in `AdminSetting`
 - **Used by**: Courses, sections, and users models
 
-### OneRoster (Future)
-- **Credentials**: `oneroster_key`, `oneroster_secret` columns already in `admin_settings`
-- **Plan**: Add OneRoster endpoints to replace ON API calls
-- **Branch**: Work in progress on `oneroster` branch
+### OneRoster
+- **Helper**: `app/helpers/one_roster_api_helper.rb`
+- **Auth**: OAuth 2.0 client_credentials grant. POSTs to `oneroster_api_path` (e.g. `https://oauth2.sky.blackbaud.com/token` for Blackbaud SKY) with key/secret as HTTP Basic auth and `grant_type=client_credentials&scope=<oneroster_scope>` in the body.
+- **AdminSetting columns**: `oneroster_api_path`, `oneroster_key`, `oneroster_secret`, `oneroster_scope`. All four are configured via the `/admin` form.
+- **Status**: Authentication is wired up and testable from the admin page; not yet used for sync. Plan is to add OneRoster endpoints alongside ON API and migrate callers over.
 
 ### SKY APIs (Future Phase)
 - Planned but not yet integrated
@@ -166,7 +167,8 @@ See `.env.example` for a complete template.
 | `models/section.rb` | Canvas section creation + enrollment |
 | `models/user.rb` | User sync between OnCampus and Canvas |
 | `models/enrollment.rb` | Grade passback tracking |
-| `helpers/on_api_helper.rb` | OnCampus API wrapper |
+| `helpers/on_api_helper.rb` | OnCampus API wrapper + DB-backed session-token cache |
+| `helpers/one_roster_api_helper.rb` | OneRoster OAuth 2.0 client wrapper |
 | `helpers/canvas_api_helper.rb` | Canvas API wrapper |
 | `app/controllers/courses_controller.rb` | Course sync UI |
 | `app/jobs/sync_canvas_enrollments_job.rb` | Main background sync |
@@ -221,7 +223,7 @@ See `config/deploy.rb` and `admin_settings` table for credential handling improv
 
 ## Known Quirks & Limitations
 
-1. **Incomplete migration to OneRoster**: Credentials are present but not yet integrated
+1. **Incomplete migration to OneRoster**: Authentication helper exists and `/admin` can verify credentials, but no sync code calls OneRoster yet — ON API is still the source of truth.
 2. **API design**: Helper methods mix HTTP concerns with business logic (consider separating to service layer)
 3. **Grade passback**: Only works one-way (Canvas → OnCampus); limited to supported assignment types
 4. **Quarantine feature**: Used to pause problematic enrollments, but cleanup is manual
@@ -293,4 +295,4 @@ This codebase is open source and designed to be reusable by other institutions. 
 
 ---
 
-**Last updated**: April 2026 | **Current branch**: oneroster
+**Last updated**: April 2026 | **Current branch**: main

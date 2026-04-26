@@ -1,5 +1,6 @@
 
 include OnApiHelper
+include OneRosterApiHelper
 
 class AdminSetting < ApplicationRecord
 
@@ -9,11 +10,15 @@ class AdminSetting < ApplicationRecord
   end
 
   def self.canvas_api_test
-    canvas_api_get('accounts')['status'] == '200 OK'
+    canvas_api_get('accounts')
   end
 
   def self.on_api_test
-    on_authenticate.code == '200'
+    on_authenticate
+  end
+
+  def self.oneroster_api_test
+    oneroster_authenticate
   end
 
 end

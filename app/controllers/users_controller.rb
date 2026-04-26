@@ -10,17 +10,28 @@ class UsersController < ApplicationController
   end
 
   def show
-    @enrollments_by_term = {}
-    @user.enrollments.sort { |a,b| a.section.term_id <=> b.section.term_id }.each do |e|
-      term_id = e.section.term_id
-      if @enrollments_by_term[term_id].nil?
-        @enrollments_by_term[term_id] = [e]
-      else
-        @enrollments_by_term[term_id] << e
-      end
+    enrollments = @user.enrollments.includes(section: :term)
+
+    course_data = enrollments.group_by { |e| e.section.course_id }.map do |_course_id, course_enrollments|
+      course = course_enrollments.first.section.course
+      terms = course_enrollments.map { |e| e.section.term }.uniq.compact
+      {
+        course: course,
+        terms: terms,
+        sections: course_enrollments.map { |e| e.section },
+        role: course_enrollments.first.role,
+        active: terms.any?(&:current?),
+        latest_start: terms.map(&:start).compact.max
+      }
     end
-    @courses = @user.enrollments.sort { |a,b| a.section.term_id <=> b.section.term_id }.map(&:course).uniq
-    # binding.pry
+
+    @active_courses = course_data.select { |d| d[:active] }.sort_by { |d| d[:course].to_s }
+    @inactive_courses = course_data.reject { |d| d[:active] }.sort_by { |d| d[:course].to_s }
+    @sync_profiles = @user.sync_profiles.includes(:school_year).order(school_year_id: :desc)
+    enabled_subs = Subscription.where(sync_profile: @user.sync_profiles, enabled: true).includes(section: :course)
+    @syncing_courses = enabled_subs.group_by { |sub| sub.section&.course }.filter_map do |course, subs|
+      { course: course, section_count: subs.count } if course
+    end.sort_by { |d| d[:course].to_s }
   end
 
   def new

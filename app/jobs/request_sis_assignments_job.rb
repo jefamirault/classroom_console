@@ -13,7 +13,6 @@ class RequestSisAssignmentsJob < ApplicationJob
     if options[:id]
       Section.find(options[:id]).sync_sis_assignments
     elsif options[:ids]
-      force_new_on_api_token
       options[:ids].each_slice((options[:ids].size / 10.0).ceil) do |ids|
         RequestSisAssignmentsJob.perform_later batch: ids
       end

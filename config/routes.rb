@@ -89,6 +89,7 @@ Rails.application.routes.draw do
   patch 'admin_setting', to: 'admin#update'
   get 'test_canvas_api', to: 'admin#test_canvas_api'
   get 'test_on_api', to: 'admin#test_on_api'
+  get 'test_oneroster_api', to: 'admin#test_oneroster_api'
 
   get 'dashboard', to: 'dashboard#index'
 
@@ -103,7 +104,9 @@ Rails.application.routes.draw do
 
   scope 'canvas_api' do
     get '', to: 'canvas_api#index', as: 'canvas_api'
-    get 'get_roles', to: 'canvas_api#get_roles', as: 'canvas_api_get_roles'
+    %w[accounts courses users roles terms].each do |record|
+      get "get_#{record}", to: "canvas_api#get_#{record}", as: "canvas_api_get_#{record}"
+    end
   end
 
 end

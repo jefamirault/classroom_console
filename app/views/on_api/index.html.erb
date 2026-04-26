@@ -1,7 +1,15 @@
-<h1>Make Calls to the ON API</h1>
+<h1>API Test</h1>
 
+<h2>ON API</h2>
 <ul>
   <% %w[school_years terms courses sections teacher_sections assignments assignment_grades departments roles users].each do |record| %>
-    <li><%= link_to "Get #{record.titleize}", send("on_api_get_#{record}_path") %></li>
+    <li><%= link_to "GET #{record.titleize}", send("on_api_get_#{record}_path") %></li>
+  <% end %>
+</ul>
+
+<h2>Canvas API</h2>
+<ul>
+  <% %w[accounts courses users roles terms].each do |record| %>
+    <li><%= link_to "GET #{record.titleize}", send("canvas_api_get_#{record}_path") %></li>
   <% end %>
 </ul>
