@@ -1,0 +1,29 @@
+<h1>Dev Login</h1>
+
+<p>Development only. Sign in as any user without a password.</p>
+
+<%= button_to 'Log in as admin', dev_login_path, class: 'btn btn-primary m-2' %>
+
+<table>
+  <thead>
+  <tr>
+    <th>User Name</th>
+    <th>Email</th>
+    <th>SIS ID</th>
+    <th>Admin</th>
+    <th></th>
+  </tr>
+  </thead>
+
+  <tbody>
+  <% @users.each do |user| %>
+    <tr>
+      <td><%= user.name %></td>
+      <td><%= user.email %></td>
+      <td><%= user.sis_id %></td>
+      <td><%= boolstr user.login_enabled %></td>
+      <td><%= button_to 'Log in', dev_login_path(user), class: 'btn btn-sm btn-outline-primary' %></td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>

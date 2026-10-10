@@ -20,4 +20,7 @@
   <% else %>
     <a class="navItem" href="<%= sign_in_path %>">Log In</a>
   <% end %>
+  <% if Rails.env.development? %>
+    <a class="navItem <%= nav_selected "dev_logins" %>" href="<%= dev_logins_path %>">Dev Login</a>
+  <% end %>
 </nav>

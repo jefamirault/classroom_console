@@ -49,5 +49,14 @@
       </div>
     <% end %>
 
+    <% if Rails.env.development? %>
+      <div class="modal-footer">
+        <div class="row w-100">
+          <%= link_to 'Pick a user', dev_logins_path, class: 'btn btn-outline-primary mr-auto' %>
+          <%= button_to 'Log in as admin (dev)', dev_login_path, class: 'btn btn-outline-primary' %>
+        </div>
+      </div>
+    <% end %>
+
   </div>
 </div>

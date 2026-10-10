@@ -43,6 +43,13 @@ Rails.application.routes.draw do
 
   devise_for :users
   resources :users
+  post 'masquerade/:user_id', to: 'masquerades#create', as: 'masquerade'
+  delete 'masquerade', to: 'masquerades#destroy', as: 'stop_masquerade'
+
+  if Rails.env.development?
+    get 'dev/login', to: 'dev_logins#index', as: 'dev_logins'
+    post 'dev/login(/:user_id)', to: 'dev_logins#create', as: 'dev_login'
+  end
   get 'sync_canvas_users', to: 'users#sync_canvas_users'
   get 'sync_sis_users', to: 'users#sync_sis_users'
 

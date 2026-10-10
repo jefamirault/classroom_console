@@ -1,0 +1,6 @@
+<% if masquerading? %>
+  <div id="masqueradeBanner">
+    Viewing as <strong><%= current_user %></strong> (signed in as <%= true_user %>)
+    <%= button_to 'Stop', stop_masquerade_path, method: :delete, form: { style: 'display:inline' }, class: 'btn btn-sm btn-light ml-2' %>
+  </div>
+<% end %>
